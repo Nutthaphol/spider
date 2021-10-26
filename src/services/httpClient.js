@@ -6,8 +6,8 @@ const isAbsoluteURLRegex = /^(?:\w+:)\/\//;
 axios.interceptors.request.use(async (config) => {
   console.log(`config url: ${config.url}`);
   // if (!isAbsoluteURLRegex.test(config.url)) {
-  config.url = join(process.env.REACT_APP_API_URL, config.url);
-  console.log(`req url: ${config.url}`);
+  //   config.url = join(process.env.REACT_APP_API_URL, config.url);
+  //   console.log(`req url: ${config.url}`);
   // }
 
   config.timeout = 900000; // 10 Second

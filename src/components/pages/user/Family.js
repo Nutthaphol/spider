@@ -53,8 +53,10 @@ const Family = () => {
   const countGenera = (id_) => {
     let num = 0;
     for (let i = 0; i < allDetail.length; i++) {
+      console.log(allDetail[i].spider_id);
       if (allDetail[i].spider_id == id_) {
         num++;
+        console.log(`num = ${num}`);
       }
     }
     return num;
