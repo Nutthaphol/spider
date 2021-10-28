@@ -1,8 +1,4 @@
-import {
-  DETAIL_SUCCESS,
-  DETAIL_FAILED,
-  DETAIL_FETCHING,
-} from "../actions/types";
+import { GENUS_SUCCESS, GENUS_FAILED, GENUS_FETCHING } from "../actions/types";
 
 const initialState = {
   result: null,
@@ -13,11 +9,11 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case DETAIL_FETCHING:
+    case GENUS_FETCHING:
       return { ...state, result: null, isFetching: true, isError: false };
-    case DETAIL_FAILED:
+    case GENUS_FAILED:
       return { ...state, result: null, isFetching: false, isError: true };
-    case DETAIL_SUCCESS:
+    case GENUS_SUCCESS:
       return { ...state, result: payload, isFetching: false, isError: false };
     default:
       return state;

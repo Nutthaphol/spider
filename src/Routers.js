@@ -3,6 +3,7 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Container, makeStyles } from "@material-ui/core";
 import Family from "./components/pages/user/Family";
+import Login from "./components/Login";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -20,6 +21,7 @@ const Routers = () => {
     <Container className={classes.content} maxWidth={false}>
       <Switch>
         <Route exact path="/" component={Family} />
+        <Route exact path="/login" component={Login} />
         <Route exact path="/Family" component={Family} />
       </Switch>
     </Container>

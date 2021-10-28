@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import details from "./details";
-import spider from "./spider";
+// import spider from "./spider";
+import family from "./family";
+import genus from "./genus";
+import auth from "./auth";
 
-const appReducer = combineReducers({ details, spider });
+const appReducer = combineReducers({ family, genus, auth });
 
 const rootReducer = (state, action) => {
   return appReducer(state, action);

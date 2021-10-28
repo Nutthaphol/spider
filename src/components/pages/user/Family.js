@@ -19,9 +19,9 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MapView from "../shared/MapView";
 
-import { getAllDetail } from "../../../actions/details";
-import { getAllSpider } from "../../../actions/spider";
 import { Search } from "@material-ui/icons";
+import { getAllFamily } from "../../../actions/family";
+import { getAllGenus } from "../../../actions/genus";
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -42,24 +42,23 @@ const position_ = [
 const Family = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { result: allDetail } = useSelector((state) => state.details);
-  const { result: spiderList } = useSelector((state) => state.spider);
+  const { result: allFamily } = useSelector((state) => state.family);
+  const { result: allGenus } = useSelector((state) => state.genus);
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(getAllDetail());
-    dispatch(getAllSpider());
+    dispatch(getAllFamily());
+    dispatch(getAllGenus());
+    if (currentUser) {
+      console.log(`id = ${currentUser.username}`);
+    }
   }, []);
 
-  const countGenera = (id_) => {
-    let num = 0;
-    for (let i = 0; i < allDetail.length; i++) {
-      console.log(allDetail[i].spider_id);
-      if (allDetail[i].spider_id == id_) {
-        num++;
-        console.log(`num = ${num}`);
-      }
+  const counterGenus = (id) => {
+    if (allGenus) {
+      const number = allGenus.filter((item) => item.fa_id === id).length;
+      return number;
     }
-    return num;
   };
 
   return (
@@ -74,7 +73,7 @@ const Family = () => {
         </Paper>
         <Divider className={classes.divider} />
         <TableContainer>
-          <Table stickyHeader aria-label="sticky table">
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Family</TableCell>
@@ -84,32 +83,25 @@ const Family = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {spiderList &&
-                spiderList.map((val) => {
-                  return (
-                    allDetail &&
-                    allDetail
-                      .slice(0, 1)
-                      .filter((id) => val.spider_id === id.spider_id)
-                      .map((val2) => (
-                        <TableRow key={val2.record_id}>
-                          <TableCell>{val.family}</TableCell>
-                          <TableCell>{val2.author}</TableCell>
-                          <TableCell align="right">
-                            {countGenera(val.spider_id)}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Link href="#">genera</Link>&nbsp;|&nbsp;
-                            <Link href="#">Search</Link>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                  );
-                })}
+              {allFamily &&
+                allFamily
+                  .filter((val) => counterGenus(val.fa_id) > 0)
+                  .map((val) => (
+                    <TableRow key={val.fa_id}>
+                      <TableCell>{val.fa_name}</TableCell>
+                      <TableCell>name author</TableCell>
+                      <TableCell align="right">
+                        {counterGenus(val.fa_id)}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Link href="#">genera</Link>&nbsp;|&nbsp;
+                        <Link href="#">Search</Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {console.log("family ", allDetail)}
       </Container>
     </Box>
   );

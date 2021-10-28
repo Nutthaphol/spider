@@ -2,22 +2,27 @@ import axios from "axios";
 import join from "url-join";
 
 const isAbsoluteURLRegex = /^(?:\w+:)\/\//;
+const user = JSON.parse(localStorage.getItem("user"));
 
 axios.interceptors.request.use(async (config) => {
-  console.log(`config url: ${config.url}`);
-  // if (!isAbsoluteURLRegex.test(config.url)) {
-  //   config.url = join(process.env.REACT_APP_API_URL, config.url);
-  //   console.log(`req url: ${config.url}`);
-  // }
+  // console.log(`config url: ${config.url}`);
+  if (!isAbsoluteURLRegex.test(config.url)) {
+    config.url = join(process.env.REACT_APP_API_URL, config.url);
+    // console.log(`req url: ${config.url}`);
+  }
 
   config.timeout = 900000; // 10 Second
+
+  if (user && user.accessToken) {
+    config.headers = { "x-access-token": user.accessToken };
+  }
 
   return config;
 });
 
 axios.interceptors.response.use(
   (response) => {
-    console.log(`res: ${response}`);
+    // console.log(`res: ${response}`);
     return response;
   },
   async (error) => {
