@@ -1,8 +1,8 @@
-const db = require("../models/spider.model");
-const getAllSpider = db.getAllSpider;
+const db = require("../models/genus.model");
+const getAllGenus = db.getAllGenus;
 
-exports.allSpider = (req, res) => {
-  getAllSpider((error, result) => {
+exports.allGenus = (req, res) => {
+  getAllGenus((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);

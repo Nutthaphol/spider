@@ -1,8 +1,8 @@
-const db = require("../models/user.model");
-const getAllUser = db.getAllUser;
+const db = require("../models/family.model");
+const getAllFamily = db.getAllFamily;
 
-exports.allUser = (req, res) => {
-  getAllUser((error, result) => {
+exports.allFamily = (req, res) => {
+  getAllFamily((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);

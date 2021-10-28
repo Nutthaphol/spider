@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
-const getAllPosition = (callback) => {
-  const query = `SELECT * FROM position_`;
+const getAllGenus = (callback) => {
+  const query = `SELECT * FROM genus`;
 
   connection.query(query, (error, result) => {
     if (error) {
@@ -9,9 +9,9 @@ const getAllPosition = (callback) => {
       callback(error, null);
       return;
     }
-    console.log(`Result position: ${result}`);
+    // console.log(`get all genus ready.`);
     callback(null, result);
   });
 };
 
-exports.getAllPosition = getAllPosition;
+exports.getAllGenus = getAllGenus;

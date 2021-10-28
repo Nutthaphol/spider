@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
 const getAllUser = (callback) => {
-  const query = `SELECT * FROM auth`;
+  const query = `SELECT * FROM user`;
 
   connection.query(query, (error, result) => {
     if (error) {
@@ -9,7 +9,7 @@ const getAllUser = (callback) => {
       callback(error, null);
       return;
     }
-    console.log(`Result user: ${result}`);
+    console.log(`get all auth ready.`);
     callback(null, result);
   });
 };

@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
-const getAllSpider = (callback) => {
-  const query = `SELECT * FROM spider_list`;
+const getAllFamily = (callback) => {
+  const query = `SELECT * FROM family`;
 
   connection.query(query, (error, result) => {
     if (error) {
@@ -9,9 +9,9 @@ const getAllSpider = (callback) => {
       callback(error, null);
       return;
     }
-    console.log(`Result spider: ${result}`);
+    // console.log(`get all family ready.`);
     callback(null, result);
   });
 };
 
-exports.getAllSpider = getAllSpider;
+exports.getAllFamily = getAllFamily;
