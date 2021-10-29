@@ -1,15 +1,16 @@
 DROP DATABASE `spiderDB_`;
 CREATE DATABASE `spiderDB_`;
+USE `spiderDB_`;
 
 -- create table auth
 DROP TABLE `user`;
 CREATE TABLE `user` (
-        `id_user` INT NOT NULL AUTO_INCREMENT,
+        `id` INT NOT NULL AUTO_INCREMENT,
         `username` VARCHAR(20)  NOT NULL,
         `password` VARCHAR(20) NOT NULL,
         `full_name` VARCHAR(150) NOT NULL,
         `auth` VARCHAR(20) DEFAULT "user",
-        PRIMARY KEY (`id_user`)
+        PRIMARY KEY (`id`)
 );
 
 -- insert admin id
@@ -29,111 +30,112 @@ INSERT INTO `user` (
 -- create table type of spider
 DROP TABLE `family`;
 CREATE TABLE `family` (
-        `fa_id` INT NOT NULL AUTO_INCREMENT,
-        `fa_name` VARCHAR(20) NOT NULL,
-        PRIMARY KEY (`fa_id`)
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `name` VARCHAR(20) NOT NULL,
+        PRIMARY KEY (`id`)
 );
 
 DROP TABLE `genus`;
 CREATE TABLE `genus` (
-         `ge_id` INT NOT NULL AUTO_INCREMENT,
-         `fa_id` INT NOT NULL,
-         `ge_name` VARCHAR(20) NOT NULL,
-         PRIMARY KEY(`ge_id`)
+         `id` INT NOT NULL AUTO_INCREMENT,
+         `family_id` INT NOT NULL,
+         `name` VARCHAR(20) NOT NULL,
+         PRIMARY KEY(`id`)
 );
 
  DROP TABLE `species`;
  CREATE TABLE `species` (
-         `sp_id` INT NOT NULL AUTO_INCREMENT,
-         `ge_id` INT NOT NULL,
-         `sp_name` VARCHAR(20) NOT NULL,
-         PRIMARY KEY (`sp_id`)
+         `id` INT NOT NULL AUTO_INCREMENT,
+         `genus_id` INT NOT NULL,
+         `name` VARCHAR(20) NOT NULL,
+         PRIMARY KEY (`id`)
  );
 
- ALTER TABLE `genus` ADD FOREIGN KEY (`fa_id`) REFERENCES `family`(`fa_id`);
- ALTER TABLE `species` ADD FOREIGN KEY (`ge_id`) REFERENCES `genus`(`ge_id`);
+ ALTER TABLE `genus` ADD FOREIGN KEY (`family_id`) REFERENCES `family`(`id`);
+ ALTER TABLE `species` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
 
 --  create table detail
+DROP TABLE `detail`;
 CREATE TABLE `detail` (
-        `de_id` INT NOT NULL AUTO_INCREMENT,
-        `fa_id` INT NOT NULL,
-        `ge_id` INT NOT NULL,
-        `sp_id` INT NOT NULL,
-        `de_author` VARCHAR(100) NOT NULL,
-        `de_year` VARCHAR(4) NOT NULL,
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `family_id` INT NOT NULL,
+        `genus_id` INT NOT NULL,
+        `species_id` INT NOT NULL,
+        `author` VARCHAR(100) NOT NULL,
+        `publish_year` VARCHAR(4) NOT NULL,
         `country` VARCHAR(20) DEFAULT "Thailand",
         `country_other` VARCHAR(20),
         `altitude` VARCHAR(50),
-        `methor` VARCHAR(255),
+        `method` VARCHAR(255),
         `habtat` VARCHAR(255),
         `microhabtat` VARCHAR(255),
         `designate` VARCHAR(255),
-        PRIMARY KEY(`de_id`)
+        PRIMARY KEY(`id`)
 );
-
-
-ALTER TABLE `detail` ADD FOREIGN KEY (`fa_id`) REFERENCES `family`(`fa_id`);
-ALTER TABLE `detail` ADD FOREIGN KEY (`ge_id`) REFERENCES `genus`(`ge_id`);
-ALTER TABLE `detail` ADD FOREIGN KEY (`sp_id`) REFERENCES `species`(`sp_id`);
 
 -- create table location and position
 DROP TABLE `location`;
 CREATE TABLE `location` (
-        `lo_id` INT NOT NULL AUTO_INCREMENT,
-        `de_id` INT NOT NULL,
-        `lo_province` VARCHAR(30),
-        `lo_district` VARCHAR(30),
-        `lo_locality` VARCHAR(255),
-        PRIMARY KEY (`lo_id`)
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
+        `province` VARCHAR(30),
+        `district` VARCHAR(30),
+        `locality` VARCHAR(255),
+        PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `location` ADD FOREIGN KEY (`de_id`) REFERENCES `detail`(`de_id`);
 
 -- create Position table
 DROP TABLE `position`;
 CREATE TABLE `position` (
-        `po_id` INT NOT NULL AUTO_INCREMENT,
-        `lo_id` INT NOT NULL,
-        `po_name` VARCHAR(255) NOT NULL,
-        `po_lat` DECIMAL(8,6) NOT NULL,
-        `po_long` DECIMAL(9,6) NOT NULL,
-        PRIMARY KEY (`po_id`)
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `location_id` INT NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
+        `lat` DECIMAL(8,6) NOT NULL,
+        `long` DECIMAL(9,6) NOT NULL,
+        PRIMARY KEY (`id`)
 );
-
-ALTER TABLE `position` ADD FOREIGN KEY (`lo_id`) REFERENCES `location`(`lo_id`);
 
 -- create table image
 DROP TABLE `image`;
 CREATE TABLE `image` (
-        `im_id` INT NOT NULL AUTO_INCREMENT,
-        `de_id` INT NOT NULL,
-        `im_path` VARCHAR(255) NOT NULL,
-        PRIMARY KEY (`im_id`)
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
+        `path` VARCHAR(255) NOT NULL,
+        PRIMARY KEY (`id`)
 );
-
-ALTER TABLE `image` ADD FOREIGN KEY (`de_id`) REFERENCES `detail`(`de_id`);
 
 DROP TABLE `paper`;
 CREATE TABLE `paper` (
-        `pe_id` INT NOT NULL AUTO_INCREMENT,
-        `de_id` INT NOT NULL,
-        `pe_name` VARCHAR(255) NOT NULL,
-        PRIMARY KEY (`pe_id`)
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
+        PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `paper` ADD FOREIGN KEY (`de_id`) REFERENCES `detail`(`de_id`);
+
+
+
+-- Add foreign key
+ALTER TABLE `detail` ADD FOREIGN KEY (`family`) REFERENCES `family`(`id`);
+ALTER TABLE `detail` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
+ALTER TABLE `detail` ADD FOREIGN KEY (`species_id`) REFERENCES `species`(`id`);
+ALTER TABLE `location` ADD FOREIGN KEY (`location_id`) REFERENCES `detail`(`id`);
+ALTER TABLE `position` ADD FOREIGN KEY (`position_id`) REFERENCES `location`(`id`);
+ALTER TABLE `image` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
+ALTER TABLE `paper` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
 
 
 -- INSER DATA ----------
-INSERT INTO `family` (`fa_name`) VALUES ("Agelenidae");
+INSERT INTO `family` (`name`) VALUES ("Agelenidae");
 
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Draconarius");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Sinocoelotes");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Coelotes");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Notiocoelotes");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Orumcekia");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Allagelena");
-INSERT INTO `genus` (`fa_id`, `ge_name`) VALUES (2, "Acutipetala");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Draconarius");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Sinocoelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Coelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Notiocoelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Orumcekia");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Allagelena");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Acutipetala");
 
 ALTER TABLE `species`DROP FOREIGN KEY `species_ibfk_1`;
 

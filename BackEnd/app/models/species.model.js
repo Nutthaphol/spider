@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
-const getAllUser = (callback) => {
-  const query = `SELECT * FROM user`;
+const getAllSpecies = (callback) => {
+  const query = `SELECT * FROM species`;
 
   connection.query(query, (error, result) => {
     if (error) {
@@ -9,9 +9,9 @@ const getAllUser = (callback) => {
       callback(error, null);
       return;
     }
-    // console.log(`get all auth ready.`);
+    console.log(`get all species ready.`);
     callback(null, result);
   });
 };
 
-exports.getAllUser = getAllUser;
+exports.getAllSpecies = getAllSpecies;

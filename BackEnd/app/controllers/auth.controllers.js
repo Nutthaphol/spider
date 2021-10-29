@@ -20,9 +20,13 @@ exports.signin = (req, res) => {
           });
         }
 
-        let token = jwt.sign({ id: profile.id_user }, config.secret, {
-          expiresIn: 43200, // 12 hours
-        });
+        let token = jwt.sign(
+          { id: profile.id_user, role: profile.role },
+          config.secret,
+          {
+            expiresIn: 43200, // 12 hours
+          }
+        );
         res.status(200).send({
           id: profile.id,
           username: profile.username,
