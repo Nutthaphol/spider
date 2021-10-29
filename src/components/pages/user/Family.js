@@ -56,7 +56,7 @@ const Family = () => {
 
   const counterGenus = (id) => {
     if (allGenus) {
-      const number = allGenus.filter((item) => item.fa_id === id).length;
+      const number = allGenus.filter((item) => item.family_id === id).length;
       return number;
     }
   };
@@ -69,7 +69,7 @@ const Family = () => {
             padding: "10",
           }}
         >
-          <MapView listPosition={position_} />
+          <MapView listPosition={position_} height="50vh" />
         </Paper>
         <Divider className={classes.divider} />
         <TableContainer>
@@ -85,13 +85,13 @@ const Family = () => {
             <TableBody>
               {allFamily &&
                 allFamily
-                  .filter((val) => counterGenus(val.fa_id) > 0)
+                  .filter((val) => counterGenus(val.id) > 0)
                   .map((val) => (
-                    <TableRow key={val.fa_id}>
-                      <TableCell>{val.fa_name}</TableCell>
+                    <TableRow key={val.id}>
+                      <TableCell>{val.name}</TableCell>
                       <TableCell>name author</TableCell>
                       <TableCell align="right">
-                        {counterGenus(val.fa_id)}
+                        {counterGenus(val.id)}
                       </TableCell>
                       <TableCell align="right">
                         <Link href="#">genera</Link>&nbsp;|&nbsp;

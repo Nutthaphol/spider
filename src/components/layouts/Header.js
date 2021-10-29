@@ -7,7 +7,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
 import Login from "../Login";
@@ -31,9 +31,19 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const [statusMenu, setStatusMenu] = useState(false);
   const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.roles == "admin") {
+        setStatusMenu(true);
+      } else {
+        setStatusMenu(false);
+      }
+    }
+  }, []);
   return (
     <div className={classes.appBar}>
       {console.log(`currentUser : ${currentUser}`)}
@@ -47,7 +57,7 @@ const Header = () => {
             Spider Thailand
           </Typography>
           <ButtonAppBar message="Family" link={"/"} />
-          {currentUser && (
+          {statusMenu && (
             <MenuBar
               message="Insert"
               icon={<KeyboardArrowDown />}

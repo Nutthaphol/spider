@@ -10,6 +10,10 @@ export const GENUS_SUCCESS = "GENUS_SUCCESS";
 export const GENUS_FAILED = "GENUS_FAILED";
 export const GENUS_FETCHING = "GENUS_FETCHING";
 
+export const SPECIES_SUCCESS = "SPECIES_SUCCESS";
+export const SPECIES_FAILED = "SPECIES_FAILED";
+export const SPECIES_FETCHING = "SPECIES_FETCHING";
+
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";

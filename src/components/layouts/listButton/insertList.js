@@ -1,6 +1,6 @@
 export const insertList = [
   {
-    path: "/insertype",
-    label: "Type of Spider",
+    path: "formInsertTypeOfSpider",
+    label: "Insert Type",
   },
 ];
