@@ -1,4 +1,13 @@
-import { CardHeader, makeStyles, withStyles } from "@material-ui/core";
+import { CardHeader } from "@mui/material";
+import withStyles from "@mui/styles/withStyles";
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
+
+import makeStyles from "@mui/styles/makeStyles";
+
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -12,14 +21,16 @@ import {
   InputAdornment,
   IconButton,
   FormControl,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
-import { red, green } from "@material-ui/core/colors";
+import { red, green } from "@mui/material/colors";
 
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../actions/auth";
+
+const theme = createTheme();
 
 const useStyles = makeStyles({
   root: {
@@ -86,6 +97,7 @@ const PasswordField = ({ isSubmitting, values, handleChange, error }) => {
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
               edge="end"
+              size="large"
             >
               {values.showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
@@ -96,7 +108,7 @@ const PasswordField = ({ isSubmitting, values, handleChange, error }) => {
   );
 };
 
-const LoginButton = withStyles((theme) => ({
+const LoginButton = withStyles(() => ({
   root: {
     marginTop: 10,
     color: theme.palette.getContrastText(green[500]),
@@ -183,48 +195,56 @@ const Login = (props) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Card className={classes.rootCard}>
-        {/* Insert Title */}
-        <CardHeader style={{ textAlign: "center" }} title="Login" />
-        <CardContent>
-          {serverMessage && (
-            <Typography
-              sx={{ fontSize: 14 }}
-              style={{ color: "#C82626" }}
-              gutterBottom
-            >
-              {serverMessage}
-            </Typography>
-          )}
-          <Formik
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              dispatch(login(values.username, values.password))
-                .then(() => {
-                  handleMessage(false);
-                  props.history.push("/");
-                  window.location.reload();
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <Card className={classes.rootCard}>
+            {/* Insert Title */}
+            <CardHeader style={{ textAlign: "center" }} title="Login" />
+            <CardContent>
+              {serverMessage && (
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  style={{ color: "#C82626" }}
+                  gutterBottom
+                >
+                  {serverMessage}
+                </Typography>
+              )}
+              <Formik
+                onSubmit={(values, { setSubmitting, resetForm }) => {
+                  dispatch(login(values.username, values.password))
+                    .then(() => {
+                      handleMessage(false);
+                      props.history.push("/");
+                      window.location.reload();
 
-                  // else {
-                  //   // props.history.push("/login");
-                  //   // window.location.reload();
-                  //   resetForm();
-                  //   handleMessage(data);
-                  // }
-                })
-                .catch((error) => {
-                  resetForm();
-                  handleMessage(error);
-                });
-            }}
-            initialValues={{ username: "", password: "", showPassword: false }}
-            validate={validate}
-          >
-            {(props) => showForm(props)}
-          </Formik>
-        </CardContent>
-      </Card>
-    </div>
+                      // else {
+                      //   // props.history.push("/login");
+                      //   // window.location.reload();
+                      //   resetForm();
+                      //   handleMessage(data);
+                      // }
+                    })
+                    .catch((error) => {
+                      resetForm();
+                      handleMessage(error);
+                    });
+                }}
+                initialValues={{
+                  username: "",
+                  password: "",
+                  showPassword: false,
+                }}
+                validate={validate}
+              >
+                {(props) => showForm(props)}
+              </Formik>
+            </CardContent>
+          </Card>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

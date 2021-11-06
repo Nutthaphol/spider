@@ -1,12 +1,5 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  Button,
-  makeStyles,
-} from "@material-ui/core";
-import { KeyboardArrowDown } from "@material-ui/icons";
+import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import { KeyboardArrowDown } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
@@ -14,6 +7,9 @@ import Login from "../Login";
 import { insertList } from "./listButton/insertList";
 import ButtonAppBar from "./menu/ButtonAppBar";
 import MenuBar from "./menu/MenuBar";
+import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+const theme = createTheme();
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -45,53 +41,57 @@ const Header = () => {
     }
   }, []);
   return (
-    <div className={classes.appBar}>
-      {console.log(`currentUser : ${currentUser}`)}
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography
-            variant="h4"
-            component="div"
-            style={{ marginRight: "20px" }}
-          >
-            Spider Thailand
-          </Typography>
-          <ButtonAppBar message="Family" link={"/"} />
-          {statusMenu && (
-            <MenuBar
-              message="Insert"
-              icon={<KeyboardArrowDown />}
-              listButton={insertList}
-            />
-          )}
-          <div style={{ flexGrow: 1 }}></div>
-          {currentUser ? (
-            <Button
-              variant="outlined"
-              color="inherit"
-              align="right"
-              size="small"
-              onClick={() => {
-                window.location.reload();
-                dispatch(logout());
-              }}
-            >
-              Logout
-            </Button>
-          ) : (
-            <Button
-              variant="outlined"
-              color="inherit"
-              align="right"
-              size="small"
-              href="login"
-            >
-              Login
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={classes.appBar}>
+          {console.log(`currentUser : ${currentUser}`)}
+          <AppBar position="fixed">
+            <Toolbar>
+              <Typography
+                variant="h4"
+                component="div"
+                style={{ marginRight: "20px" }}
+              >
+                Spider Thailand
+              </Typography>
+              <ButtonAppBar message="Family" link={"/"} />
+              {statusMenu && (
+                <MenuBar
+                  message="Insert"
+                  icon={<KeyboardArrowDown />}
+                  listButton={insertList}
+                />
+              )}
+              <div style={{ flexGrow: 1 }}></div>
+              {currentUser ? (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  align="right"
+                  size="small"
+                  onClick={() => {
+                    window.location.reload();
+                    dispatch(logout());
+                  }}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  align="right"
+                  size="small"
+                  href="login"
+                >
+                  Login
+                </Button>
+              )}
+            </Toolbar>
+          </AppBar>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

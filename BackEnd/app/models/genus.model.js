@@ -14,4 +14,20 @@ const getAllGenus = (callback) => {
   });
 };
 
+const postGenus = (data, callback) => {
+  const query = `INSERT INTO genus (family_id, name) VALUES (?, ?);`;
+
+  const paramt = [data.family_id, data.name];
+
+  connection.query(query, paramt, (error, result) => {
+    if (error) {
+      console.log(error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+exports.postGenus = postGenus;
 exports.getAllGenus = getAllGenus;

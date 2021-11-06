@@ -1,17 +1,24 @@
 import React from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, makeStyles } from "@material-ui/core";
+import { Container } from "@mui/material";
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import Family from "./components/pages/user/Family";
 import Login from "./components/Login";
-import FormInsert from "./components/pages/admin/FormInsert";
+import InsertForm from "./components/pages/admin/InsertForm";
 
-const useStyles = makeStyles((theme) => ({
+const theme = createTheme();
+
+const useStyles = makeStyles(() => ({
   content: {
-    flexGrow: 1,
+    // flexGrow: 1,
     display: "flex",
     justifyContent: "center",
-    padding: 0,
   },
 }));
 
@@ -42,19 +49,19 @@ const Routers = () => {
   };
 
   return (
-    <Container className={classes.content} maxWidth={false}>
-      <Switch>
-        <Route exact path="/" component={Family} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/Family" component={Family} />
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Container className={classes.content} maxWidth={false} disableGutters>
+          <Switch>
+            <Route exact path="/" component={Family} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/Family" component={Family} />
 
-        <AdminRoute
-          exact
-          path="/formInsertTypeOfSpider"
-          component={FormInsert}
-        />
-      </Switch>
-    </Container>
+            <AdminRoute exact path="/Form" component={InsertForm} />
+          </Switch>
+        </Container>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

@@ -128,6 +128,8 @@ ALTER TABLE `paper` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
 
 -- INSER DATA ----------
 INSERT INTO `family` (`name`) VALUES ("Agelenidae");
+DELETE FROM `family` WHERE `name` = "admin";
+ALTER TABLE `family` AUTO_INCREMENT = 1;
 
 INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Draconarius");
 INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Sinocoelotes");

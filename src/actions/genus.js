@@ -17,3 +17,9 @@ export const getAllGenus = () => async (dispatch) => {
     });
   }
 };
+
+export const postGenus = (data) => (dispatch) => {
+  return genusService.postGenus(data).then((data) => {
+    dispatch(getAllGenus());
+  });
+};

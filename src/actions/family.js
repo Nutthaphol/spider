@@ -18,3 +18,11 @@ export const getAllFamily = () => async (dispatch) => {
     });
   }
 };
+
+export const postFamily = (data) => (dispatch) => {
+  console.log(data);
+  return familyService.postFamily(data).then((data) => {
+    dispatch(getAllFamily());
+    return data;
+  });
+};

@@ -9,7 +9,7 @@ const getAllSpecies = (callback) => {
       callback(error, null);
       return;
     }
-    console.log(`get all species ready.`);
+    // console.log(`get all species ready.`);
     callback(null, result);
   });
 };

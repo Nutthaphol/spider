@@ -31,6 +31,7 @@ require("./app/routes/auth.route")(app);
 require("./app/routes/family.route")(app);
 require("./app/routes/genus.route")(app);
 require("./app/routes/species.route")(app);
+require("./app/routes/post.route")(app);
 // require("./app/routes/position.route")(app);
 
 // app.get("*", (req, res) => {

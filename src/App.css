@@ -3,6 +3,11 @@
   height: 100vh;
 } */
 
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -19,7 +24,7 @@
   padding-top: 100px;
   width: 100%;
 }
-
+/* 
 .MuiPaper-root {
   background-color: #404040;
-}
+} */
