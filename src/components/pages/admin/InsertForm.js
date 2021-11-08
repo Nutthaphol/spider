@@ -68,7 +68,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const InsertForm = () => {
-  let [years, setYears] = useState([]);
+  const [years, setYears] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
   const { result: dbFamily } = useSelector((state) => state.family);
@@ -109,16 +109,18 @@ const InsertForm = () => {
   });
 
   const [files, setFiles] = useState([]);
+  const [uploads, setUploads] = useState();
 
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
     let formData = new FormData();
-    acceptedFiles.map((file) => formData.append("file", file));
+    acceptedFiles.map((file) => formData.append("image", file));
     setFiles(
       acceptedFiles.map((file) =>
         Object.assign(file, { preview: URL.createObjectURL(file) })
       )
     );
+    setUploads(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -138,7 +140,7 @@ const InsertForm = () => {
 
     const createListYear = () => {
       const date = new Date();
-      const tmpYesrs = [...years];
+      const tmpYesrs = [];
       let nowYear = date.getFullYear();
       console.log(`now year : ${nowYear}`);
       for (let i = nowYear; i > nowYear - 100; i--) {
@@ -150,7 +152,15 @@ const InsertForm = () => {
     createListYear();
   }, []);
 
-  // const thump =(fileSelect)
+  const handleSubmit = async (values) => {
+    setData({ ...values });
+    const formData = new FormData();
+    uploads.map((file) => formData.append("image", file));
+
+    formData.append("data", JSON.stringify(data));
+
+    dispatch(postFullData(formData));
+  };
 
   return (
     <StyledEngineProvider injectFirst>
@@ -160,11 +170,8 @@ const InsertForm = () => {
             <Paper className={classes.paper}>
               <Formik
                 initialValues={{ data, status }}
-                onSubmit={(values, setSubmitting, setStatus) => {
-                  setData({ ...values.data });
-                  console.log("data", data);
-                  console.log("files", files);
-                  // dispatch(postFullData(data));
+                onSubmit={(values, setSubmitting) => {
+                  handleSubmit(values.data);
                 }}
               >
                 {({
@@ -362,7 +369,7 @@ const InsertForm = () => {
                               Other country
                             </Typography>
                             <Field
-                              name="country_other"
+                              name="data.country_other"
                               component={TextField}
                               fullWidth
                               size="small"
@@ -664,6 +671,7 @@ const InsertForm = () => {
                                 values.data.paper.map((val, index) => (
                                   <Grid
                                     item
+                                    key={index}
                                     xs={4}
                                     sx={{
                                       display: "flex",

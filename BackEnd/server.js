@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+var multer = require("multer");
+var upload = multer({ dest: "./app/image" });
 
 const cors = require("cors");
 
@@ -26,6 +28,11 @@ app.use("/image", express.static("./app/image"));
 app.get("/", (req, res) => {
   res.send(`Server is running !`);
 });
+
+// app.post("/api/post/postfulldata", upload.array("file"), (req, res) => {
+//   console.log("data", req.files);
+//   res.send(req.files);
+// });
 
 require("./app/routes/auth.route")(app);
 require("./app/routes/family.route")(app);

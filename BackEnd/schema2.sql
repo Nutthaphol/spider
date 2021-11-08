@@ -101,6 +101,7 @@ DROP TABLE `image`;
 CREATE TABLE `image` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `detail_id` INT NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
         `path` VARCHAR(255) NOT NULL,
         PRIMARY KEY (`id`)
 );
