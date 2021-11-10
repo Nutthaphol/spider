@@ -13,7 +13,7 @@ const postFamily = async (data) => {
     .then((response) => {
       return response.data;
     });
-  // console.log(`family post res ${res}`);
+  // console.log("family post res", res);
   return res;
 };
 

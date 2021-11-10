@@ -18,7 +18,6 @@ const postFamily = (name, callback) => {
   const query = `INSERT INTO family (name) VALUES (?);`;
 
   const paramt = [name];
-  console.log(` model ${name}`);
 
   connection.query(query, paramt, (error, result) => {
     if (error) {

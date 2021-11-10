@@ -36,6 +36,8 @@ import {
   DeleteOutline,
 } from "@material-ui/icons";
 import { useDropzone } from "react-dropzone";
+import familyService from "../../../services/family.service";
+import genusService from "../../../services/genus.service";
 
 const theme = createTheme();
 
@@ -111,28 +113,6 @@ const InsertForm = () => {
   const [files, setFiles] = useState([]);
   const [uploads, setUploads] = useState();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    let formData = new FormData();
-    acceptedFiles.map((file) => formData.append("image", file));
-    setFiles(
-      acceptedFiles.map((file) =>
-        Object.assign(file, { preview: URL.createObjectURL(file) })
-      )
-    );
-    setUploads(acceptedFiles);
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "image/jpeg, image/png",
-    onDrop,
-    maxFiles: 20,
-  });
-
-  const thumbs = files.map((file) => (
-    <img key={file.name} src={file.preview} className={classes.uploadImage} />
-  ));
-
   useEffect(() => {
     dispatch(getAllFamily());
     dispatch(getAllGenus());
@@ -152,16 +132,73 @@ const InsertForm = () => {
     createListYear();
   }, []);
 
-  const handleSubmit = async (values) => {
-    setData({ ...values });
-    const formData = new FormData();
-    uploads.map((file) => formData.append("image", file));
+  // onDrop of react Drop zone
+  const onDrop = useCallback((acceptedFiles) => {
+    // Do something with the files
+    let formData = new FormData();
+    acceptedFiles.map((file) => formData.append("image", file));
+    setFiles(
+      acceptedFiles.map((file) =>
+        Object.assign(file, { preview: URL.createObjectURL(file) })
+      )
+    );
+    setUploads(acceptedFiles);
+  }, []);
 
-    formData.append("data", JSON.stringify(data));
+  // set react Drop zone
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: "image/jpeg, image/png",
+    onDrop,
+    maxFiles: 20,
+  });
 
-    dispatch(postFullData(formData));
+  // preview image input
+  const thumbs = files.map((file) => (
+    <img key={file.name} src={file.preview} className={classes.uploadImage} />
+  ));
+
+  // push new family
+  const postFamilyFn = (name) => {
+    return familyService.postFamily(name).then((res) => {
+      return res.insertId;
+    });
   };
 
+  // push new genus
+  const postGenusFn = async (family_id, name) => {
+    return genusService.postGenus({ family_id, name }).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  // form submit
+  const handleSubmit = async (values) => {
+    const formData = new FormData();
+    {
+      uploads && uploads.map((file) => formData.append("image", file));
+    }
+
+    // check new family
+    if (
+      dbFamily.find(
+        (item) => item.id == Number(values.family) || item.name == values.family
+      )
+    ) {
+      values.family = dbFamily.find(
+        (item) => item.id == Number(values.family) || item.name == values.family
+      ).id;
+    } else {
+      values.family = await postFamilyFn(values.family);
+      values.genus = await postGenusFn(values.family, values.genus);
+      console.log("values status", values);
+    }
+
+    // formData.append("data", JSON.stringify(values));
+
+    // dispatch(postFullData(formData));
+  };
+
+  // render form component
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -184,7 +221,6 @@ const InsertForm = () => {
                   setStatus,
                 }) => (
                   <Form autoComplete="off">
-                    {console.log("value", values)}
                     <Grid container style={{ padding: "20px" }} spacing={2}>
                       <Grid item xs={6}>
                         <Grid container spacing={2}>

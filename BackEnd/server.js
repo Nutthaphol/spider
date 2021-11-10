@@ -33,6 +33,10 @@ app.get("/", (req, res) => {
 //   console.log("data", req.files);
 //   res.send(req.files);
 // });
+const tmp = "1";
+console.log(Number(tmp));
+
+Number(tmp) ? console.log("true") : console.log("false");
 
 require("./app/routes/auth.route")(app);
 require("./app/routes/family.route")(app);
