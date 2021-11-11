@@ -1,4 +1,4 @@
-const genus = require("../controllers/genus.controllers");
+const genus = require("../controllers/genus.controller");
 
 module.exports = (app) => {
   app.get("/api/genus/allgenus", genus.allGenus);

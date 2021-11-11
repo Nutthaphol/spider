@@ -1,9 +1,7 @@
-const db = require("../models/family.model");
-const getAllFamily = db.getAllFamily;
-const postFamily = db.postFamily;
+const db = require("../models/species.model");
 
-exports.allFamily = (req, res) => {
-  getAllFamily((error, result) => {
+exports.allSpecies = (req, res) => {
+  db.getAllSpecies((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -16,14 +14,15 @@ exports.allFamily = (req, res) => {
   });
 };
 
-exports.postFamily = (req, res) => {
-  const name = req.body.data;
-  postFamily(name, (error, result) => {
+exports.postSpecies = (req, res) => {
+  const data = req.body;
+
+  db.postSpecies(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
       } else {
-        return res.status(404).send({ message: "Data not found" });
+        return res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
       res.status(500).send({ message: error.message });

@@ -1,4 +1,4 @@
-const family = require("../controllers/family.controllers");
+const family = require("../controllers/family.controller");
 const { authJwt } = require("../middleware");
 
 module.exports = (app) => {

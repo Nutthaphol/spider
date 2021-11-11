@@ -1,9 +1,9 @@
-DROP DATABASE `spiderDB_`;
-CREATE DATABASE `spiderDB_`;
+DROP DATABASE IF EXISTS `spiderDB_`;
+CREATE DATABASE `spiderDB_` CHARACTER SET `utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 USE `spiderDB_`;
 
 -- create table auth
-DROP TABLE `user`;
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `username` VARCHAR(20)  NOT NULL,
@@ -28,14 +28,14 @@ INSERT INTO `user` (
 
 
 -- create table type of spider
-DROP TABLE `family`;
+DROP TABLE IF EXISTS `family`;
 CREATE TABLE `family` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `name` VARCHAR(20) NOT NULL,
         PRIMARY KEY (`id`)
 );
 
-DROP TABLE `genus`;
+DROP TABLE IF EXISTS `genus`;
 CREATE TABLE `genus` (
          `id` INT NOT NULL AUTO_INCREMENT,
          `family_id` INT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `genus` (
          PRIMARY KEY(`id`)
 );
 
- DROP TABLE `species`;
+ DROP TABLE IF EXISTS `species`;
  CREATE TABLE `species` (
          `id` INT NOT NULL AUTO_INCREMENT,
          `genus_id` INT NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `genus` (
  ALTER TABLE `species` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
 
 --  create table detail
-DROP TABLE `detail`;
+DROP TABLE IF EXISTS `detail`;
 CREATE TABLE `detail` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `family_id` INT NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `detail` (
 );
 
 -- create table location and position
-DROP TABLE `location`;
+DROP TABLE IF EXISTS `location`;
 CREATE TABLE `location` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `detail_id` INT NOT NULL,
@@ -86,18 +86,20 @@ CREATE TABLE `location` (
 
 
 -- create Position table
-DROP TABLE `position`;
-CREATE TABLE `position` (
+DROP TABLE IF EXISTS `address`;
+CREATE TABLE `address` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `location_id` INT NOT NULL,
         `name` VARCHAR(255) NOT NULL,
-        `lat` DECIMAL(8,6) NOT NULL,
-        `long` DECIMAL(9,6) NOT NULL,
+        `latitude` DOUBLE,
+        `longitude` DOUBLE,
         PRIMARY KEY (`id`)
 );
 
+insert into position (location_id, name, latitude, longitude) values (1, "nut", 22.31, 23.23);
+
 -- create table image
-DROP TABLE `image`;
+DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `detail_id` INT NOT NULL,
@@ -106,7 +108,7 @@ CREATE TABLE `image` (
         PRIMARY KEY (`id`)
 );
 
-DROP TABLE `paper`;
+DROP TABLE IF EXISTS `paper`;
 CREATE TABLE `paper` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `detail_id` INT NOT NULL,
@@ -118,11 +120,11 @@ CREATE TABLE `paper` (
 
 
 -- Add foreign key
-ALTER TABLE `detail` ADD FOREIGN KEY (`family`) REFERENCES `family`(`id`);
+ALTER TABLE `detail` ADD FOREIGN KEY (`family_id`) REFERENCES `family`(`id`);
 ALTER TABLE `detail` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
 ALTER TABLE `detail` ADD FOREIGN KEY (`species_id`) REFERENCES `species`(`id`);
-ALTER TABLE `location` ADD FOREIGN KEY (`location_id`) REFERENCES `detail`(`id`);
-ALTER TABLE `position` ADD FOREIGN KEY (`position_id`) REFERENCES `location`(`id`);
+ALTER TABLE `location` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
+ALTER TABLE `address` ADD FOREIGN KEY (`location_id`) REFERENCES `location`(`id`);
 ALTER TABLE `image` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
 ALTER TABLE `paper` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
 
@@ -275,3 +277,11 @@ INSERT INTO `family` (`fa_name`) VALUES ("	Theridiosomatidae	");
 INSERT INTO `family` (`fa_name`) VALUES ("	Trogloraptoridae	");
 INSERT INTO `family` (`fa_name`) VALUES ("	Uloboridae	");
 INSERT INTO `family` (`fa_name`) VALUES ("	Myrmecicultoridae	");
+
+
+INSERT INTO position (
+    location_id,
+    name,
+    latitude,
+    longitude
+) VALUES (1, "asffew", 11.22, 22.44);

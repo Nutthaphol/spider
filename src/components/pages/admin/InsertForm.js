@@ -26,7 +26,6 @@ import { postFamily, getAllFamily } from "../../../actions/family";
 import { getAllGenus, postGenus } from "../../../actions/genus";
 import { getAllSpecies } from "../../../actions/species";
 import { useSelector } from "react-redux";
-import { postFullData } from "../../../actions/post";
 import { Select, SimpleFileUpload, Switch, TextField } from "formik-mui";
 import { Box, margin } from "@mui/system";
 import {
@@ -38,6 +37,10 @@ import {
 import { useDropzone } from "react-dropzone";
 import familyService from "../../../services/family.service";
 import genusService from "../../../services/genus.service";
+import speciesService from "../../../services/species.service";
+import detailService from "../../../services/detail.service";
+import locationService from "../../../services/location.service";
+import positionService from "../../../services/position.service";
 
 const theme = createTheme();
 
@@ -89,6 +92,11 @@ const InsertForm = () => {
     publish_year: "",
     country: "Thailand",
     country_other: "",
+    altitude: "",
+    method: "",
+    habtat: "",
+    microhabtat: "",
+    designate: "",
     location: [
       {
         province: "",
@@ -97,8 +105,8 @@ const InsertForm = () => {
         position: [
           {
             name: "",
-            lat: "",
-            long: "",
+            lat: 11.22,
+            long: 11.33,
           },
         ],
       },
@@ -157,41 +165,112 @@ const InsertForm = () => {
     <img key={file.name} src={file.preview} className={classes.uploadImage} />
   ));
 
-  // push new family
+  // function post data
   const postFamilyFn = (name) => {
     return familyService.postFamily(name).then((res) => {
       return res.insertId;
     });
   };
 
-  // push new genus
   const postGenusFn = async (family_id, name) => {
     return genusService.postGenus({ family_id, name }).then((res) => {
       return res.insertId;
     });
   };
 
+  const postSpeciesFn = async (genus_id, name) => {
+    return speciesService.postSpecies({ genus_id, name }).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  const postDetailFn = async (detail) => {
+    return detailService.postDetail(detail).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  const postLocationFn = async (location, detail_id) => {
+    console.log("check location", location);
+    location["detail_id"] = detail_id;
+    return locationService.postLocation(location).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  const postPositionFn = async (position, locationId) => {
+    position["location_id"] = locationId;
+    console.log("check position", position);
+    console.log("type of lat", typeof position.lat);
+    // position.lat = parseFloat(position.lat);
+    // position.long = parseFloat(position.long);
+    return positionService.postPosition(position).then((res) => {
+      return res.insertId;
+    });
+  };
+
   // form submit
   const handleSubmit = async (values) => {
+    const data_ = values;
     const formData = new FormData();
     {
       uploads && uploads.map((file) => formData.append("image", file));
     }
 
-    // check new family
-    if (
-      dbFamily.find(
-        (item) => item.id == Number(values.family) || item.name == values.family
-      )
-    ) {
-      values.family = dbFamily.find(
-        (item) => item.id == Number(values.family) || item.name == values.family
-      ).id;
-    } else {
-      values.family = await postFamilyFn(values.family);
-      values.genus = await postGenusFn(values.family, values.genus);
-      console.log("values status", values);
-    }
+    // check type old type spider
+    const checkFamily = dbFamily.find(
+      (item) => item.id == Number(values.family) || item.name == values.family
+    );
+
+    const checkGenus = dbGenus.find(
+      (item) => item.id == Number(values.genus) || item.name == values.genus
+    );
+
+    const checkSpecies = dbSpecies.find(
+      (item) => item.id == Number(values.species) || item.name == values.species
+    );
+
+    checkFamily
+      ? (data_.family = checkFamily.id)
+      : (data_.family = await postFamilyFn(data_.family));
+
+    checkGenus
+      ? (data_.genus = checkGenus.id)
+      : (data_.genus = await postGenusFn(data_.family, data_.genus));
+
+    checkSpecies
+      ? (data_.species = checkSpecies.id)
+      : (data_.species = await postSpeciesFn(data_.genus, data_.species));
+
+    const detail_ = {
+      family_id: data_.family,
+      genus_id: data_.genus,
+      species_id: data_.species,
+      author: data_.author,
+      publish_year: data_.publish_year,
+      country: data_.country,
+      country_other: data_.country_other,
+      altitude: data_.altitude,
+      method: data_.method,
+      habtat: data_.habtat,
+      microhabtat: data_.microhabtat,
+      designate: data_.designate,
+    };
+
+    const detail_id = await postDetailFn(detail_);
+
+    const location = data_.location;
+
+    console.log("location ", location);
+    location.map(async (item) => {
+      const position = item.position;
+      delete item.position;
+      const locationId = await postLocationFn(item, detail_id);
+      const locationId_ = 1;
+      position.map(async (item2) => {
+        const positionId = await postPositionFn(item2, locationId_);
+      });
+    });
 
     // formData.append("data", JSON.stringify(values));
 
@@ -424,6 +503,61 @@ const InsertForm = () => {
                         <MapView
                           styles={{ borderRadius: "10px", height: "40vh" }}
                         />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">Altitude</Typography>
+                        <Field
+                          name="data.altitude"
+                          component={TextField}
+                          fullWidth
+                          multiline
+                          rows={2}
+                          size="small"
+                        ></Field>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">Method</Typography>
+                        <Field
+                          name="data.method"
+                          component={TextField}
+                          fullWidth
+                          multiline
+                          rows={2}
+                          size="small"
+                        ></Field>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">Habtat</Typography>
+                        <Field
+                          name="data.habtat"
+                          component={TextField}
+                          fullWidth
+                          multiline
+                          rows={2}
+                          size="small"
+                        ></Field>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">Microhabtat</Typography>
+                        <Field
+                          name="data.microhabtat"
+                          component={TextField}
+                          fullWidth
+                          multiline
+                          rows={2}
+                          size="small"
+                        ></Field>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">Designate</Typography>
+                        <Field
+                          name="data.designate"
+                          component={TextField}
+                          fullWidth
+                          multiline
+                          rows={2}
+                          size="small"
+                        ></Field>
                       </Grid>
                       <Grid item xs={12}>
                         <Divider style={{ marginTop: "1rem" }} />

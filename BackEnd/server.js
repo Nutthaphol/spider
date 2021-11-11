@@ -33,17 +33,14 @@ app.get("/", (req, res) => {
 //   console.log("data", req.files);
 //   res.send(req.files);
 // });
-const tmp = "1";
-console.log(Number(tmp));
-
-Number(tmp) ? console.log("true") : console.log("false");
 
 require("./app/routes/auth.route")(app);
 require("./app/routes/family.route")(app);
 require("./app/routes/genus.route")(app);
 require("./app/routes/species.route")(app);
-require("./app/routes/post.route")(app);
-// require("./app/routes/position.route")(app);
+require("./app/routes/detail.route")(app);
+require("./app/routes/location.route")(app);
+require("./app/routes/position.route")(app);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "build/index.html"));
