@@ -1,9 +1,9 @@
 import { httpClient } from "./httpClient";
 
-const postPosition = async (data) => {
+const postAddress = async (data) => {
   console.log("services", data);
   const res = await httpClient
-    .post("/position/postposition", { data })
+    .post("/address/postaddress", { data })
     .then((response) => {
       return response.data;
     });
@@ -12,5 +12,5 @@ const postPosition = async (data) => {
 };
 
 export default {
-  postPosition,
+  postAddress,
 };

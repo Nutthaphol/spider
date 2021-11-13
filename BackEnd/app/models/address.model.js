@@ -1,6 +1,6 @@
 const connection = require("./database.model");
 
-const postPosition = (data, callback) => {
+const postAddress = (data, callback) => {
   const query = `INSERT INTO address (
     location_id,
     name,
@@ -12,7 +12,7 @@ const postPosition = (data, callback) => {
 
   connection.query(query, paramt, (error, result) => {
     if (error) {
-      console.log("error position ", error);
+      console.log("error addrass   ", error);
       callback(error, null);
       return;
     }
@@ -20,4 +20,4 @@ const postPosition = (data, callback) => {
   });
 };
 
-exports.postPosition = postPosition;
+exports.postAddress = postAddress;

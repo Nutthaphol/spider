@@ -1,13 +1,14 @@
-const db = require("../models/detail.model");
+const db = require("../models/paper.model");
 
-exports.postDetail = (req, res) => {
+exports.postPaper = (req, res) => {
   const data = req.body.data;
-  db.postDetail(data, (error, result) => {
+
+  db.postPaper(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
       } else {
-        return res.status(404).send({ message: "Insert is fail" });
+        res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
       res.status(500).send({ message: error.message });

@@ -40,7 +40,9 @@ import genusService from "../../../services/genus.service";
 import speciesService from "../../../services/species.service";
 import detailService from "../../../services/detail.service";
 import locationService from "../../../services/location.service";
-import positionService from "../../../services/position.service";
+import addressService from "../../../services/address.service";
+import paperService from "../../../services/paper.service";
+import imageService from "../../../services/image.service";
 
 const theme = createTheme();
 
@@ -85,35 +87,35 @@ const InsertForm = () => {
     showSpecies: true,
   });
   const [data, setData] = useState({
-    family: "",
-    genus: "",
-    species: "",
-    author: "",
-    publish_year: "",
+    family: undefined,
+    genus: undefined,
+    species: undefined,
+    author: undefined,
+    publish_year: undefined,
     country: "Thailand",
-    country_other: "",
-    altitude: "",
-    method: "",
-    habtat: "",
-    microhabtat: "",
-    designate: "",
+    country_other: undefined,
+    altitude: undefined,
+    method: undefined,
+    habtat: undefined,
+    microhabtat: undefined,
+    designate: undefined,
     location: [
       {
-        province: "",
-        district: "",
-        locality: "",
+        province: undefined,
+        district: undefined,
+        locality: undefined,
         position: [
           {
-            name: "",
-            lat: 11.22,
-            long: 11.33,
+            name: undefined,
+            lat: undefined,
+            long: undefined,
           },
         ],
       },
     ],
     paper: [
       {
-        name: "",
+        name: undefined,
       },
     ],
   });
@@ -191,20 +193,31 @@ const InsertForm = () => {
   };
 
   const postLocationFn = async (location, detail_id) => {
-    console.log("check location", location);
     location["detail_id"] = detail_id;
     return locationService.postLocation(location).then((res) => {
       return res.insertId;
     });
   };
 
-  const postPositionFn = async (position, locationId) => {
-    position["location_id"] = locationId;
-    console.log("check position", position);
-    console.log("type of lat", typeof position.lat);
-    // position.lat = parseFloat(position.lat);
-    // position.long = parseFloat(position.long);
-    return positionService.postPosition(position).then((res) => {
+  const postAddressFn = async (address, locationId) => {
+    address["location_id"] = locationId;
+    address.lat = parseFloat(address.lat);
+    address.long = parseFloat(address.long);
+    return addressService.postAddress(address).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  const postPaperFn = async (paper, detail_id) => {
+    paper.detail_id = detail_id;
+    console.log("check paper", paper);
+    return paperService.postPaper(paper).then((res) => {
+      return res.insertId;
+    });
+  };
+
+  const postImageFn = async (files) => {
+    return imageService.postImage(files).then((res) => {
       return res.insertId;
     });
   };
@@ -212,10 +225,6 @@ const InsertForm = () => {
   // form submit
   const handleSubmit = async (values) => {
     const data_ = values;
-    const formData = new FormData();
-    {
-      uploads && uploads.map((file) => formData.append("image", file));
-    }
 
     // check type old type spider
     const checkFamily = dbFamily.find(
@@ -266,15 +275,25 @@ const InsertForm = () => {
       const position = item.position;
       delete item.position;
       const locationId = await postLocationFn(item, detail_id);
-      const locationId_ = 1;
       position.map(async (item2) => {
-        const positionId = await postPositionFn(item2, locationId_);
+        const AddressId = await postAddressFn(item2, locationId);
       });
     });
 
-    // formData.append("data", JSON.stringify(values));
+    const paper = data_.paper;
 
-    // dispatch(postFullData(formData));
+    paper.map(async (item) => {
+      const paperId = await postPaperFn(item, detail_id);
+    });
+
+    uploads &&
+      uploads.map((item) => {
+        const formData = new FormData();
+        formData.append("image", item);
+        formData.append("detail_id", detail_id);
+
+        const res = postImageFn(formData);
+      });
   };
 
   // render form component

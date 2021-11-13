@@ -1,9 +1,9 @@
-const db = require("../models/position.model");
+const db = require("../models/address.model");
 
-exports.postPosition = (req, res) => {
+exports.postAddress = (req, res) => {
   const data = req.body.data;
 
-  db.postPosition(data, (error, result) => {
+  db.postAddress(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);

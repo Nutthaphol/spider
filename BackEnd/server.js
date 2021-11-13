@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-var multer = require("multer");
-var upload = multer({ dest: "./app/image" });
+const multer = require("multer");
+const upload = multer({ dest: "./app/image" });
 
 const cors = require("cors");
 
@@ -40,7 +40,9 @@ require("./app/routes/genus.route")(app);
 require("./app/routes/species.route")(app);
 require("./app/routes/detail.route")(app);
 require("./app/routes/location.route")(app);
-require("./app/routes/position.route")(app);
+require("./app/routes/address.route")(app);
+require("./app/routes/paper.route")(app);
+require("./app/routes/image.route")(app, upload);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "build/index.html"));
