@@ -29,3 +29,18 @@ exports.postSpecies = (req, res) => {
     }
   });
 };
+exports.getSpecies = (req, res) => {
+  const id = req.params.id;
+
+  db.getSpecies(id, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        return res.status(404).send({ message: "species not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};

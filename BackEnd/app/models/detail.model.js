@@ -11,8 +11,8 @@ const postDetail = (data, callback) => {
         country_other,
         altitude,
         method,
-        habtat,
-        microhabtat,
+        habitat,
+        microhabitat,
         designate
   )
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -27,8 +27,8 @@ const postDetail = (data, callback) => {
     data.country_other,
     data.altitude,
     data.method,
-    data.habtat,
-    data.microhabtat,
+    data.habitat,
+    data.microhabitat,
     data.designate,
   ];
 
@@ -42,4 +42,17 @@ const postDetail = (data, callback) => {
   });
 };
 
+const getDetail = (id, callback) => {
+  const query = `SELECT * from detail where id = ${id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("error get detail id", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
 exports.postDetail = postDetail;
+exports.getDetail = getDetail;

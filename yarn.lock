@@ -3844,7 +3844,7 @@ cliui@^6.0.0:
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
 
-clsx@^1.0.4, clsx@^1.1.1:
+clsx@^1.0.4, clsx@^1.1.0, clsx@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
@@ -8298,6 +8298,14 @@ normalize-url@^3.0.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-3.3.0.tgz"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+notistack@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-2.0.3.tgz#9007550e5cbc14df84d1d54e7a55ac0948eb59e8"
+  integrity sha512-krmVFtTO9kEY1Pa4NrbyexrjiRcV6TqBM2xLx8nuDea1g96Z/OZfkvVLmYKkTvoSJ3jyQntWK16z86ssW5kt4A==
+  dependencies:
+    clsx "^1.1.0"
+    hoist-non-react-statics "^3.3.0"
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.npmjs.org/npm-run-path/-/npm-run-path-2.0.2.tgz"
@@ -12448,7 +12456,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-yup@^0.32.9:
+yup@^0.32.11:
   version "0.32.11"
   resolved "https://registry.yarnpkg.com/yup/-/yup-0.32.11.tgz#d67fb83eefa4698607982e63f7ca4c5ed3cf18c5"
   integrity sha512-Z2Fe1bn+eLstG8DRR6FTavGD+MeAwyfmouhHsIUgaADz8jvFKbO/fXc2trJKZg+5EBjh4gGm3iU/t3onKlXHIg==

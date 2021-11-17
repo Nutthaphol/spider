@@ -29,5 +29,19 @@ const postGenus = (data, callback) => {
   });
 };
 
+const getGenus = (id, callback) => {
+  const query = `SELECT * FROM genus WHERE id = ${id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get genus error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+exports.getGenus = getGenus;
 exports.postGenus = postGenus;
 exports.getAllGenus = getAllGenus;

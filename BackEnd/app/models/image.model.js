@@ -19,4 +19,18 @@ const postImage = (data, callback) => {
   });
 };
 
+const getFromDetail = (id, callback) => {
+  const query = `SELECT * FROM image WHERE detail_id = id`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get img from detail error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
 exports.postImage = postImage;
+exports.getFromDetail = getFromDetail;

@@ -17,7 +17,14 @@ const postFamily = async (data) => {
   return res;
 };
 
+const getFamily = async (id) => {
+  const res = await httpClient.get("/family/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
 export default {
   getAllFamily,
+  getFamily,
   postFamily,
 };

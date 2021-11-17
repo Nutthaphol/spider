@@ -21,7 +21,7 @@ INSERT INTO `user` (
         `auth`
 ) VALUES (
         "admin", 
-        "admin123", 
+        "adminadmin", 
         "Admin Spider Web",
         "admin"
 );
@@ -67,8 +67,8 @@ CREATE TABLE `detail` (
         `country_other` VARCHAR(20),
         `altitude` VARCHAR(50),
         `method` VARCHAR(255),
-        `habtat` VARCHAR(255),
-        `microhabtat` VARCHAR(255),
+        `habitat` VARCHAR(255),
+        `microhabitat` VARCHAR(255),
         `designate` VARCHAR(255),
         PRIMARY KEY(`id`)
 );
@@ -96,7 +96,6 @@ CREATE TABLE `address` (
         PRIMARY KEY (`id`)
 );
 
-insert into position (location_id, name, latitude, longitude) values (1, "nut", 22.31, 23.23);
 
 -- create table image
 DROP TABLE IF EXISTS `image`;

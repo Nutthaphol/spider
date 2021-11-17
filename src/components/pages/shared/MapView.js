@@ -1,52 +1,50 @@
-import { Box } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
 
-import makeStyles from '@mui/styles/makeStyles';
-
-const theme = createTheme();
-
-const useStyles = makeStyles((theme) => ({
-  mapStyle: {
-    "& .leaflet-container": {
-      width: "100%",
-      height: "50vh",
-    },
-  },
-}));
-
-const MapView = ({ listPosition, zoom, styles }) => {
-  const classes = useStyles();
+const MapView = ({ listEx, listNormal, zoom }) => {
+  const [position_, setPosition_] = useState([]);
   useEffect(() => {
-    if (!styles) {
-      let styles = {};
+    if (listEx) {
+      let data = [];
+      for (let i = 0; i < listEx.length; i++) {
+        for (let j = 0; j < listEx[i].address.length; j++) {
+          data.push(listEx[i].address[j]);
+        }
+      }
+      setPosition_(data);
     }
-  }, []);
-  styles["width"] = "100%";
+  }, [listEx]);
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <Box
-          sx={{
-            "& .leaflet-container": styles,
-          }}
-        >
-          <MapContainer className="map-view" center={[13, 100]} zoom={zoom || 5}>
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {listPosition &&
-              listPosition.map((val) => (
-                <Marker key={val.position_id} position={[val.lat_, val.long_]}>
-                  <Popup>{val.position_name}</Popup>
-                </Marker>
-              ))}
-          </MapContainer>
-        </Box>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <MapContainer className="map-view" center={[13, 100]} zoom={zoom || 5}>
+      {/* {console.log("listEx", listEx)} */}
+
+      <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {position_ &&
+        position_
+          .filter((item) => {
+            console.log("parseFloat(item.lat)", parseFloat(item.lat));
+            console.log("parseFloat(item.long)", parseFloat(item.long));
+            console.log(
+              !isNaN(parseFloat(item.lat)) && !isNaN(parseFloat(item.long))
+            );
+            if (!isNaN(parseFloat(item.lat)) && !isNaN(parseFloat(item.long))) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          .map((val, index) => (
+            <Marker
+              key={index}
+              position={[parseFloat(val.lat), parseFloat(val.long)]}
+            >
+              <Popup>{val.name}</Popup>
+            </Marker>
+          ))}
+    </MapContainer>
   );
 };
 

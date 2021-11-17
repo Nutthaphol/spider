@@ -11,6 +11,16 @@ const postImage = async (data) => {
   return res;
 };
 
+const getFromDetail = async (id) => {
+  const res = await httpClient
+    .get("/image/getfromdetail/" + id)
+    .then((response) => {
+      return response.data;
+    });
+  return res;
+};
+
 export default {
   postImage,
+  getFromDetail,
 };

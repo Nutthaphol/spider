@@ -28,3 +28,17 @@
 .MuiPaper-root {
   background-color: #404040;
 } */
+
+/* #map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 50vh;
+}
+
+.leaflet-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+} */

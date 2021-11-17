@@ -24,3 +24,19 @@ exports.postImage = (req, res) => {
 
   console.log(filename, path, detail_id);
 };
+
+exports.getFromDetail = (req, res) => {
+  const id = req.params.id;
+
+  db.getFromDetail(id, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "image not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};

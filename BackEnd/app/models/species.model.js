@@ -29,5 +29,18 @@ const postSpecies = (data, callback) => {
   });
 };
 
+const getSpecies = (id, callback) => {
+  const query = `SELECT * FROM species WHERE id = ${id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get species error", error);
+      callback(error, null);
+    }
+    callback(null, result);
+  });
+};
+
+exports.getSpecies = getSpecies;
 exports.getAllSpecies = getAllSpecies;
 exports.postSpecies = postSpecies;

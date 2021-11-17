@@ -11,6 +11,15 @@ const postDetail = async (data) => {
   return res;
 };
 
+const getDetail = async (id) => {
+  const res = await httpClient.get("detail/get/" + id).then((response) => {
+    return response.data;
+  });
+  console.log("get detail", res);
+  return res;
+};
+
 export default {
   postDetail,
+  getDetail,
 };

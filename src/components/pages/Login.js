@@ -28,7 +28,7 @@ import { red, green } from "@mui/material/colors";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { login } from "../actions/auth";
+import { login } from "../../actions/auth";
 
 const theme = createTheme();
 

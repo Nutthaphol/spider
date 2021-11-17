@@ -3,18 +3,21 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
-import Login from "../Login";
 import { insertList } from "./listButton/insertList";
 import ButtonAppBar from "./menu/ButtonAppBar";
 import MenuBar from "./menu/MenuBar";
-import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 const theme = createTheme();
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     "& .MuiAppBar-colorPrimary": {
-      backgroundColor: "#404040",
+      backgroundColor: "#002984",
     },
     "& .MuiToolbar-regular": {
       minHeight: "40px",
@@ -62,6 +65,7 @@ const Header = () => {
                   listButton={insertList}
                 />
               )}
+              <ButtonAppBar message="Check Data" link={"/check"} />
               <div style={{ flexGrow: 1 }}></div>
               {currentUser ? (
                 <Button

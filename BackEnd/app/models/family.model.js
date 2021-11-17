@@ -30,5 +30,19 @@ const postFamily = (name, callback) => {
   });
 };
 
+const getFamily = (id, callback) => {
+  const query = `SELECT * FROM family where id = ${id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get family error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
 exports.getAllFamily = getAllFamily;
+exports.getFamily = getFamily;
 exports.postFamily = postFamily;

@@ -15,7 +15,15 @@ const postSpecies = async (data) => {
   return res;
 };
 
+const getSpecies = async (id) => {
+  const res = await httpClient.get("/species/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
 export default {
   getAllSpecies,
+  getSpecies,
   postSpecies,
 };

@@ -8,9 +8,10 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import Family from "./components/pages/user/Family";
-import Login from "./components/Login";
+import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
 import InsertForm from "./components/pages/admin/InsertForm";
+import CheckData from "./components/pages/user/CheckData";
 
 const theme = createTheme();
 
@@ -53,9 +54,10 @@ const Routers = () => {
       <ThemeProvider theme={theme}>
         <Container className={classes.content} maxWidth={false} disableGutters>
           <Switch>
-            <Route exact path="/" component={Family} />
+            <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/Family" component={Family} />
+            <Route exact path="/Home" component={Home} />
+            <Route exact path="/check" component={CheckData} />
 
             <AdminRoute exact path="/Form" component={InsertForm} />
           </Switch>

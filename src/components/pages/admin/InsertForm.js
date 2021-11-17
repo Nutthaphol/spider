@@ -9,6 +9,7 @@ import {
   Autocomplete,
   MenuItem,
   IconButton,
+  Snackbar,
 } from "@mui/material";
 import {
   ThemeProvider,
@@ -16,8 +17,14 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import { Field, Formik, Form, FieldArray } from "formik";
-import React, { useState, useEffect, Fragment, useCallback } from "react";
+import { Field, Formik, Form, FieldArray, ErrorMessage } from "formik";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  Fragment,
+  useCallback,
+} from "react";
 import MapView from "../shared/MapView";
 import { useDispatch } from "react-redux";
 import "./index.css";
@@ -35,14 +42,20 @@ import {
   DeleteOutline,
 } from "@material-ui/icons";
 import { useDropzone } from "react-dropzone";
-import familyService from "../../../services/family.service";
-import genusService from "../../../services/genus.service";
-import speciesService from "../../../services/species.service";
-import detailService from "../../../services/detail.service";
-import locationService from "../../../services/location.service";
-import addressService from "../../../services/address.service";
-import paperService from "../../../services/paper.service";
-import imageService from "../../../services/image.service";
+
+import { SnackbarProvider, useSnackbar } from "notistack";
+
+import {
+  postFamilyFn,
+  postGenusFn,
+  postSpeciesFn,
+  postDetailFn,
+  postLocationFn,
+  postAddressFn,
+  postPaperFn,
+  postImageFn,
+} from "./insertFn";
+import validationSchema from "./validate";
 
 const theme = createTheme();
 
@@ -57,7 +70,7 @@ const useStyles = makeStyles(() => ({
     width: "100%",
     height: "100%",
     display: "flex",
-    position: "absolute",
+    address: "absolute",
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
@@ -72,12 +85,18 @@ const useStyles = makeStyles(() => ({
   placeholderLabel: {
     color: "rgb(255, 255, 255)",
   },
+  form: {
+    // "& div": {
+    //   position: "absolute",
+    // },
+  },
 }));
 
 const InsertForm = () => {
   const [years, setYears] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
+  const formRef = useRef();
   const { result: dbFamily } = useSelector((state) => state.family);
   const { result: dbGenus } = useSelector((state) => state.genus);
   const { result: dbSpecies } = useSelector((state) => state.species);
@@ -86,40 +105,47 @@ const InsertForm = () => {
     showGenus: true,
     showSpecies: true,
   });
-  const [data, setData] = useState({
-    family: undefined,
-    genus: undefined,
-    species: undefined,
-    author: undefined,
-    publish_year: undefined,
+  const [data] = useState({
+    family: "",
+    genus: "",
+    species: "",
+    author: "",
+    publish_year: "",
     country: "Thailand",
-    country_other: undefined,
-    altitude: undefined,
-    method: undefined,
-    habtat: undefined,
-    microhabtat: undefined,
-    designate: undefined,
+    country_other: "",
+    altitude: "",
+    method: "",
+    habitat: "",
+    microhabitat: "",
+    designate: "",
     location: [
       {
-        province: undefined,
-        district: undefined,
-        locality: undefined,
-        position: [
+        province: "",
+        district: "",
+        locality: "",
+        address: [
           {
-            name: undefined,
-            lat: undefined,
-            long: undefined,
+            name: "",
+            lat: "",
+            long: "",
           },
         ],
       },
     ],
     paper: [
       {
-        name: undefined,
+        name: "",
       },
     ],
   });
 
+  const [point, setPoint] = useState([
+    {
+      name: "",
+      lat: "",
+      long: "",
+    },
+  ]);
   const [files, setFiles] = useState([]);
   const [uploads, setUploads] = useState();
 
@@ -167,61 +193,6 @@ const InsertForm = () => {
     <img key={file.name} src={file.preview} className={classes.uploadImage} />
   ));
 
-  // function post data
-  const postFamilyFn = (name) => {
-    return familyService.postFamily(name).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postGenusFn = async (family_id, name) => {
-    return genusService.postGenus({ family_id, name }).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postSpeciesFn = async (genus_id, name) => {
-    return speciesService.postSpecies({ genus_id, name }).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postDetailFn = async (detail) => {
-    return detailService.postDetail(detail).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postLocationFn = async (location, detail_id) => {
-    location["detail_id"] = detail_id;
-    return locationService.postLocation(location).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postAddressFn = async (address, locationId) => {
-    address["location_id"] = locationId;
-    address.lat = parseFloat(address.lat);
-    address.long = parseFloat(address.long);
-    return addressService.postAddress(address).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postPaperFn = async (paper, detail_id) => {
-    paper.detail_id = detail_id;
-    console.log("check paper", paper);
-    return paperService.postPaper(paper).then((res) => {
-      return res.insertId;
-    });
-  };
-
-  const postImageFn = async (files) => {
-    return imageService.postImage(files).then((res) => {
-      return res.insertId;
-    });
-  };
-
   // form submit
   const handleSubmit = async (values) => {
     const data_ = values;
@@ -261,8 +232,8 @@ const InsertForm = () => {
       country_other: data_.country_other,
       altitude: data_.altitude,
       method: data_.method,
-      habtat: data_.habtat,
-      microhabtat: data_.microhabtat,
+      habitat: data_.habitat,
+      microhabitat: data_.microhabitat,
       designate: data_.designate,
     };
 
@@ -272,10 +243,10 @@ const InsertForm = () => {
 
     console.log("location ", location);
     location.map(async (item) => {
-      const position = item.position;
-      delete item.position;
+      const address = item.address;
+      delete item.address;
       const locationId = await postLocationFn(item, detail_id);
-      position.map(async (item2) => {
+      address.map(async (item2) => {
         const AddressId = await postAddressFn(item2, locationId);
       });
     });
@@ -294,6 +265,12 @@ const InsertForm = () => {
 
         const res = postImageFn(formData);
       });
+
+    return detail_id;
+  };
+
+  const showStatus = () => {
+    return <Snackbar open={true} autoHideDuration={1500} message="Done!" />;
   };
 
   // render form component
@@ -305,8 +282,18 @@ const InsertForm = () => {
             <Paper className={classes.paper}>
               <Formik
                 initialValues={{ data, status }}
+                enableReinitialize
+                innerRef={formRef}
+                validationSchema={validationSchema}
                 onSubmit={(values, setSubmitting) => {
-                  handleSubmit(values.data);
+                  try {
+                    handleSubmit(values.data).then((detail_id) => {
+                      showStatus();
+                      window.location.reload();
+                    });
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }}
               >
                 {({
@@ -316,9 +303,8 @@ const InsertForm = () => {
                   touched,
                   handleBlur,
                   setFieldValue,
-                  setStatus,
                 }) => (
-                  <Form autoComplete="off">
+                  <Form autoComplete="off" className={classes.form}>
                     <Grid container style={{ padding: "20px" }} spacing={2}>
                       <Grid item xs={6}>
                         <Grid container spacing={2}>
@@ -519,9 +505,9 @@ const InsertForm = () => {
                         <Typography variant="subtitle1" gutterBottom>
                           Map monitor
                         </Typography>
-                        <MapView
-                          styles={{ borderRadius: "10px", height: "40vh" }}
-                        />
+                        <div className="map" style={{ height: "100%" }}>
+                          <MapView listEx={values.data.location} />
+                        </div>
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="subtitle1">Altitude</Typography>
@@ -546,9 +532,9 @@ const InsertForm = () => {
                         ></Field>
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography variant="subtitle1">Habtat</Typography>
+                        <Typography variant="subtitle1">habitat</Typography>
                         <Field
-                          name="data.habtat"
+                          name="data.habitat"
                           component={TextField}
                           fullWidth
                           multiline
@@ -557,9 +543,11 @@ const InsertForm = () => {
                         ></Field>
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography variant="subtitle1">Microhabtat</Typography>
+                        <Typography variant="subtitle1">
+                          microhabitat
+                        </Typography>
                         <Field
-                          name="data.microhabtat"
+                          name="data.microhabitat"
                           component={TextField}
                           fullWidth
                           multiline
@@ -596,7 +584,7 @@ const InsertForm = () => {
                                         province: "",
                                         district: "",
                                         locality: "",
-                                        position: [
+                                        address: [
                                           {
                                             name: "",
                                             lat: "",
@@ -685,20 +673,22 @@ const InsertForm = () => {
                                           </Grid>
                                           <Grid item xs={12}>
                                             <FieldArray
-                                              name={`data.location[${index}].position`}
+                                              name={`data.location[${index}].address`}
                                             >
                                               {({ push, remove }) => (
                                                 <Grid container spacing={2}>
                                                   <Grid
                                                     item
                                                     xs={12}
-                                                    style={{ display: "flex" }}
+                                                    style={{
+                                                      display: "flex",
+                                                    }}
                                                   >
                                                     <Typography
                                                       variant="subtitle1"
                                                       gutterBottom
                                                     >
-                                                      Position
+                                                      address
                                                     </Typography>
                                                     <Button
                                                       sx={{
@@ -707,22 +697,22 @@ const InsertForm = () => {
                                                       color="success"
                                                       variant="outlined"
                                                       size="small"
-                                                      onClick={() =>
+                                                      onClick={() => {
                                                         push({
                                                           name: "",
                                                           lat: "",
                                                           long: "",
-                                                        })
-                                                      }
+                                                        });
+                                                      }}
                                                     >
                                                       Add
                                                     </Button>
                                                   </Grid>
                                                   {values.data.location[index]
-                                                    .position &&
+                                                    .address &&
                                                     values.data.location[
                                                       index
-                                                    ].position.map(
+                                                    ].address.map(
                                                       (val, subIndex) => (
                                                         <Grid
                                                           item
@@ -759,7 +749,7 @@ const InsertForm = () => {
                                                                 }}
                                                               />
                                                               <Field
-                                                                name={`data.location[${index}].position[${subIndex}].name`}
+                                                                name={`data.location[${index}].address[${subIndex}].name`}
                                                                 component={
                                                                   TextField
                                                                 }
@@ -770,7 +760,7 @@ const InsertForm = () => {
                                                             </Grid>
                                                             <Grid item xs={3}>
                                                               <Field
-                                                                name={`data.location[${index}].position[${subIndex}].lat`}
+                                                                name={`data.location[${index}].address[${subIndex}].lat`}
                                                                 component={
                                                                   TextField
                                                                 }
@@ -781,7 +771,7 @@ const InsertForm = () => {
                                                             </Grid>
                                                             <Grid item xs={3}>
                                                               <Field
-                                                                name={`data.location[${index}].position[${subIndex}].long`}
+                                                                name={`data.location[${index}].address[${subIndex}].long`}
                                                                 component={
                                                                   TextField
                                                                 }
@@ -797,7 +787,7 @@ const InsertForm = () => {
                                                                   values.data
                                                                     .location[
                                                                     index
-                                                                  ].position
+                                                                  ].address
                                                                     .length >
                                                                     1 &&
                                                                     remove(

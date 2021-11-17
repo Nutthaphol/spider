@@ -16,18 +16,20 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import MapView from "../shared/MapView";
+import MapView from "./shared/MapView";
 import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from "@mui/material/styles";
 
+import "./index.css";
+
 import makeStyles from "@mui/styles/makeStyles";
 
 import { Search } from "@mui/icons-material";
-import { getAllFamily } from "../../../actions/family";
-import { getAllGenus } from "../../../actions/genus";
+import { getAllFamily } from "../../actions/family";
+import { getAllGenus } from "../../actions/genus";
 
 const theme = createTheme();
 
@@ -47,7 +49,7 @@ const position_ = [
   },
 ];
 
-const Family = () => {
+const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { result: allFamily } = useSelector((state) => state.family);
@@ -74,13 +76,9 @@ const Family = () => {
       <ThemeProvider theme={theme}>
         <Box className={`page`}>
           <Container sx={{ maxWidth: "lg" }}>
-            <Paper
-              sx={{
-                padding: "10",
-              }}
-            >
+            <div className="map" style={{ height: "59vh" }}>
               <MapView listPosition={position_} styles={{ height: "50vh" }} />
-            </Paper>
+            </div>
             <Divider className={classes.divider} />
             <TableContainer>
               <Table>
@@ -119,4 +117,4 @@ const Family = () => {
   );
 };
 
-export default Family;
+export default Home;

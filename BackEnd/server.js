@@ -5,6 +5,7 @@ const upload = multer({ dest: "./app/image" });
 
 const cors = require("cors");
 
+const fs = require("fs");
 const path = require("path");
 const app = express();
 
@@ -23,6 +24,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/image", express.static("./app/image"));
 
+app.get("/app/image/:filename", (req, res) => {
+  const filename = req.params.filename;
+  console.log("params", filename);
+  const readStream = fs.createReadStream(
+    path.join(__dirname, "app/image/", filename)
+  );
+  readStream.pipe(res);
+});
 // app.use(express.static("build"));
 
 app.get("/", (req, res) => {

@@ -16,7 +16,15 @@ const postGenus = async (data) => {
   return res;
 };
 
+const getGenus = async (id) => {
+  const res = await httpClient.get("/genus/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
 export default {
   getAllGenus,
+  getGenus,
   postGenus,
 };
