@@ -20,4 +20,18 @@ const postLocation = (data, callback) => {
   });
 };
 
+const getLocation = (id, callback) => {
+  const query = `SELECT * FROM location WHERE detail_id = ${id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get location error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+exports.getLocation = getLocation;
 exports.postLocation = postLocation;

@@ -20,7 +20,7 @@ const postImage = (data, callback) => {
 };
 
 const getFromDetail = (id, callback) => {
-  const query = `SELECT * FROM image WHERE detail_id = id`;
+  const query = `SELECT * FROM image WHERE detail_id = ${id}`;
 
   connection.query(query, (error, result) => {
     if (error) {

@@ -11,6 +11,14 @@ const postPaper = async (data) => {
   return res;
 };
 
+const getPaper = async (id) => {
+  const res = await httpClient.get("/paper/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
 export default {
   postPaper,
+  getPaper,
 };

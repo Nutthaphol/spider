@@ -11,6 +11,13 @@ const postLocation = async (data) => {
   return res;
 };
 
+const getLocation = async (id) => {
+  const res = await httpClient.get("/location/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
 export default {
   postLocation,
+  getLocation,
 };

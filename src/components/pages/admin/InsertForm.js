@@ -10,6 +10,10 @@ import {
   MenuItem,
   IconButton,
   Snackbar,
+  Collapse,
+  Alert,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import {
   ThemeProvider,
@@ -56,6 +60,7 @@ import {
   postImageFn,
 } from "./insertFn";
 import validationSchema from "./validate";
+import { Close, WindowSharp } from "@mui/icons-material";
 
 const theme = createTheme();
 
@@ -97,6 +102,8 @@ const InsertForm = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const formRef = useRef();
+  const [success, setSuccess] = useState(false);
+  const [submit, setSubmit] = useState(false);
   const { result: dbFamily } = useSelector((state) => state.family);
   const { result: dbGenus } = useSelector((state) => state.genus);
   const { result: dbSpecies } = useSelector((state) => state.species);
@@ -269,9 +276,11 @@ const InsertForm = () => {
     return detail_id;
   };
 
-  const showStatus = () => {
-    return <Snackbar open={true} autoHideDuration={1500} message="Done!" />;
-  };
+  function onKeyDown(keyEvent) {
+    if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+      keyEvent.preventDefault();
+    }
+  }
 
   // render form component
   return (
@@ -280,16 +289,38 @@ const InsertForm = () => {
         <div className={`page`}>
           <Container maxWidth="lg">
             <Paper className={classes.paper}>
+              <Collapse in={success}>
+                <Alert
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setSuccess(false);
+                        window.location.reload();
+                      }}
+                    >
+                      <Close fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  success !
+                </Alert>
+              </Collapse>
               <Formik
-                initialValues={{ data, status }}
+                initialValues={{ data, status, submit }}
                 enableReinitialize
                 innerRef={formRef}
                 validationSchema={validationSchema}
                 onSubmit={(values, setSubmitting) => {
                   try {
                     handleSubmit(values.data).then((detail_id) => {
-                      showStatus();
-                      window.location.reload();
+                      setSuccess(true);
+                      window.scrollTo(0, 0);
+                      // setTimeout(() => {
+                      //   window.location.reload();
+                      // }, 1000);
                     });
                   } catch (error) {
                     console.log(error);
@@ -304,7 +335,11 @@ const InsertForm = () => {
                   handleBlur,
                   setFieldValue,
                 }) => (
-                  <Form autoComplete="off" className={classes.form}>
+                  <Form
+                    autoComplete="off"
+                    className={classes.form}
+                    onKeyDown={onKeyDown}
+                  >
                     <Grid container style={{ padding: "20px" }} spacing={2}>
                       <Grid item xs={6}>
                         <Grid container spacing={2}>
@@ -941,14 +976,15 @@ const InsertForm = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <Button
-                          type="submit"
                           variant="outlined"
                           color="primary"
+                          type="submit"
                         >
                           Submit
                         </Button>
                       </Grid>
                     </Grid>
+
                     <Box style={{ display: "flex" }}>
                       <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
                     </Box>

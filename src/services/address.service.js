@@ -11,6 +11,14 @@ const postAddress = async (data) => {
   return res;
 };
 
+const getAddress = async (id) => {
+  const res = await httpClient.get("/address/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
 export default {
   postAddress,
+  getAddress,
 };

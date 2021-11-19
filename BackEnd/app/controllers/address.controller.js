@@ -15,3 +15,19 @@ exports.postAddress = (req, res) => {
     }
   });
 };
+
+exports.getAddress = (req, res) => {
+  const id = req.params.id;
+
+  db.getAddress(id, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "address not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};
