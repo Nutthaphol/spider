@@ -16,8 +16,8 @@ const validationSchema = Yup.object().shape({
     designate: Yup.string().required("Please specify"),
     location: Yup.array(
       Yup.object().shape({
-        province: Yup.string().required("Please specify"),
-        district: Yup.string().required("Please specify"),
+        province: Yup.number().required("Please specify"),
+        district: Yup.number().required("Please specify"),
         locality: Yup.string().required("Please specify"),
         address: Yup.array(
           Yup.object().shape({

@@ -1,222 +1,286 @@
--- create Authorities table
-DROP TABLE `auth`;
-CREATE TABLE `auth` (
+DROP DATABASE IF EXISTS `spiderDB_`;
+CREATE DATABASE `spiderDB` CHARACTER SET `utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+USE `spiderDB_`;
+
+-- create table auth
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+        `id` INT NOT NULL AUTO_INCREMENT,
         `username` VARCHAR(20)  NOT NULL,
-        `password_` VARCHAR(20) NOT NULL,
+        `password` VARCHAR(20) NOT NULL,
         `full_name` VARCHAR(150) NOT NULL,
-        PRIMARY KEY (`username`)
+        `auth` VARCHAR(20) DEFAULT "user",
+        PRIMARY KEY (`id`)
 );
 
--- insert main authorities
-INSERT INTO `auth` (
+-- insert admin id
+INSERT INTO `user` (
         `username`, 
-        `password_`, 
-        `full_name`
+        `password`, 
+        `full_name`,
+        `auth`
 ) VALUES (
         "admin", 
-        "admin123", 
-        "Admin Spider Web"
+        "adminadmin", 
+        "Admin Spider Web",
+        "admin"
 );
 
--- create Spider table
-DROP TABLE `spider_list`;
-CREATE TABLE `spider_list` (
-        `spider_id` INT NOT NULL AUTO_INCREMENT,
-        `family` VARCHAR(50) NOT NULL,
-        `genus` VARCHAR(50) NOT NULL,
-        `species` VARCHAR(50)NOT NULL,
-        PRIMARY KEY (`spider_id`)
+
+-- create table type of spider
+DROP TABLE IF EXISTS `family`;
+CREATE TABLE `family` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `name` VARCHAR(20) NOT NULL,
+        PRIMARY KEY (`id`)
 );
 
--- create Detail Record table 
-DROP TABLE `detail_record`;
-CREATE TABLE `detail_record` (
-        `record_id` INT NOT NULL AUTO_INCREMENT,
-        `spider_id` INT NOT NULL,
-        `author` VARCHAR(150) NOT NULL,
-        `public_year` INT NOT NULL, 
+DROP TABLE IF EXISTS `genus`;
+CREATE TABLE `genus` (
+         `id` INT NOT NULL AUTO_INCREMENT,
+         `family_id` INT NOT NULL,
+         `name` VARCHAR(20) NOT NULL,
+         PRIMARY KEY(`id`)
+);
+
+ DROP TABLE IF EXISTS `species`;
+ CREATE TABLE `species` (
+         `id` INT NOT NULL AUTO_INCREMENT,
+         `genus_id` INT NOT NULL,
+         `name` VARCHAR(20) NOT NULL,
+         PRIMARY KEY (`id`)
+ );
+
+ ALTER TABLE `genus` ADD FOREIGN KEY (`family_id`) REFERENCES `family`(`id`);
+ ALTER TABLE `species` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
+
+--  create table detail
+DROP TABLE IF EXISTS `detail`;
+CREATE TABLE `detail` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `family_id` INT NOT NULL,
+        `genus_id` INT NOT NULL,
+        `species_id` INT NOT NULL,
+        `author` VARCHAR(100) NOT NULL,
+        `publish_year` VARCHAR(4) NOT NULL,
         `country` VARCHAR(20) DEFAULT "Thailand",
         `country_other` VARCHAR(20),
         `altitude` VARCHAR(50),
-        `methor` VARCHAR(255),
-        `habtat` VARCHAR(255),
-        `microhabtat` VARCHAR(255),
+        `method` VARCHAR(255),
+        `habitat` VARCHAR(255),
+        `microhabitat` VARCHAR(255),
         `designate` VARCHAR(255),
-        PRIMARY KEY (`record_id`)
+        PRIMARY KEY(`id`)
 );
 
--- create Location table
-DROP TABLE `location_`;
-CREATE TABLE `location_` (
-        `location_id` INT NOT NULL AUTO_INCREMENT, 
-        `record_id` INT NOT NULL,
+-- create table location and position
+DROP TABLE IF EXISTS `location`;
+CREATE TABLE `location` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
         `province` VARCHAR(30),
         `district` VARCHAR(30),
         `locality` VARCHAR(255),
-        PRIMARY KEY (`location_id`)
+        PRIMARY KEY (`id`)
 );
+
 
 -- create Position table
-DROP TABLE `position_`;
-CREATE TABLE `position_` (
-        `position_id` INT NOT NULL AUTO_INCREMENT, 
+DROP TABLE IF EXISTS `address`;
+CREATE TABLE `address` (
+        `id` INT NOT NULL AUTO_INCREMENT,
         `location_id` INT NOT NULL,
-        `position_name` VARCHAR(255) NOT NULL, 
-        `lat_` DECIMAL(8,6) NOT NULL, 
-        `long_` DECIMAL(9,6) NOT NULL,
-        PRIMARY KEY (`position_id`)
-);
-
--- create image table 
-DROP TABLE `image_`;
-CREATE TABLE `image_` (
-        `image_id` INT NOT NULL AUTO_INCREMENT, 
-        `record_id` INT NOT NULL, 
-        `image_url` VARCHAR(255) NOT NULL,
-        PRIMARY KEY (`image_id`)
-);
-
--- create paper table
-DROP TABLE `paper_`;
-CREATE TABLE `paper_` (
-        `paper_id` INT NOT NULL AUTO_INCREMENT,
-        `record_id` INT NOT NULL,
-        `paper_name` VARCHAR(255) NOT NULL,
-        PRIMARY KEY (`paper_id`)
+        `name` VARCHAR(255) NOT NULL,
+        `latitude` DOUBLE,
+        `longitude` DOUBLE,
+        PRIMARY KEY (`id`)
 );
 
 
-
--- add foreign key 
-
-ALTER TABLE `detail_record` ADD FOREIGN KEY (`spider_id`) REFERENCES `spider_list`(`spider_id`);
-
-ALTER TABLE `location_` ADD FOREIGN KEY (`record_id`) REFERENCES `detail_record`(`record_id`);
-
-ALTER TABLE `image_` ADD FOREIGN KEY (`record_id`) REFERENCES `detail_record`(`record_id`);
-
-ALTER TABLE `paper_` ADD FOREIGN KEY (`record_id`) REFERENCES `detail_record`(`record_id`);
-
-ALTER TABLE `position_` ADD FOREIGN KEY (`location_id`) REFERENCES `location_`(`location_id`);
-
-
--- demo data 
--- 1
-INSERT INTO `spider_list` (`family`, `genus`, `species`) VALUES (
-        "Agelenidae",
-        "Draconarius",
-        "abbreviatus"
+-- create table image
+DROP TABLE IF EXISTS `image`;
+CREATE TABLE `image` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
+        `path` VARCHAR(255) NOT NULL,
+        PRIMARY KEY (`id`)
 );
 
-INSERT INTO `detail_record` (
-        `spider_id`,
-        `author`,
-        `public_year`,
-        `country_other`,
-        `altitude`,
-        `methor`,
-        `habtat`,
-        `microhabtat`,
-        `designate`
-) VALUES (
-        1,
-        "Dankittipakul & Wang",
-        2003,
-        NULL,
-        "1000, 1750 m",
-        "pitfall trap, litter sample",
-        "pine forest, evergreen hill forest",
-        NULL,
-        "Short retrolateral apophysis"
-);
-
-INSERT INTO `location_` (
-        `record_id`,
-        `province`,
-        `district`,
-        `locality`
-) VALUES (
-        1,
-        "Chiang Mai",
-        "Chomthong",
-        "Doi Inthanon National Park"
-);
-
-INSERT INTO `position_` (
-        `location_id`,
-        `position_name`, 
-        `lat_`, 
-        `long_`
-) VALUES (
-        1,
-        "Doi Inthaonon",
-        18.5880,
-        98.4871
-);
-
--- 2
-INSERT INTO `spider_list` (`family`, `genus`, `species`) VALUES (
-        "Agelenidae",
-        "Draconarius",
-        "anthonyi"
-);
-
-INSERT INTO `detail_record` (
-        `spider_id`,
-        `author`,
-        `public_year`,
-        `country_other`,
-        `altitude`,
-        `methor`,
-        `habtat`,
-        `microhabtat`,
-        `designate`
-) VALUES (
-        2,
-        "Dankittipakul & Wang",
-        2003,
-        NULL,
-        "1500, 1500-1600, 1610, 1680 m",
-        "not mentioned",
-        "evergreen hill forest",
-        "road bank, funnel in crevice of trees",
-        "patronym dedicated to Anthony Osa, Auckland New Zealand"
+DROP TABLE IF EXISTS `paper`;
+CREATE TABLE `paper` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `detail_id` INT NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
+        PRIMARY KEY (`id`)
 );
 
 
-INSERT INTO `location_` (
-        `record_id`,
-        `province`,
-        `district`,
-        `locality`
-) VALUES (
-        2,
-        "Chiang Mai",
-        "Muang",
-        "Doi Suthep-Pui National Park"
-);
-
-INSERT INTO `position_` (
-        `location_id`,
-        `position_name`, 
-        `lat_`, 
-        `long_`
-) VALUES (
-        2,
-        "Doi Pui",
-        18.8067,
-        98.9164
-);
 
 
--- Dummy database
-CREATE TABLE `dummy` (
-         `id` INT NOT NULL AUTO_INCREMENT,
-         `fname` VARCHAR(20) NOT NULL,
-         `lname` VARCHAR(20) NOT NULL,
-         `age` INT NOT NULL,
-         PRIMARY KEY (`id`)
- )
+-- Add foreign key
+ALTER TABLE `detail` ADD FOREIGN KEY (`family_id`) REFERENCES `family`(`id`);
+ALTER TABLE `detail` ADD FOREIGN KEY (`genus_id`) REFERENCES `genus`(`id`);
+ALTER TABLE `detail` ADD FOREIGN KEY (`species_id`) REFERENCES `species`(`id`);
+ALTER TABLE `location` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
+ALTER TABLE `address` ADD FOREIGN KEY (`location_id`) REFERENCES `location`(`id`);
+ALTER TABLE `image` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
+ALTER TABLE `paper` ADD FOREIGN KEY (`detail_id`) REFERENCES `detail`(`id`);
+
+
+-- INSER DATA ----------
+INSERT INTO `family` (`name`) VALUES ("Agelenidae");
+DELETE FROM `family` WHERE `name` = "admin";
+ALTER TABLE `family` AUTO_INCREMENT = 1;
+
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Draconarius");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Sinocoelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Coelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Notiocoelotes");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Orumcekia");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Allagelena");
+INSERT INTO `genus` (`family_id`, `name`) VALUES (1, "Acutipetala");
+
+ALTER TABLE `species`DROP FOREIGN KEY `species_ibfk_1`;
 
 
 
+
+
+INSERT INTO `family` (`fa_name`) VALUES ("	Actinopodidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Agelenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Stiphidiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cycloctenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Amaurobiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Titanoecidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Desidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Zoropsidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Toxopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Ammoxenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Anapidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Antrodiaetidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Anyphaenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Araneidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Theridiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Arkyidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Linyphiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Archaeidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Atypidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Austrochilidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Barychelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Theraphosidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Pycnothelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Caponiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cithaeronidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Clubionidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cheiracanthiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Phrurolithidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Corinnidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Trachelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Liocranidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Miturgidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Ctenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Trechaleidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Xenoctenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Viridasiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Halonoproctidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Ctenizidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Stasimopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cyatholipidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Dictynidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cybaeidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Cyrtaucheniidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Microstigmatidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Nemesiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Bemmeridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Deinopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Hahniidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Diguetidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Euagridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Ischnothelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Dipluridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Microhexuridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Anamidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Drymusidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Dysderidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Eresidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Euctenizidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Filistatidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Gallieniellidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Gnaphosidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Trochanteriidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Gradungulidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Hersiliidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Atracidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Hexathelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Macrothelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Porrhothelidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Zodariidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Homalonychidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Huttoniidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Hypochilidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Idiopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Migidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Lamponidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Leptonetidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Archoleptonetidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Liphistiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Lycosidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Pisauridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Malkaridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Hexurellidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Mecicobothriidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Megahexuridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Mecysmaucheniidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Mimetidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Tetragnathidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Mysmenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Symphytognathidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Entypesidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Nesticidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Nicodamidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Megadictynidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Psilodercidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Ochyroceratidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Oecobiidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Oonopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Orsolobidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Oxyopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Palpimanidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Paratropididae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Penestomidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Periegopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Philodromidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Thomisidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Pholcidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Phyxelididae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Pimoidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Plectreuridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Psechridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Salticidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Scytodidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Segestriidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Selenopidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Senoculidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Sicariidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Sparassidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Stenochilidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Synaphridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Physoglenidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Synotaxidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Telemidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Udubidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Tetrablemmidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Pacullidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Theridiosomatidae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Trogloraptoridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Uloboridae	");
+INSERT INTO `family` (`fa_name`) VALUES ("	Myrmecicultoridae	");
+
+
+INSERT INTO position (
+    location_id,
+    name,
+    latitude,
+    longitude
+) VALUES (1, "asffew", 11.22, 22.44);

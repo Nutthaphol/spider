@@ -17,14 +17,23 @@ import speciesService from "../../../services/species.service";
 import locationService from "../../../services/location.service";
 import addressService from "../../../services/address.service";
 import paperService from "../../../services/paper.service";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProvinces } from "../../../actions/province";
+import { getAllDistrict } from "../../../actions/district";
 
 const theme = createTheme();
 
 const CheckData = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useState();
   const [detail, setDetail] = useState();
+  const { result: dbProvince } = useSelector((state) => state.province);
+  const { result: dbDistrict } = useSelector((state) => state.district);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    dispatch(getAllProvinces());
+    dispatch(getAllDistrict());
+  }, []);
 
   const handleOnClick = async () => {
     const tmpDetail = id ? await detailService.getDetail(id) : false;
@@ -54,9 +63,9 @@ const CheckData = () => {
     setDetail(tmpDetail);
   };
   return (
-    <div className={`page`}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={`page`}>
           <Container maxWidth="lg">
             <Box sx={{ display: "flex" }}>
               <TextField
@@ -129,8 +138,18 @@ const CheckData = () => {
                     </Typography>
                     <Box sx={{ marginLeft: "2.5rem" }}>
                       <Typography variant="subtitle1">
-                        province: {val.province} <br />
-                        district: {val.district} <br />
+                        province: {console.log("type of ", typeof val.province)}
+                        {
+                          dbProvince.find((item) => item.id == val.province)
+                            .name_en
+                        }
+                        <br />
+                        district:{" "}
+                        {
+                          dbDistrict.find((item) => item.id == val.district)
+                            .name_en
+                        }{" "}
+                        <br />
                         locality: {val.locality}
                       </Typography>
                       {val.address.map((val2, index2) => (
@@ -172,9 +191,9 @@ const CheckData = () => {
               <Typography variant="h6">Not have information</Typography>
             )}
           </Container>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </div>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

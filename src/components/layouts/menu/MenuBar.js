@@ -10,9 +10,13 @@ import {
   Link,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
-import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
 
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const theme = createTheme();
 
@@ -57,67 +61,65 @@ const MenuBar = (props) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <div>
-          <Button
-            variant="text"
-            color="inherit"
-            align="right"
-            ref={anchorRef}
-            id="composition-button"
-            aria-controls={open ? "composition-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-            endIcon={icon}
-          >
-            {message}
-          </Button>
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement="bottom-start"
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === "bottom-start" ? "left top" : "left bottom",
-                }}
-              >
-                <Paper style={{ backgroundColor: "#404040", color: "inherit" }}>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={open}
-                      id="composition-menu"
-                      aria-labelledby="composition-button"
-                      onKeyDown={handleListKeyDown}
-                    >
-                      {listButton &&
-                        listButton.map((item, index) => (
-                          <MenuItem key={index} onClick={handleClose}>
-                            <Link
-                              href={item.path}
-                              color="inherit"
-                              underline="none"
-                            >
-                              {item.label}
-                            </Link>
-                          </MenuItem>
-                        ))}
-                      {/* 
+        {/* <Button
+          variant="text"
+          color="inherit"
+          align="right"
+          ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+          endIcon={icon}
+        >
+          {message}
+        </Button>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === "bottom-start" ? "left top" : "left bottom",
+              }}
+            >
+              <Paper style={{ backgroundColor: "#404040", color: "inherit" }}>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    {listButton &&
+                      listButton.map((item, index) => (
+                        <MenuItem key={index} onClick={handleClose}>
+                          <Link
+                            href={item.path}
+                            color="inherit"
+                            underline="none"
+                          >
+                            {item.label}
+                          </Link>
+                        </MenuItem>
+                      ))}
+
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem> */}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-        </div>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper> */}
       </ThemeProvider>
     </StyledEngineProvider>
   );

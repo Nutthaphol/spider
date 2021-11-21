@@ -52,6 +52,8 @@ require("./app/routes/location.route")(app);
 require("./app/routes/address.route")(app);
 require("./app/routes/paper.route")(app);
 require("./app/routes/image.route")(app, upload);
+require("./app/routes/province.route")(app);
+require("./app/routes/district.route")(app);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "build/index.html"));

@@ -61,6 +61,8 @@ import {
 } from "./insertFn";
 import validationSchema from "./validate";
 import { Close, WindowSharp } from "@mui/icons-material";
+import { getAllProvinces } from "../../../actions/province";
+import { getAllDistrict } from "../../../actions/district";
 
 const theme = createTheme();
 
@@ -107,6 +109,8 @@ const InsertForm = () => {
   const { result: dbFamily } = useSelector((state) => state.family);
   const { result: dbGenus } = useSelector((state) => state.genus);
   const { result: dbSpecies } = useSelector((state) => state.species);
+  const { result: dbProvince } = useSelector((state) => state.province);
+  const { result: dbDistrict } = useSelector((state) => state.district);
   const [status, setStatus] = useState({
     showFamily: true,
     showGenus: true,
@@ -160,6 +164,9 @@ const InsertForm = () => {
     dispatch(getAllFamily());
     dispatch(getAllGenus());
     dispatch(getAllSpecies());
+
+    dispatch(getAllProvinces());
+    dispatch(getAllDistrict());
 
     const createListYear = () => {
       const date = new Date();
@@ -656,12 +663,45 @@ const InsertForm = () => {
                                             <Typography varaint="subtitle1">
                                               Province
                                             </Typography>
-                                            <Field
+                                            {/* <Field
                                               name={`data.location[${index}].province`}
                                               component={TextField}
                                               size="small"
                                               fullWidth
-                                            />
+                                            /> */}
+                                            <Field
+                                              component={Select}
+                                              formControl={{
+                                                sx: {
+                                                  width: "100%",
+                                                  size: "small",
+                                                },
+                                              }}
+                                              MenuProps={{
+                                                PaperProps: {
+                                                  sx: { maxHeight: 500 },
+                                                },
+                                              }}
+                                              size="small"
+                                              id={`data.location[${index}].province`}
+                                              name={`data.location[${index}].province`}
+                                            >
+                                              {dbProvince &&
+                                                dbProvince
+                                                  .sort((a, b) =>
+                                                    a.name_en > b.name_en
+                                                      ? 1
+                                                      : -1
+                                                  )
+                                                  .map((val, index) => (
+                                                    <MenuItem
+                                                      key={index}
+                                                      value={val.id}
+                                                    >
+                                                      {val.name_en}
+                                                    </MenuItem>
+                                                  ))}
+                                            </Field>
                                           </Grid>
                                           <Grid
                                             item
@@ -671,12 +711,52 @@ const InsertForm = () => {
                                             <Typography varaint="subtitle1">
                                               District
                                             </Typography>
-                                            <Field
+                                            {/* <Field
                                               name={`data.location[${index}].district`}
                                               component={TextField}
                                               size="small"
                                               fullWidth
-                                            />
+                                            /> */}
+                                            <Field
+                                              component={Select}
+                                              formControl={{
+                                                sx: {
+                                                  width: "100%",
+                                                  size: "small",
+                                                },
+                                              }}
+                                              MenuProps={{
+                                                PaperProps: {
+                                                  sx: { maxHeight: 500 },
+                                                },
+                                              }}
+                                              size="small"
+                                              id={`data.location[${index}].district`}
+                                              name={`data.location[${index}].district`}
+                                            >
+                                              {dbDistrict &&
+                                                dbDistrict
+                                                  .filter(
+                                                    (item) =>
+                                                      item.province_id ==
+                                                      values.data.location[
+                                                        index
+                                                      ].province
+                                                  )
+                                                  .sort((a, b) =>
+                                                    a.name_en > b.name_en
+                                                      ? 1
+                                                      : -1
+                                                  )
+                                                  .map((val, index) => (
+                                                    <MenuItem
+                                                      key={index}
+                                                      value={val.id}
+                                                    >
+                                                      {val.name_en}
+                                                    </MenuItem>
+                                                  ))}
+                                            </Field>
                                           </Grid>
                                           <Grid
                                             item
