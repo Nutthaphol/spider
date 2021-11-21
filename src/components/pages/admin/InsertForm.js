@@ -39,12 +39,6 @@ import { getAllSpecies } from "../../../actions/species";
 import { useSelector } from "react-redux";
 import { Select, SimpleFileUpload, Switch, TextField } from "formik-mui";
 import { Box, margin } from "@mui/system";
-import {
-  AddAPhoto,
-  Backspace,
-  Delete,
-  DeleteOutline,
-} from "@material-ui/icons";
 import { useDropzone } from "react-dropzone";
 
 import { SnackbarProvider, useSnackbar } from "notistack";
@@ -60,7 +54,14 @@ import {
   postImageFn,
 } from "./insertFn";
 import validationSchema from "./validate";
-import { Close, WindowSharp } from "@mui/icons-material";
+import {
+  Close,
+  WindowSharp,
+  AddAPhoto,
+  Backspace,
+  Delete,
+  DeleteOutline,
+} from "@mui/icons-material";
 import { getAllProvinces } from "../../../actions/province";
 import { getAllDistrict } from "../../../actions/district";
 

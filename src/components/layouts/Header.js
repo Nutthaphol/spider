@@ -57,7 +57,7 @@ const Header = () => {
               >
                 Spider Thailand
               </Typography>
-              <ButtonAppBar message="Family" link={"/"} />
+              <ButtonAppBar message="Home" link={"/"} />
               {statusMenu && (
                 <MenuBar
                   message="Insert"

@@ -20,106 +20,77 @@ import makeStyles from "@mui/styles/makeStyles";
 
 const theme = createTheme();
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiPaper-root": {
+      borderRadius: 6,
+      // marginTop: theme.spacing(1),
+      minWidth: 140,
+      color:
+        theme.palette.mode === "light"
+          ? "rgb(55, 65, 81)"
+          : theme.palette.grey[300],
+      boxShadow:
+        "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+      "& .MuiMenu-list": {
+        padding: "2px 0",
+      },
+    },
+  },
+}));
 
 const MenuBar = (props) => {
   const { message, icon, listButton } = props;
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
-
-  const prevOpen = React.useRef(open);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const handleListKeyDown = (event) => {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-
-    prevOpen.current = open;
-  }, [open]);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        {/* <Button
-          variant="text"
-          color="inherit"
-          align="right"
-          ref={anchorRef}
-          id="composition-button"
-          aria-controls={open ? "composition-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
+        <Button
+          id="basic-button"
+          aria-controls="basic-menu"
           aria-haspopup="true"
-          onClick={handleToggle}
-          endIcon={icon}
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+          sx={{ color: "white" }}
         >
-          {message}
+          Insert
         </Button>
-        <Popper
+        <Menu
+          className={classes.root}
+          anchorEl={anchorEl}
           open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="bottom-start"
-          transition
-          disablePortal
+          onClose={handleClose}
+          elevation={0}
+          // anchorOrigin={{
+          //   vertical: "bottom",
+          //   horizontal: "right",
+          // }}
+          // transformOrigin={{
+          //   vertical: "top",
+          //   horizontal: "right",
+          // }}
         >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === "bottom-start" ? "left top" : "left bottom",
-              }}
-            >
-              <Paper style={{ backgroundColor: "#404040", color: "inherit" }}>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                    onKeyDown={handleListKeyDown}
-                  >
-                    {listButton &&
-                      listButton.map((item, index) => (
-                        <MenuItem key={index} onClick={handleClose}>
-                          <Link
-                            href={item.path}
-                            color="inherit"
-                            underline="none"
-                          >
-                            {item.label}
-                          </Link>
-                        </MenuItem>
-                      ))}
-
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper> */}
+          {listButton &&
+            listButton.map((val, index) => (
+              <Link
+                key={index}
+                href={val.path}
+                underline="none"
+                sx={{ color: "black" }}
+              >
+                <MenuItem>{val.label}</MenuItem>
+              </Link>
+            ))}
+        </Menu>
       </ThemeProvider>
     </StyledEngineProvider>
   );

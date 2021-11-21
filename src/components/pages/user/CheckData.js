@@ -5,8 +5,7 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import { Button, Container, Divider } from "@material-ui/core";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography,Button, Container, Divider } from "@mui/material";
 import { border, Box } from "@mui/system";
 import detailService from "../../../services/detail.service";
 import { DetailsSharp } from "@mui/icons-material";

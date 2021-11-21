@@ -13,6 +13,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
+  TextField,
+  Autocomplete,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +33,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Search } from "@mui/icons-material";
 import { getAllFamily } from "../../actions/family";
 import { getAllGenus } from "../../actions/genus";
+import { getAllProvinces } from "../../actions/province";
+import { getAllDistrict } from "../../actions/district";
 
 const theme = createTheme();
 
@@ -52,64 +57,50 @@ const position_ = [
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { result: allFamily } = useSelector((state) => state.family);
-  const { result: allGenus } = useSelector((state) => state.genus);
+  const { result: dbprovince } = useSelector((state) => state.province);
+  const { result: dbdistrict } = useSelector((state) => state.district);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [province, setProvince] = useState("");
+  const [district, setDistrict] = useState("");
 
   useEffect(() => {
-    dispatch(getAllFamily());
-    dispatch(getAllGenus());
+    // dispatch(getAllFamily());
+    // dispatch(getAllGenus());
+    dispatch(getAllDistrict());
+    dispatch(getAllProvinces());
     if (currentUser) {
       console.log(`id = ${currentUser.username}`);
     }
   }, []);
 
-  const counterGenus = (id) => {
-    if (allGenus) {
-      const number = allGenus.filter((item) => item.family_id === id).length;
-      return number;
-    }
-  };
+  // const counterGenus = (id) => {
+  //   if (allGenus) {
+  //     const number = allGenus.filter((item) => item.family_id === id).length;
+  //     return number;
+  //   }
+  // };
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <Box className={`page`}>
           <Container sx={{ maxWidth: "lg" }}>
-            <div className="map" style={{ height: "59vh" }}>
-              <MapView listPosition={position_} styles={{ height: "50vh" }} />
-            </div>
-            <Divider className={classes.divider} />
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Family</TableCell>
-                    <TableCell>Author</TableCell>
-                    <TableCell align="right"># genera</TableCell>
-                    <TableCell align="right">Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {allFamily &&
-                    allFamily
-                      .filter((val) => counterGenus(val.id) > 0)
-                      .map((val) => (
-                        <TableRow key={val.id}>
-                          <TableCell>{val.name}</TableCell>
-                          <TableCell>name author</TableCell>
-                          <TableCell align="right">
-                            {counterGenus(val.id)}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Link href="#">genera</Link>&nbsp;|&nbsp;
-                            <Link href="#">Search</Link>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Grid container spacing={4}>
+              <Grid item>
+                <Typography variant="h5">Filter location</Typography>
+                <br />
+                <Autocomplete
+                  disablePortal
+                  size="small"
+                  onChange={(e) => setProvince(e.target.value)}
+                  sx={{ width: 240 }}
+                  options={dbprovince && dbprovince.map((item) => item.name_en)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Province" />
+                  )}
+                />
+              </Grid>
+            </Grid>
           </Container>
         </Box>
       </ThemeProvider>
