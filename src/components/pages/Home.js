@@ -99,6 +99,17 @@ const Home = () => {
                     <TextField {...params} label="Province" />
                   )}
                 />
+                <br />
+                <Autocomplete
+                  disablePortal
+                  size="small"
+                  onChange={(e) => setProvince(e.target.value)}
+                  sx={{ width: 240 }}
+                  options={dbdistrict && dbdistrict.map((item) => item.name_en)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="district" />
+                  )}
+                />
               </Grid>
             </Grid>
           </Container>
