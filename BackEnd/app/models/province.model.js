@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
 const getAllProvinces = (callback) => {
-  const query = `SELECT id, name_en FROM provinces_list`;
+  const query = `SELECT * FROM provinces_list`;
 
   connection.query(query, (error, result) => {
     if (error) {

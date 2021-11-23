@@ -1,7 +1,7 @@
 const connection = require("./database.model");
 
 const getAllDistricts = (callback) => {
-  const query = `SELECT id, name_en, province_id FROM districts_list`;
+  const query = `SELECT * FROM districts_list`;
 
   connection.query(query, (error, result) => {
     if (error) {

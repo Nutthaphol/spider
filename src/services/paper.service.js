@@ -3,7 +3,7 @@ import { httpClient } from "./httpClient";
 const postPaper = async (data) => {
   console.log("services paper", data);
   const res = await httpClient
-    .post("/paper/postpaper", { data })
+    .post("paper/postpaper", { data })
     .then((response) => {
       return response.data;
     });
@@ -12,7 +12,7 @@ const postPaper = async (data) => {
 };
 
 const getPaper = async (id) => {
-  const res = await httpClient.get("/paper/" + id).then((response) => {
+  const res = await httpClient.get("paper/" + id).then((response) => {
     return response.data;
   });
   return res;

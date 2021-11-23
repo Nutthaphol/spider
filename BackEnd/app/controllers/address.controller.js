@@ -31,3 +31,17 @@ exports.getAddress = (req, res) => {
     }
   });
 };
+
+exports.getAllAddress = (req, res) => {
+  db.getAllAddress((error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "address not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};

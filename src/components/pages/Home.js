@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
   Autocomplete,
+  Button,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,8 @@ import {
 
 import "./index.css";
 
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
 import makeStyles from "@mui/styles/makeStyles";
 
 import { Search } from "@mui/icons-material";
@@ -35,6 +38,10 @@ import { getAllFamily } from "../../actions/family";
 import { getAllGenus } from "../../actions/genus";
 import { getAllProvinces } from "../../actions/province";
 import { getAllDistrict } from "../../actions/district";
+import { getAllDetail } from "../../actions/detail";
+import { getAllLocation } from "../../actions/location";
+import { getAllAddress } from "../../actions/address";
+import { getAllSpecies } from "../../actions/species";
 
 const theme = createTheme();
 
@@ -57,28 +64,130 @@ const position_ = [
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { result: dbfamily } = useSelector((state) => state.family);
+  const { result: dbgenus } = useSelector((state) => state.genus);
+  const { result: dbspecies } = useSelector((state) => state.species);
   const { result: dbprovince } = useSelector((state) => state.province);
   const { result: dbdistrict } = useSelector((state) => state.district);
+  const { result: dbdetail } = useSelector((state) => state.detail);
+  const { result: dblocation } = useSelector((state) => state.location);
+  const { result: dbaddress } = useSelector((state) => state.address);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
+  const [address, setAddress] = useState();
+  const [location, setLocation] = useState();
+  const [detail, setDetail] = useState();
+  const [family, setFamily] = useState();
+  const [genus, setGenus] = useState();
+  const [species, setSpecies] = useState();
 
   useEffect(() => {
-    // dispatch(getAllFamily());
-    // dispatch(getAllGenus());
+    dispatch(getAllFamily());
+    dispatch(getAllGenus());
+    dispatch(getAllSpecies());
+    dispatch(getAllDetail());
     dispatch(getAllDistrict());
     dispatch(getAllProvinces());
+    dispatch(getAllLocation());
+    dispatch(getAllAddress());
     if (currentUser) {
       console.log(`id = ${currentUser.username}`);
     }
+
+    setAddress(dbaddress);
   }, []);
 
-  // const counterGenus = (id) => {
-  //   if (allGenus) {
-  //     const number = allGenus.filter((item) => item.family_id === id).length;
-  //     return number;
-  //   }
-  // };
+  const handleOnChangeAddress = () => {
+    if (province && district) {
+      const location_ = dblocation.filter(
+        (item) => item.province == province && item.district == district
+      );
+
+      const checkId = [];
+      const detail_ = [];
+
+      location_.map((item) => {
+        if (checkId.indexOf(item.detail_id) === -1) {
+          checkId.push(item.detail_id);
+          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
+        }
+      });
+
+      setDetail(detail_);
+
+      setLocation(location_);
+      let address_ = [];
+
+      location_.map((item) => {
+        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
+        tmp.map((val) => {
+          address_.push(val);
+        });
+      });
+
+      setAddress(address_);
+    } else if (province) {
+      const location_ = dblocation.filter((item) => item.province == province);
+
+      const checkId = [];
+      const detail_ = [];
+
+      location_.map((item) => {
+        if (checkId.indexOf(item.detail_id) === -1) {
+          checkId.push(item.detail_id);
+          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
+        }
+      });
+
+      setDetail(detail_);
+
+      setLocation(location_);
+      let address_ = [];
+      location_.map((item) => {
+        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
+        tmp.map((val) => {
+          address_.push(val);
+        });
+      });
+
+      setAddress(address_);
+    } else if (district) {
+      const location_ = dblocation.filter((item) => item.district == district);
+
+      const checkId = [];
+      const detail_ = [];
+
+      location_.map((item) => {
+        if (checkId.indexOf(item.detail_id) === -1) {
+          checkId.push(item.detail_id);
+          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
+        }
+      });
+
+      setDetail(detail_);
+
+      setLocation(location_);
+      let address_ = [];
+      location_.map((item) => {
+        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
+        tmp.map((val) => {
+          address_.push(val);
+        });
+      });
+
+      setAddress(address_);
+    } else {
+      setFamily(dbfamily);
+      setGenus(dbgenus);
+      setSpecies(dbspecies);
+      setDetail(dbdetail);
+      setLocation(dblocation);
+      setAddress(dbaddress);
+    }
+
+    // setAddress(dbaddress);
+  };
 
   return (
     <StyledEngineProvider injectFirst>
@@ -86,32 +195,174 @@ const Home = () => {
         <Box className={`page`}>
           <Container sx={{ maxWidth: "lg" }}>
             <Grid container spacing={4}>
-              <Grid item>
-                <Typography variant="h5">Filter location</Typography>
-                <br />
-                <Autocomplete
-                  disablePortal
+              <Grid
+                item
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItem: "center",
+                }}
+              >
+                <Typography variant="h5" sx={{ flexGrow: 0.05 }}>
+                  Filter location
+                </Typography>
+                <Box sx={{ flexGrow: 0.05 }}>
+                  <Autocomplete
+                    disablePortal
+                    size="small"
+                    onChange={(e, value) => {
+                      value ? setProvince(value.id) : setProvince("");
+                    }}
+                    sx={{ width: 240 }}
+                    options={
+                      dbprovince &&
+                      dbprovince
+                        .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                        .map((item) => item)
+                      // dbprovince && dbprovince.map((item) => item.name_en)
+                    }
+                    getOptionLabel={(options) => {
+                      return options.name_en + " (" + options.name_th + ")";
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Province (All)" />
+                    )}
+                  />
+                </Box>
+                <Box sx={{ flexGrow: 0.05 }}>
+                  <Autocomplete
+                    disablePortal
+                    size="small"
+                    onChange={(e, value) => {
+                      value ? setDistrict(value.id) : setDistrict("");
+                    }}
+                    sx={{ width: 240 }}
+                    options={
+                      province
+                        ? dbdistrict
+                            .filter((item) => item.province_id == province)
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                        : dbdistrict &&
+                          dbdistrict
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                    }
+                    getOptionLabel={(options) => {
+                      return options.name_en + " (" + options.name_th + ")";
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="district (All)" />
+                    )}
+                  />
+                </Box>
+                <Button
                   size="small"
-                  onChange={(e) => setProvince(e.target.value)}
-                  sx={{ width: 240 }}
-                  options={dbprovince && dbprovince.map((item) => item.name_en)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Province" />
-                  )}
-                />
-                <br />
-                <Autocomplete
-                  disablePortal
-                  size="small"
-                  onChange={(e) => setProvince(e.target.value)}
-                  sx={{ width: 240 }}
-                  options={dbdistrict && dbdistrict.map((item) => item.name_en)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="district" />
-                  )}
-                />
+                  variant="outlined"
+                  sx={{ minWidth: "100px" }}
+                  onClick={() => handleOnChangeAddress()}
+                >
+                  select
+                </Button>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  height: "600px",
+                  width: "100%",
+                }}
+              >
+                <Box
+                  sx={{
+                    height: "100%",
+                    border: "1px solid #040404",
+                  }}
+                >
+                  <MapContainer
+                    className="map-view"
+                    center={[13, 100]}
+                    zoom={5}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+
+                    {address
+                      ? address.map((item, index) => (
+                          <Marker
+                            key={index}
+                            position={[
+                              parseFloat(item.latitude),
+                              parseFloat(item.longitude),
+                            ]}
+                          >
+                            <Popup>{item.name}</Popup>
+                          </Marker>
+                        ))
+                      : dbaddress &&
+                        dbaddress.map((item, index) => (
+                          <Marker
+                            key={index}
+                            position={[
+                              parseFloat(item.latitude),
+                              parseFloat(item.longitude),
+                            ]}
+                          >
+                            <Popup>{item.name}</Popup>
+                          </Marker>
+                        ))}
+                  </MapContainer>
+                </Box>
               </Grid>
             </Grid>
+            <br />
+            <br />
+            <Typography variant="h5">Family : Actions</Typography>
+            <TableContainer
+              component={Paper}
+              sx={{
+                boxShadow: "none",
+                border: "1px solid #B3B6B7",
+              }}
+            >
+              <Table sx={{ minWidth: 650 }}>
+                <TableHead>
+                  <TableCell>Family</TableCell>
+                  <TableCell>Author</TableCell>
+                  <TableCell> # genera</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableHead>
+                <TableBody>
+                  {family &&
+                    family
+                      .filter((item) =>
+                        detail.find((val) => val.family_id == item.id)
+                      )
+                      .map((val, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{val.name}</TableCell>
+                          <TableCell>
+                            {
+                              detail
+                                // .slice(0, 1)
+                                .find((item) => item.family_id == val.id).author
+                            }
+                          </TableCell>
+                          <TableCell>
+                            {
+                              genus.filter((item) => item.family_id == val.id)
+                                .length
+                            }
+                          </TableCell>
+                          <TableCell>
+                            <Link sx={{ cursor: "pointer" }}>genera</Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Container>
         </Box>
       </ThemeProvider>

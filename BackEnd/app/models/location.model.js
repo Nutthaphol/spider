@@ -33,5 +33,19 @@ const getLocation = (id, callback) => {
   });
 };
 
+const getAllLocation = (callback) => {
+  const query = `SELECT * FROM location`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get location error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
 exports.getLocation = getLocation;
 exports.postLocation = postLocation;
+exports.getAllLocation = getAllLocation;

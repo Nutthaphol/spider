@@ -3,7 +3,7 @@ import { httpClient } from "./httpClient";
 const postDetail = async (data) => {
   console.log("services", data);
   const res = await httpClient
-    .post("/detail/postdetail", { data })
+    .post("detail/postdetail", { data })
     .then((response) => {
       return response.data;
     });
@@ -19,7 +19,15 @@ const getDetail = async (id) => {
   return res;
 };
 
+const getAllDetail = async () => {
+  const res = await httpClient.get("detail").then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
 export default {
   postDetail,
   getDetail,
+  getAllDetail,
 };

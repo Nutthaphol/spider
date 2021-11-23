@@ -32,3 +32,17 @@ exports.getDetail = (req, res) => {
     }
   });
 };
+
+exports.getAllDetail = (req, res) => {
+  db.getAllDetail((error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "detail not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};

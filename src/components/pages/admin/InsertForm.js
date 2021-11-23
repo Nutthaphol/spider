@@ -138,8 +138,8 @@ const InsertForm = () => {
         address: [
           {
             name: "",
-            lat: "",
-            long: "",
+            latitude: "",
+            longitude: "",
           },
         ],
       },
@@ -154,8 +154,8 @@ const InsertForm = () => {
   const [point, setPoint] = useState([
     {
       name: "",
-      lat: "",
-      long: "",
+      latitude: "",
+      longitude: "",
     },
   ]);
   const [files, setFiles] = useState([]);
@@ -630,8 +630,8 @@ const InsertForm = () => {
                                         address: [
                                           {
                                             name: "",
-                                            lat: "",
-                                            long: "",
+                                            latitude: "",
+                                            longitude: "",
                                           },
                                         ],
                                       })
@@ -816,8 +816,8 @@ const InsertForm = () => {
                                                       onClick={() => {
                                                         push({
                                                           name: "",
-                                                          lat: "",
-                                                          long: "",
+                                                          latitude: "",
+                                                          longitude: "",
                                                         });
                                                       }}
                                                     >
@@ -876,7 +876,7 @@ const InsertForm = () => {
                                                             </Grid>
                                                             <Grid item xs={3}>
                                                               <Field
-                                                                name={`data.location[${index}].address[${subIndex}].lat`}
+                                                                name={`data.location[${index}].address[${subIndex}].latitude`}
                                                                 component={
                                                                   TextField
                                                                 }
@@ -887,7 +887,7 @@ const InsertForm = () => {
                                                             </Grid>
                                                             <Grid item xs={3}>
                                                               <Field
-                                                                name={`data.location[${index}].address[${subIndex}].long`}
+                                                                name={`data.location[${index}].address[${subIndex}].longitude`}
                                                                 component={
                                                                   TextField
                                                                 }
@@ -954,8 +954,8 @@ const InsertForm = () => {
                                   onClick={() =>
                                     push({
                                       name: "",
-                                      lat: "",
-                                      long: "",
+                                      latitude: "",
+                                      longitude: "",
                                     })
                                   }
                                 >

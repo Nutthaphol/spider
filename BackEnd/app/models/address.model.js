@@ -33,5 +33,19 @@ const getAddress = (id, callback) => {
   });
 };
 
+const getAllAddress = (callback) => {
+  const query = `SELECT * FROM address`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get address error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
 exports.postAddress = postAddress;
 exports.getAddress = getAddress;
+exports.getAllAddress = getAllAddress;

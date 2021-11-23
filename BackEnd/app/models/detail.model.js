@@ -54,5 +54,19 @@ const getDetail = (id, callback) => {
     callback(null, result);
   });
 };
+
+const getAllDetail = (callback) => {
+  const query = `SELECT * from detail`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("error get detail id", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
 exports.postDetail = postDetail;
 exports.getDetail = getDetail;
+exports.getAllDetail = getAllDetail;

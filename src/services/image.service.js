@@ -3,7 +3,7 @@ import { httpClient } from "./httpClient";
 const postImage = async (data) => {
   console.log("services image", data);
   const res = await httpClient
-    .post("/image/postimage", data)
+    .post("image/postimage", data)
     .then((response) => {
       return response.data;
     });
@@ -13,7 +13,7 @@ const postImage = async (data) => {
 
 const getFromDetail = async (id) => {
   const res = await httpClient
-    .get("/image/getfromdetail/" + id)
+    .get("image/getfromdetail/" + id)
     .then((response) => {
       return response.data;
     });

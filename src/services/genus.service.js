@@ -1,14 +1,14 @@
 import { httpClient } from "./httpClient";
 
 const getAllGenus = async () => {
-  const res = await httpClient.get("/genus/allgenus");
+  const res = await httpClient.get("genus/allgenus");
   // console.log(`res genus ${res}`);
   return res;
 };
 
 const postGenus = async (data) => {
   const res = await httpClient
-    .post("/genus/postgenus", data)
+    .post("genus/postgenus", data)
     .then((response) => {
       return response.data;
     });
@@ -17,7 +17,7 @@ const postGenus = async (data) => {
 };
 
 const getGenus = async (id) => {
-  const res = await httpClient.get("/genus/" + id).then((response) => {
+  const res = await httpClient.get("genus/" + id).then((response) => {
     return response.data;
   });
   return res;
