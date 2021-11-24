@@ -85,6 +85,7 @@ const Home = () => {
   const [genus, setGenus] = useState();
   const [species, setSpecies] = useState();
   const [map, setMap] = useState();
+  const [table, setTable] = useState();
 
   useEffect(() => {
     dispatch(getAllFamily());
@@ -113,23 +114,7 @@ const Home = () => {
     return address_;
   };
 
-  const handleOnChangeAddress = () => {
-    // ONLY PROVICE
-    const map = [];
-    let location_ = "";
-
-    if (province && district) {
-      location_ = dblocation.filter(
-        (item) => item.province == province && item.district == district
-      );
-    }
-    if (province) {
-      location_ = dblocation.filter((item) => item.province == province);
-    }
-    if (district) {
-      location_ = dblocation.filter((item) => item.district == district);
-    }
-
+  const mapMarker = (location_) => {
     const address_ = markAddress(location_);
 
     let data = [];
@@ -156,14 +141,48 @@ const Home = () => {
       };
 
       data.push(mock);
-
-      if (index == 0) {
-        console.log("log data", mock);
-      }
     });
 
     setMap(data);
-    console.log("data ", data);
+  };
+
+  const tableShow = (location_) => {
+    let detail_ = [];
+    location_.map((item) => {
+      const tmp = dbdetail.find((val) => val.id == item.detail_id);
+      if (
+        detail_
+          .map((e) => {
+            return e.id;
+          })
+          .indexOf(tmp.id) === -1
+      ) {
+        detail_.push(tmp);
+      }
+    });
+
+    console.log("data", detail_);
+  };
+
+  const handleOnChangeAddress = () => {
+    // ONLY PROVICE
+    const map = [];
+    let location_ = "";
+
+    if (province && district) {
+      location_ = dblocation.filter(
+        (item) => item.province == province && item.district == district
+      );
+    }
+    if (province) {
+      location_ = dblocation.filter((item) => item.province == province);
+    }
+    if (district) {
+      location_ = dblocation.filter((item) => item.district == district);
+    }
+
+    mapMarker(location_);
+    tableShow(location_);
   };
 
   return (
