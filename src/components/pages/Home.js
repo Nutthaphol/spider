@@ -17,6 +17,9 @@ import {
   TextField,
   Autocomplete,
   Button,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -81,6 +84,7 @@ const Home = () => {
   const [family, setFamily] = useState();
   const [genus, setGenus] = useState();
   const [species, setSpecies] = useState();
+  const [map, setMap] = useState();
 
   useEffect(() => {
     dispatch(getAllFamily());
@@ -98,95 +102,68 @@ const Home = () => {
     setAddress(dbaddress);
   }, []);
 
+  const markAddress = (location_) => {
+    let address_ = [];
+    location_.map((item) => {
+      const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
+      tmp.map((val) => {
+        address_.push(val);
+      });
+    });
+    return address_;
+  };
+
   const handleOnChangeAddress = () => {
+    // ONLY PROVICE
+    const map = [];
+    let location_ = "";
+
     if (province && district) {
-      const location_ = dblocation.filter(
+      location_ = dblocation.filter(
         (item) => item.province == province && item.district == district
       );
-
-      const checkId = [];
-      const detail_ = [];
-
-      location_.map((item) => {
-        if (checkId.indexOf(item.detail_id) === -1) {
-          checkId.push(item.detail_id);
-          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
-        }
-      });
-
-      setDetail(detail_);
-
-      setLocation(location_);
-      let address_ = [];
-
-      location_.map((item) => {
-        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
-        tmp.map((val) => {
-          address_.push(val);
-        });
-      });
-
-      setAddress(address_);
-    } else if (province) {
-      const location_ = dblocation.filter((item) => item.province == province);
-
-      const checkId = [];
-      const detail_ = [];
-
-      location_.map((item) => {
-        if (checkId.indexOf(item.detail_id) === -1) {
-          checkId.push(item.detail_id);
-          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
-        }
-      });
-
-      setDetail(detail_);
-
-      setLocation(location_);
-      let address_ = [];
-      location_.map((item) => {
-        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
-        tmp.map((val) => {
-          address_.push(val);
-        });
-      });
-
-      setAddress(address_);
-    } else if (district) {
-      const location_ = dblocation.filter((item) => item.district == district);
-
-      const checkId = [];
-      const detail_ = [];
-
-      location_.map((item) => {
-        if (checkId.indexOf(item.detail_id) === -1) {
-          checkId.push(item.detail_id);
-          detail_.push(dbdetail.find((val) => val.id == item.detail_id));
-        }
-      });
-
-      setDetail(detail_);
-
-      setLocation(location_);
-      let address_ = [];
-      location_.map((item) => {
-        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
-        tmp.map((val) => {
-          address_.push(val);
-        });
-      });
-
-      setAddress(address_);
-    } else {
-      setFamily(dbfamily);
-      setGenus(dbgenus);
-      setSpecies(dbspecies);
-      setDetail(dbdetail);
-      setLocation(dblocation);
-      setAddress(dbaddress);
+    }
+    if (province) {
+      location_ = dblocation.filter((item) => item.province == province);
+    }
+    if (district) {
+      location_ = dblocation.filter((item) => item.district == district);
     }
 
-    // setAddress(dbaddress);
+    const address_ = markAddress(location_);
+
+    let data = [];
+
+    address_.map((item, index) => {
+      const loc_ = location_.find((val) => val.id === item.location_id);
+
+      const detail_ = dbdetail.find((val) => val.id == loc_.detail_id);
+
+      const provinceName = dbprovince.find((val) => val.id == loc_.province);
+
+      const family_ = dbfamily.find((val) => val.id == detail_.family_id);
+      const genus_ = dbgenus.find((val) => val.id == detail_.genus_id);
+      const species_ = dbspecies.find((val) => val.id == detail_.species_id);
+
+      const mock = {
+        positionName: item.name,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        province: provinceName.name_en,
+        family: family_.name,
+        genus: genus_.name,
+        species: species_.name,
+      };
+
+      data.push(mock);
+
+      if (index == 0) {
+        console.log("log data", mock);
+      }
+    });
+
+    setMap(data);
+    console.log("data ", data);
   };
 
   return (
@@ -288,16 +265,44 @@ const Home = () => {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {address
-                      ? address.map((item, index) => (
+                    {map
+                      ? map.map((item, index) => (
                           <Marker
                             key={index}
-                            position={[
-                              parseFloat(item.latitude),
-                              parseFloat(item.longitude),
-                            ]}
+                            position={[item.latitude, item.longitude]}
                           >
-                            <Popup>{item.name}</Popup>
+                            <Popup>
+                              {" "}
+                              <List disablePadding>
+                                <ListItem disablePadding>
+                                  <ListItemText
+                                    primary={
+                                      "Position name: " + item.positionName
+                                    }
+                                  />
+                                </ListItem>
+                                <ListItem disablePadding>
+                                  <ListItemText
+                                    primary={"Province: " + item.province}
+                                  />
+                                </ListItem>
+                                <ListItem disablePadding>
+                                  <ListItemText
+                                    primary={"Family: " + item.family}
+                                  />
+                                </ListItem>
+                                <ListItem disablePadding>
+                                  <ListItemText
+                                    primary={"Genus: " + item.genus}
+                                  />
+                                </ListItem>
+                                <ListItem disablePadding>
+                                  <ListItemText
+                                    primary={"Species: " + item.species}
+                                  />
+                                </ListItem>
+                              </List>
+                            </Popup>
                           </Marker>
                         ))
                       : dbaddress &&
@@ -309,7 +314,7 @@ const Home = () => {
                               parseFloat(item.longitude),
                             ]}
                           >
-                            <Popup>{item.name}</Popup>
+                            <Popup></Popup>
                           </Marker>
                         ))}
                   </MapContainer>
