@@ -45,6 +45,8 @@ import { getAllDetail } from "../../actions/detail";
 import { getAllLocation } from "../../actions/location";
 import { getAllAddress } from "../../actions/address";
 import { getAllSpecies } from "../../actions/species";
+import FamilyTable from "./shared/FamilyTable";
+import GenusTable from "./shared/GenusTable";
 
 const theme = createTheme();
 
@@ -80,12 +82,18 @@ const Home = () => {
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState();
   const [location, setLocation] = useState();
-  const [detail, setDetail] = useState();
-  const [family, setFamily] = useState();
-  const [genus, setGenus] = useState();
-  const [species, setSpecies] = useState();
+  const [detail, setDetail] = useState([]);
+  const [family, setFamily] = useState([]);
+  const [genus, setGenus] = useState([]);
+  const [species, setSpecies] = useState([]);
   const [map, setMap] = useState();
   const [table, setTable] = useState();
+  const [show, setShow] = useState({
+    family: true,
+    genus: false,
+    species: false,
+    id: "",
+  });
 
   useEffect(() => {
     dispatch(getAllFamily());
@@ -117,18 +125,74 @@ const Home = () => {
   const mapMarker = (location_) => {
     const address_ = markAddress(location_);
 
+    setFamily([]);
+    setGenus([]);
+    setSpecies([]);
+
     let data = [];
+
+    // setFamily(dbfamily);
+    // setGenus(dbgenus);
+    // setSpecies(dbspecies);
 
     address_.map((item, index) => {
       const loc_ = location_.find((val) => val.id === item.location_id);
 
       const detail_ = dbdetail.find((val) => val.id == loc_.detail_id);
 
+      setDetail(dbdetail.filter((val) => val.id == loc_.detail_id));
+
       const provinceName = dbprovince.find((val) => val.id == loc_.province);
 
       const family_ = dbfamily.find((val) => val.id == detail_.family_id);
+      let tmpFamily = family;
+      let tmp = dbfamily.filter((val) => val.id == detail_.family_id);
+      tmp.map((item) => {
+        if (
+          tmpFamily
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(item.id) == -1
+        ) {
+          tmpFamily.push(item);
+        }
+      });
+      setFamily(tmpFamily);
+
       const genus_ = dbgenus.find((val) => val.id == detail_.genus_id);
+      // setGenus(dbgenus.filter((val) => val.id == detail_.genus_id));
+      let tmpGenus = genus;
+      tmp = dbgenus.filter((val) => val.id == detail_.genus_id);
+      tmp.map((item) => {
+        if (
+          tmpGenus
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(item.id) == -1
+        ) {
+          tmpGenus.push(item);
+        }
+      });
+      setGenus(tmpGenus);
+
       const species_ = dbspecies.find((val) => val.id == detail_.species_id);
+      // setSpecies(dbspecies.filter((val) => val.id == detail_.species_id));
+      let tmpSpecies = species;
+      tmp = dbspecies.filter((val) => val.id == detail_.species_id);
+      tmp.map((item) => {
+        if (
+          tmpSpecies
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(item.id) == -1
+        ) {
+          tmpSpecies.push(item);
+        }
+      });
+      setSpecies(tmpSpecies);
 
       const mock = {
         positionName: item.name,
@@ -157,10 +221,14 @@ const Home = () => {
           })
           .indexOf(tmp.id) === -1
       ) {
+        tmp.family = dbfamily.find((val) => val.id == tmp.family_id).name;
+        tmp.genus = dbgenus.find((val) => val.id == tmp.genus_id).name;
+        tmp.species = dbspecies.find((val) => val.id == tmp.species_id).name;
         detail_.push(tmp);
       }
     });
 
+    return detail_;
     console.log("data", detail_);
   };
 
@@ -169,20 +237,38 @@ const Home = () => {
     const map = [];
     let location_ = "";
 
+    setShow({
+      family: true,
+      genus: false,
+      species: false,
+      id: "",
+    });
+
     if (province && district) {
       location_ = dblocation.filter(
         (item) => item.province == province && item.district == district
       );
-    }
-    if (province) {
+    } else if (province) {
       location_ = dblocation.filter((item) => item.province == province);
-    }
-    if (district) {
+    } else if (district) {
       location_ = dblocation.filter((item) => item.district == district);
+    } else {
+      location_ = dblocation;
     }
-
     mapMarker(location_);
-    tableShow(location_);
+    const detail_ = tableShow(location_);
+  };
+
+  const ToNext = (type, id) => {
+    const tmpShow = { ...show };
+    if (type == "genus") {
+      tmpShow.genus = true;
+      tmpShow.family = false;
+      tmpShow.species = false;
+    }
+    tmpShow.id = id;
+    console.log("tmp show", tmpShow);
+    setShow(tmpShow);
   };
 
   return (
@@ -211,10 +297,11 @@ const Home = () => {
                     }}
                     sx={{ width: 240 }}
                     options={
-                      dbprovince &&
                       dbprovince
-                        .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                        .map((item) => item)
+                        ? dbprovince
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                        : [""]
                       // dbprovince && dbprovince.map((item) => item.name_en)
                     }
                     getOptionLabel={(options) => {
@@ -239,10 +326,11 @@ const Home = () => {
                             .filter((item) => item.province_id == province)
                             .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
                             .map((item) => item)
-                        : dbdistrict &&
-                          dbdistrict
+                        : dbdistrict
+                        ? dbdistrict
                             .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
                             .map((item) => item)
+                        : [""]
                     }
                     getOptionLabel={(options) => {
                       return options.name_en + " (" + options.name_th + ")";
@@ -324,69 +412,33 @@ const Home = () => {
                             </Popup>
                           </Marker>
                         ))
-                      : dbaddress &&
-                        dbaddress.map((item, index) => (
-                          <Marker
-                            key={index}
-                            position={[
-                              parseFloat(item.latitude),
-                              parseFloat(item.longitude),
-                            ]}
-                          >
-                            <Popup></Popup>
-                          </Marker>
-                        ))}
+                      : ""}
                   </MapContainer>
                 </Box>
               </Grid>
             </Grid>
             <br />
             <br />
-            <Typography variant="h5">Family : Actions</Typography>
-            <TableContainer
-              component={Paper}
-              sx={{
-                boxShadow: "none",
-                border: "1px solid #B3B6B7",
-              }}
-            >
-              <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                  <TableCell>Family</TableCell>
-                  <TableCell>Author</TableCell>
-                  <TableCell> # genera</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableHead>
-                <TableBody>
-                  {family &&
-                    family
-                      .filter((item) =>
-                        detail.find((val) => val.family_id == item.id)
-                      )
-                      .map((val, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{val.name}</TableCell>
-                          <TableCell>
-                            {
-                              detail
-                                // .slice(0, 1)
-                                .find((item) => item.family_id == val.id).author
-                            }
-                          </TableCell>
-                          <TableCell>
-                            {
-                              genus.filter((item) => item.family_id == val.id)
-                                .length
-                            }
-                          </TableCell>
-                          <TableCell>
-                            <Link sx={{ cursor: "pointer" }}>genera</Link>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <div>
+              {show.family ? (
+                <FamilyTable
+                  family={family}
+                  genus={genus}
+                  detail={detail}
+                  ToNext={ToNext}
+                />
+              ) : show.genus ? (
+                <GenusTable
+                  genus={genus}
+                  species={species}
+                  detail={detail}
+                  id={show.id}
+                  family={family}
+                />
+              ) : (
+                ""
+              )}
+            </div>
           </Container>
         </Box>
       </ThemeProvider>
