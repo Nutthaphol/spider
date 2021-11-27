@@ -22,8 +22,8 @@ const validationSchema = Yup.object().shape({
         address: Yup.array(
           Yup.object().shape({
             name: Yup.string().required("Please specify"),
-            lat: Yup.number().required("Please specify"),
-            long: Yup.number().required("Please specify"),
+            latitude: Yup.number().required("Please specify"),
+            longitude: Yup.number().required("Please specify"),
           })
         ),
       })

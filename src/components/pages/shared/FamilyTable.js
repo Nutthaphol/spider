@@ -28,7 +28,6 @@ const FamilyTable = ({ family, detail, genus, ToNext }) => {
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
-          <Typography variant="h5">Family : List</Typography>
           <TableContainer
             component={Paper}
             sx={{
@@ -48,10 +47,10 @@ const FamilyTable = ({ family, detail, genus, ToNext }) => {
               <TableBody>
                 {family &&
                   family
-                    .filter(
-                      (item) =>
-                        detail && detail.find((val) => val.family_id == item.id)
-                    )
+                    // .filter(
+                    //   (item) =>
+                    //     detail && detail.find((val) => val.family_id == item.id)
+                    // )
                     .map((val, index) => (
                       <TableRow key={index}>
                         <TableCell>{val.name}</TableCell>
@@ -62,10 +61,6 @@ const FamilyTable = ({ family, detail, genus, ToNext }) => {
                               .find((item) => item.family_id == val.id).author}
                         </TableCell>
                         <TableCell align="center">
-                          {console.log(
-                            "genus ",
-                            genus.filter((item) => item.family_id == val.id)
-                          )}
                           {
                             genus.filter((item) => item.family_id == val.id)
                               .length

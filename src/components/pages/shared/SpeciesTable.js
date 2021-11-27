@@ -23,7 +23,7 @@ import {
 
 const theme = createTheme();
 
-const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
+const SpeciesTable = ({ genus, species, detail, id }) => {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -38,16 +38,16 @@ const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Genus</TableCell>
+                  <TableCell>species</TableCell>
                   <TableCell align="center">Author</TableCell>
-                  <TableCell align="center"> # species</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {genus &&
-                  genus
-                    .filter((item) => item.family_id == id)
+                {console.log("detail ", detail)}
+                {species &&
+                  species
+                    .filter((item) => item.genus_id == id)
                     .map((val, index) => (
                       <TableRow key={index}>
                         <TableCell>{val.name}</TableCell>
@@ -55,22 +55,16 @@ const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
                           {detail &&
                             detail
                               // .slice(0, 1)
-                              .find((item) => item.genus_id == val.id).author}
+                              .find((item) => item.species_id == val.id).author}
                         </TableCell>
-                        <TableCell align="center">
-                          {
-                            species.filter((item) => item.genus_id == val.id)
-                              .length
-                          }
-                        </TableCell>
+
                         <TableCell align="center">
                           <Link
                             sx={{
                               cursor: "pointer",
                             }}
-                            onClick={() => ToNext("species", val.id)}
                           >
-                            species
+                            detail
                           </Link>
                         </TableCell>
                       </TableRow>
@@ -84,4 +78,4 @@ const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
   );
 };
 
-export default GenusTable;
+export default SpeciesTable;

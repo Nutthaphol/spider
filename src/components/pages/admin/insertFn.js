@@ -40,8 +40,8 @@ const postLocationFn = async (location, detail_id) => {
 
 const postAddressFn = async (address, locationId) => {
   address["location_id"] = locationId;
-  address.lat = parseFloat(address.lat);
-  address.long = parseFloat(address.long);
+  address.latitude = parseFloat(address.latitude);
+  address.longitude = parseFloat(address.longitude);
   return addressService.postAddress(address).then((res) => {
     return res.insertId;
   });

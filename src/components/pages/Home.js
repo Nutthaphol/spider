@@ -21,7 +21,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MapView from "./shared/MapView";
 import {
@@ -36,7 +36,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import makeStyles from "@mui/styles/makeStyles";
 
-import { Search } from "@mui/icons-material";
+import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material";
 import { getAllFamily } from "../../actions/family";
 import { getAllGenus } from "../../actions/genus";
 import { getAllProvinces } from "../../actions/province";
@@ -47,6 +47,7 @@ import { getAllAddress } from "../../actions/address";
 import { getAllSpecies } from "../../actions/species";
 import FamilyTable from "./shared/FamilyTable";
 import GenusTable from "./shared/GenusTable";
+import SpeciesTable from "./shared/SpeciesTable";
 
 const theme = createTheme();
 
@@ -88,12 +89,12 @@ const Home = () => {
   const [species, setSpecies] = useState([]);
   const [map, setMap] = useState();
   const [table, setTable] = useState();
-  const [show, setShow] = useState({
-    family: true,
-    genus: false,
-    species: false,
-    id: "",
-  });
+  const [show, setShow] = useState([
+    {
+      id: -1,
+    },
+  ]);
+  const [stack, setStack] = useState(1);
 
   useEffect(() => {
     dispatch(getAllFamily());
@@ -125,74 +126,63 @@ const Home = () => {
   const mapMarker = (location_) => {
     const address_ = markAddress(location_);
 
-    setFamily([]);
-    setGenus([]);
-    setSpecies([]);
-
     let data = [];
 
-    // setFamily(dbfamily);
-    // setGenus(dbgenus);
-    // setSpecies(dbspecies);
+    let tmpFamily = [];
+    let tmpGenus = [];
+    let tmpSpecies = [];
+    let tmpDetail = [];
 
     address_.map((item, index) => {
       const loc_ = location_.find((val) => val.id === item.location_id);
 
       const detail_ = dbdetail.find((val) => val.id == loc_.detail_id);
-
-      setDetail(dbdetail.filter((val) => val.id == loc_.detail_id));
+      if (
+        tmpDetail
+          .map((e) => {
+            return e.id;
+          })
+          .indexOf(detail_.id) == -1
+      ) {
+        tmpDetail.push(detail_);
+      }
 
       const provinceName = dbprovince.find((val) => val.id == loc_.province);
 
       const family_ = dbfamily.find((val) => val.id == detail_.family_id);
-      let tmpFamily = family;
-      let tmp = dbfamily.filter((val) => val.id == detail_.family_id);
-      tmp.map((item) => {
-        if (
-          tmpFamily
-            .map((e) => {
-              return e.id;
-            })
-            .indexOf(item.id) == -1
-        ) {
-          tmpFamily.push(item);
-        }
-      });
-      setFamily(tmpFamily);
+
+      if (
+        tmpFamily
+          .map((e) => {
+            return e.id;
+          })
+          .indexOf(family_.id) == -1
+      ) {
+        tmpFamily.push(family_);
+      }
 
       const genus_ = dbgenus.find((val) => val.id == detail_.genus_id);
-      // setGenus(dbgenus.filter((val) => val.id == detail_.genus_id));
-      let tmpGenus = genus;
-      tmp = dbgenus.filter((val) => val.id == detail_.genus_id);
-      tmp.map((item) => {
-        if (
-          tmpGenus
-            .map((e) => {
-              return e.id;
-            })
-            .indexOf(item.id) == -1
-        ) {
-          tmpGenus.push(item);
-        }
-      });
-      setGenus(tmpGenus);
+
+      if (
+        tmpGenus
+          .map((e) => {
+            return e.id;
+          })
+          .indexOf(genus_.id) == -1
+      ) {
+        tmpGenus.push(genus_);
+      }
 
       const species_ = dbspecies.find((val) => val.id == detail_.species_id);
-      // setSpecies(dbspecies.filter((val) => val.id == detail_.species_id));
-      let tmpSpecies = species;
-      tmp = dbspecies.filter((val) => val.id == detail_.species_id);
-      tmp.map((item) => {
-        if (
-          tmpSpecies
-            .map((e) => {
-              return e.id;
-            })
-            .indexOf(item.id) == -1
-        ) {
-          tmpSpecies.push(item);
-        }
-      });
-      setSpecies(tmpSpecies);
+      if (
+        tmpSpecies
+          .map((e) => {
+            return e.id;
+          })
+          .indexOf(species_.id) == -1
+      ) {
+        tmpSpecies.push(species_);
+      }
 
       const mock = {
         positionName: item.name,
@@ -206,6 +196,11 @@ const Home = () => {
 
       data.push(mock);
     });
+
+    setFamily(tmpFamily);
+    setGenus(tmpGenus);
+    setSpecies(tmpSpecies);
+    setDetail(tmpDetail);
 
     setMap(data);
   };
@@ -237,12 +232,12 @@ const Home = () => {
     const map = [];
     let location_ = "";
 
-    setShow({
-      family: true,
-      genus: false,
-      species: false,
-      id: "",
-    });
+    setShow([
+      {
+        id: -1,
+      },
+    ]);
+    setStack(1);
 
     if (province && district) {
       location_ = dblocation.filter(
@@ -260,15 +255,51 @@ const Home = () => {
   };
 
   const ToNext = (type, id) => {
-    const tmpShow = { ...show };
+    let tmpShow = [...show];
     if (type == "genus") {
-      tmpShow.genus = true;
-      tmpShow.family = false;
-      tmpShow.species = false;
+      tmpShow[1] ? (tmpShow[1].id = id) : tmpShow.push({ id: id });
+    } else if (type == "species") {
+      tmpShow[2] ? (tmpShow[2].id = id) : tmpShow.push({ id: id });
     }
-    tmpShow.id = id;
+    // tmpShow.id = id;
     console.log("tmp show", tmpShow);
+    setStack(stack + 1);
     setShow(tmpShow);
+  };
+
+  const handleOnClickBackward = () => {
+    setStack(stack - 1);
+  };
+
+  const handleOnClickForward = () => {
+    setStack(stack + 1);
+  };
+
+  const ButtonStack = () => {
+    return (
+      <Fragment>
+        <IconButton
+          sx={{ border: "1px solid #808080", borderRadius: "4px" }}
+          size="small"
+          disabled={stack == 1 ? true : false}
+          onClick={() => handleOnClickBackward()}
+        >
+          <ArrowBackIosNew fontSize="small" />
+        </IconButton>
+        <IconButton
+          sx={{
+            marginLeft: "5px",
+            border: "1px solid #808080",
+            borderRadius: "4px",
+          }}
+          size="small"
+          disabled={stack >= show.length ? true : false}
+          onClick={() => handleOnClickForward()}
+        >
+          <ArrowForwardIos fontSize="small" />
+        </IconButton>
+      </Fragment>
+    );
   };
 
   return (
@@ -302,7 +333,6 @@ const Home = () => {
                             .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
                             .map((item) => item)
                         : [""]
-                      // dbprovince && dbprovince.map((item) => item.name_en)
                     }
                     getOptionLabel={(options) => {
                       return options.name_en + " (" + options.name_th + ")";
@@ -420,25 +450,76 @@ const Home = () => {
             <br />
             <br />
             <div>
-              {show.family ? (
-                <FamilyTable
-                  family={family}
-                  genus={genus}
-                  detail={detail}
-                  ToNext={ToNext}
-                />
-              ) : show.genus ? (
-                <GenusTable
-                  genus={genus}
-                  species={species}
-                  detail={detail}
-                  id={show.id}
-                  family={family}
-                />
+              {stack == 1 ? (
+                <div>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    sx={{ marginBottom: "10px" }}
+                  >
+                    <Typography variant="h5">Family : List</Typography>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <ButtonStack />
+                  </Box>
+                  <FamilyTable
+                    family={family}
+                    genus={genus}
+                    detail={detail}
+                    ToNext={ToNext}
+                  />
+                </div>
+              ) : stack == 2 ? (
+                <div>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    sx={{ marginBottom: "10px" }}
+                  >
+                    <Typography variant="h5">
+                      Family:{" "}
+                      {family &&
+                        family.find((item) => item.id == show[1].id).name}
+                    </Typography>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <ButtonStack />
+                  </Box>
+                  <GenusTable
+                    genus={genus}
+                    species={species}
+                    detail={detail}
+                    id={show[1].id}
+                    family={family}
+                    ToNext={ToNext}
+                  />
+                </div>
               ) : (
-                ""
+                stack == 3 && (
+                  <div>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      <Typography variant="h5">
+                        Genus:{" "}
+                        {genus &&
+                          genus.find((item) => item.id == show[2].id).name}
+                      </Typography>
+                      <Box sx={{ flexGrow: 1 }} />
+                      <ButtonStack />
+                    </Box>
+                    <SpeciesTable
+                      genus={genus}
+                      species={species}
+                      detail={detail}
+                      id={show[2].id}
+                      family={family}
+                    />
+                  </div>
+                )
               )}
             </div>
+            <Box sx={{ marginBottom: "25vh" }} />
           </Container>
         </Box>
       </ThemeProvider>

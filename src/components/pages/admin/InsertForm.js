@@ -322,7 +322,13 @@ const InsertForm = () => {
                 innerRef={formRef}
                 validationSchema={validationSchema}
                 onSubmit={(values, setSubmitting) => {
+                  {
+                    console.log("submit");
+                  }
                   try {
+                    {
+                      console.log("submit");
+                    }
                     handleSubmit(values.data).then((detail_id) => {
                       setSuccess(true);
                       window.scrollTo(0, 0);
@@ -1057,9 +1063,9 @@ const InsertForm = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <Button
+                          type="submit"
                           variant="outlined"
                           color="primary"
-                          type="submit"
                         >
                           Submit
                         </Button>

@@ -8,7 +8,7 @@ const postAddress = (data, callback) => {
     longitude
 ) VALUES (?,?,?,?)`;
 
-  const paramt = [data.location_id, data.name, data.lat, data.long];
+  const paramt = [data.location_id, data.name, data.latitude, data.longitude];
 
   connection.query(query, paramt, (error, result) => {
     if (error) {
