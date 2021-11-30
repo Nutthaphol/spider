@@ -197,12 +197,61 @@ const Home = () => {
       data.push(mock);
     });
 
+    const reduceAddress = () => {
+      let newAddress = [];
+
+      address_.map((item) => {
+        const lat = newAddress.map((e) => {
+          return e.latitude;
+        });
+        const long = newAddress.map((e) => {
+          return e.longitude;
+        });
+
+        if (
+          lat.indexOf(item.latitude) == -1 &&
+          long.indexOf(item.longitude) == -1
+        ) {
+          newAddress.push({
+            latitude: item.latitude,
+            longitude: item.longitude,
+          });
+        }
+      });
+
+      return newAddress;
+    };
+
+    const newData = reduceAddress();
+
+    console.log("data", data);
+    console.log("tmpFamily", tmpFamily);
+    console.log("tmpGenus", tmpGenus);
+    console.log("tmpSpecies", tmpSpecies);
+    console.log("tmpDetail", tmpDetail);
+
+    const strucTmp = {
+      latitude: "",
+      longitude: "",
+      data: [],
+    };
+
+    for (let i = 0; i < newData.length; i++) {
+      const lat = newData[i].latitude;
+      const long = newData[i].longitude;
+
+      newData[i].data = data.filter(
+        (item) => item.latitude == lat && item.longitude == long
+      );
+    }
+    console.log("newData", newData);
+
     setFamily(tmpFamily);
     setGenus(tmpGenus);
     setSpecies(tmpSpecies);
     setDetail(tmpDetail);
 
-    setMap(data);
+    setMap(newData);
   };
 
   const tableShow = (location_) => {
@@ -379,7 +428,7 @@ const Home = () => {
                   select
                 </Button>
               </Grid>
-              <Grid
+              {/* <Grid
                 item
                 sx={{
                   height: "600px",
@@ -414,28 +463,67 @@ const Home = () => {
                                 <ListItem disablePadding>
                                   <ListItemText
                                     primary={
-                                      "Position name: " + item.positionName
+                                      <Typography
+                                        variant="body1"
+                                        component="span"
+                                      >
+                                        {<b>Position name: </b>}
+                                        {item.positionName}
+                                      </Typography>
                                     }
                                   />
                                 </ListItem>
                                 <ListItem disablePadding>
                                   <ListItemText
-                                    primary={"Province: " + item.province}
+                                    primary={
+                                      <Typography
+                                        variant="body1"
+                                        component="span"
+                                      >
+                                        {<b>Province:</b>} {item.province}
+                                      </Typography>
+                                    }
                                   />
                                 </ListItem>
                                 <ListItem disablePadding>
                                   <ListItemText
-                                    primary={"Family: " + item.family}
+                                    primary={
+                                      <Typography
+                                        variant="body1"
+                                        component="span"
+                                      >
+                                        {<b>Family:</b>} {item.family}
+                                      </Typography>
+                                    }
                                   />
                                 </ListItem>
                                 <ListItem disablePadding>
                                   <ListItemText
-                                    primary={"Genus: " + item.genus}
+                                    primary={
+                                      <Typography
+                                        variant="body1"
+                                        component="span"
+                                      >
+                                        {<b>Genus:</b>} {<i>{item.genus}</i>}
+                                      </Typography>
+                                    }
                                   />
                                 </ListItem>
                                 <ListItem disablePadding>
                                   <ListItemText
-                                    primary={"Species: " + item.species}
+                                    primary={
+                                      <Typography
+                                        variant="body1"
+                                        component="span"
+                                      >
+                                        {<b>Species:</b>}{" "}
+                                        {
+                                          <i>
+                                            {item.genus} {item.species}
+                                          </i>
+                                        }
+                                      </Typography>
+                                    }
                                   />
                                 </ListItem>
                               </List>
@@ -445,11 +533,11 @@ const Home = () => {
                       : ""}
                   </MapContainer>
                 </Box>
-              </Grid>
+              </Grid>*/}
             </Grid>
             <br />
             <br />
-            <div>
+            {/* <div>
               {stack == 1 ? (
                 <div>
                   <Box
@@ -518,7 +606,7 @@ const Home = () => {
                   </div>
                 )
               )}
-            </div>
+            </div> */}
             <Box sx={{ marginBottom: "25vh" }} />
           </Container>
         </Box>

@@ -50,7 +50,9 @@ const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
                     .filter((item) => item.family_id == id)
                     .map((val, index) => (
                       <TableRow key={index}>
-                        <TableCell>{val.name}</TableCell>
+                        <TableCell>
+                          <i>{val.name}</i>
+                        </TableCell>
                         <TableCell align="center">
                           {detail &&
                             detail

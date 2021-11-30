@@ -45,3 +45,20 @@ exports.getAllAddress = (req, res) => {
     }
   });
 };
+
+exports.getFromLocation = (req, res) => {
+  const location_id = req.params.id;
+  db.getFromLocation(location_id, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res
+          .status(404)
+          .send({ message: `address from id ${location_id} not fount` });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};

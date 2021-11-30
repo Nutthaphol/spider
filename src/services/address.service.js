@@ -3,7 +3,7 @@ import { httpClient } from "./httpClient";
 const postAddress = async (data) => {
   console.log("services", data);
   const res = await httpClient
-    .post("address/postaddress", { data })
+    .post("address/postAddress", { data })
     .then((response) => {
       return response.data;
     });
@@ -25,8 +25,18 @@ const getAllAddress = async () => {
   return res;
 };
 
+const getFromLocationId = async (id) => {
+  const res = await httpClient
+    .get("address/getFromLocationId/" + id)
+    .then((response) => {
+      return response.data;
+    });
+  return res;
+};
+
 export default {
   postAddress,
   getAddress,
   getAllAddress,
+  getFromLocationId,
 };

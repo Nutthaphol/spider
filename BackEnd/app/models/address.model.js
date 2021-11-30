@@ -46,6 +46,20 @@ const getAllAddress = (callback) => {
   });
 };
 
+const getFromLocation = (location_id, callback) => {
+  const query = `SELECT * FROM address WHERE location_id = ${location_id}`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get address from location_id error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
 exports.postAddress = postAddress;
 exports.getAddress = getAddress;
 exports.getAllAddress = getAllAddress;
+exports.getFromLocation = getFromLocation;

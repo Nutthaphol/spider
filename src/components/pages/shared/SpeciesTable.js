@@ -38,7 +38,7 @@ const SpeciesTable = ({ genus, species, detail, id }) => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>species</TableCell>
+                  <TableCell>Species</TableCell>
                   <TableCell align="center">Author</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
@@ -50,7 +50,12 @@ const SpeciesTable = ({ genus, species, detail, id }) => {
                     .filter((item) => item.genus_id == id)
                     .map((val, index) => (
                       <TableRow key={index}>
-                        <TableCell>{val.name}</TableCell>
+                        <TableCell>
+                          <i>
+                            {genus && genus.find((item) => item.id == id).name}{" "}
+                            {val.name}
+                          </i>
+                        </TableCell>
                         <TableCell align="center">
                           {detail &&
                             detail
