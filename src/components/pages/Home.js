@@ -36,7 +36,13 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import makeStyles from "@mui/styles/makeStyles";
 
-import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material";
+import {
+  ArrowBackIosNew,
+  ArrowForwardIos,
+  KeyboardArrowRight,
+  Search,
+  KeyboardArrowLeft,
+} from "@mui/icons-material";
 import { getAllFamily } from "../../actions/family";
 import { getAllGenus } from "../../actions/genus";
 import { getAllProvinces } from "../../actions/province";
@@ -48,6 +54,9 @@ import { getAllSpecies } from "../../actions/species";
 import FamilyTable from "./shared/FamilyTable";
 import GenusTable from "./shared/GenusTable";
 import SpeciesTable from "./shared/SpeciesTable";
+import Slider from "react-slick";
+import SlideArrow from "./shared/slideArrow";
+import PaperPopup from "./shared/PaperPopup";
 
 const theme = createTheme();
 
@@ -351,6 +360,18 @@ const Home = () => {
     );
   };
 
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: 1,
+    adaptiveHeight: false,
+    nextArrow: <SlideArrow Comp={KeyboardArrowRight} />,
+    prevArrow: <SlideArrow Comp={KeyboardArrowLeft} />,
+  };
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -365,74 +386,80 @@ const Home = () => {
                   alignItem: "center",
                 }}
               >
-                <Typography variant="h5" sx={{ flexGrow: 0.05 }}>
-                  Filter location
-                </Typography>
-                <Box sx={{ flexGrow: 0.05 }}>
-                  <Autocomplete
-                    disablePortal
-                    size="small"
-                    onChange={(e, value) => {
-                      value ? setProvince(value.id) : setProvince("");
-                    }}
-                    sx={{ width: 240 }}
-                    options={
-                      dbprovince
-                        ? dbprovince
-                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                            .map((item) => item)
-                        : [""]
-                    }
-                    getOptionLabel={(options) => {
-                      return options.name_en + " (" + options.name_th + ")";
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Province (All)" />
-                    )}
-                  />
-                </Box>
-                <Box sx={{ flexGrow: 0.05 }}>
-                  <Autocomplete
-                    disablePortal
-                    size="small"
-                    onChange={(e, value) => {
-                      value ? setDistrict(value.id) : setDistrict("");
-                    }}
-                    sx={{ width: 240 }}
-                    options={
-                      province
-                        ? dbdistrict
-                            .filter((item) => item.province_id == province)
-                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                            .map((item) => item)
-                        : dbdistrict
-                        ? dbdistrict
-                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                            .map((item) => item)
-                        : [""]
-                    }
-                    getOptionLabel={(options) => {
-                      return options.name_en + " (" + options.name_th + ")";
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="district (All)" />
-                    )}
-                  />
-                </Box>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  sx={{ minWidth: "100px" }}
-                  onClick={() => handleOnChangeAddress()}
-                >
-                  select
-                </Button>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <Typography variant="h5" sx={{ flexGrow: 0.05 }}>
+                      Filter location
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Autocomplete
+                      disablePortal
+                      size="small"
+                      onChange={(e, value) => {
+                        value ? setProvince(value.id) : setProvince("");
+                      }}
+                      sx={{ width: 240 }}
+                      options={
+                        dbprovince
+                          ? dbprovince
+                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                              .map((item) => item)
+                          : [""]
+                      }
+                      getOptionLabel={(options) => {
+                        return options.name_en + " (" + options.name_th + ")";
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Province (All)" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Autocomplete
+                      disablePortal
+                      size="small"
+                      onChange={(e, value) => {
+                        value ? setDistrict(value.id) : setDistrict("");
+                      }}
+                      sx={{ width: 240 }}
+                      options={
+                        province
+                          ? dbdistrict
+                              .filter((item) => item.province_id == province)
+                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                              .map((item) => item)
+                          : dbdistrict
+                          ? dbdistrict
+                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                              .map((item) => item)
+                          : [""]
+                      }
+                      getOptionLabel={(options) => {
+                        return options.name_en + " (" + options.name_th + ")";
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="district (All)" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="outlined"
+                      sx={{ minWidth: "100px", height: "40px" }}
+                      onClick={() => handleOnChangeAddress()}
+                    >
+                      select
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
-              {/* <Grid
+              <Grid
                 item
                 sx={{
                   height: "600px",
                   width: "100%",
+                  margin: "20px",
                 }}
               >
                 <Box
@@ -451,93 +478,47 @@ const Home = () => {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {map
-                      ? map.map((item, index) => (
-                          <Marker
-                            key={index}
-                            position={[item.latitude, item.longitude]}
-                          >
-                            <Popup>
-                              {" "}
-                              <List disablePadding>
-                                <ListItem disablePadding>
-                                  <ListItemText
-                                    primary={
-                                      <Typography
-                                        variant="body1"
-                                        component="span"
-                                      >
-                                        {<b>Position name: </b>}
-                                        {item.positionName}
-                                      </Typography>
-                                    }
+                    {map &&
+                      map.map((val, index) => (
+                        <Marker
+                          key={index}
+                          position={[val.latitude, val.longitude]}
+                        >
+                          {val.data.length > 1 ? (
+                            <Popup style={{ width: "480px" }}>
+                              <Slider {...settings}>
+                                {val.data.map((val2, index2) => (
+                                  <PaperPopup
+                                    key={index2}
+                                    positionName={val2.positionName}
+                                    province={val2.province}
+                                    family={val2.family}
+                                    genus={val2.genus}
+                                    species={val2.species}
                                   />
-                                </ListItem>
-                                <ListItem disablePadding>
-                                  <ListItemText
-                                    primary={
-                                      <Typography
-                                        variant="body1"
-                                        component="span"
-                                      >
-                                        {<b>Province:</b>} {item.province}
-                                      </Typography>
-                                    }
-                                  />
-                                </ListItem>
-                                <ListItem disablePadding>
-                                  <ListItemText
-                                    primary={
-                                      <Typography
-                                        variant="body1"
-                                        component="span"
-                                      >
-                                        {<b>Family:</b>} {item.family}
-                                      </Typography>
-                                    }
-                                  />
-                                </ListItem>
-                                <ListItem disablePadding>
-                                  <ListItemText
-                                    primary={
-                                      <Typography
-                                        variant="body1"
-                                        component="span"
-                                      >
-                                        {<b>Genus:</b>} {<i>{item.genus}</i>}
-                                      </Typography>
-                                    }
-                                  />
-                                </ListItem>
-                                <ListItem disablePadding>
-                                  <ListItemText
-                                    primary={
-                                      <Typography
-                                        variant="body1"
-                                        component="span"
-                                      >
-                                        {<b>Species:</b>}{" "}
-                                        {
-                                          <i>
-                                            {item.genus} {item.species}
-                                          </i>
-                                        }
-                                      </Typography>
-                                    }
-                                  />
-                                </ListItem>
-                              </List>
+                                ))}
+                              </Slider>
                             </Popup>
-                          </Marker>
-                        ))
-                      : ""}
+                          ) : (
+                            <Popup>
+                              <PaperPopup
+                                positionName={val.data[0].positionName}
+                                province={val.data[0].province}
+                                family={val.data[0].family}
+                                genus={val.data[0].genus}
+                                species={val.data[0].species}
+                              />
+                            </Popup>
+                          )}
+                        </Marker>
+                      ))}
                   </MapContainer>
                 </Box>
-              </Grid>*/}
+              </Grid>
             </Grid>
             <br />
             <br />
-            {/* <div>
+            <div>
               {stack == 1 ? (
                 <div>
                   <Box
@@ -606,7 +587,7 @@ const Home = () => {
                   </div>
                 )
               )}
-            </div> */}
+            </div>
             <Box sx={{ marginBottom: "25vh" }} />
           </Container>
         </Box>
