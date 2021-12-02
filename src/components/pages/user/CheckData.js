@@ -5,7 +5,13 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import { TextField, Typography,Button, Container, Divider } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  Button,
+  Container,
+  Divider,
+} from "@mui/material";
 import { border, Box } from "@mui/system";
 import detailService from "../../../services/detail.service";
 import { DetailsSharp } from "@mui/icons-material";
@@ -38,7 +44,7 @@ const CheckData = () => {
     const tmpDetail = id ? await detailService.getDetail(id) : false;
 
     if (tmpDetail) {
-      const image_ = await imageService.getFromDetail(id);
+      const image_ = await imageService.getImage(id);
       tmpDetail.image = image_;
 
       const family_ = await familyService.getFamily(tmpDetail.family_id);

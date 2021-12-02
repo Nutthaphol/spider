@@ -23,7 +23,7 @@ import {
 
 const theme = createTheme();
 
-const SpeciesTable = ({ genus, species, detail, id }) => {
+const SpeciesTable = ({ genus, species, detail, id, location }) => {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -39,13 +39,42 @@ const SpeciesTable = ({ genus, species, detail, id }) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Species</TableCell>
-                  <TableCell align="center">Author</TableCell>
-                  <TableCell align="center">Action</TableCell>
+                  <TableCell align="left">Author</TableCell>
+                  <TableCell align="left">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {console.log("detail ", detail)}
-                {species &&
+                {detail &&
+                  detail
+                    // .filter(
+                    //   (item, index, self) =>
+                    //     self
+                    //       .map((e) => {
+                    //         return e.species_id;
+                    //       })
+                    //       .indexOf(item.species_id) === index
+                    // )
+                    .filter((item) => item.genus_id === id)
+                    .map((val, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <i>{`${val.genus} ${val.species}`}</i>
+                        </TableCell>
+                        <TableCell align="left">{val.author}</TableCell>
+                        <TableCell align="left">
+                          <Link
+                            href={`detail/${val.id}`}
+                            sx={{
+                              cursor: "pointer",
+                            }}
+                            underline="hover"
+                          >
+                            detail
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                {/* {species &&
                   species
                     .filter((item) => item.genus_id == id)
                     .map((val, index) => (
@@ -60,11 +89,16 @@ const SpeciesTable = ({ genus, species, detail, id }) => {
                           {detail &&
                             detail
                               // .slice(0, 1)
-                              .find((item) => item.species_id == val.id).author}
+                              .find(
+                                (item) =>
+                                  item.species_id == val.id &&
+                                  item.genus_id == id
+                              ).author}
                         </TableCell>
 
                         <TableCell align="center">
                           <Link
+                            href={`detail/${val.id}`}
                             sx={{
                               cursor: "pointer",
                             }}
@@ -73,7 +107,7 @@ const SpeciesTable = ({ genus, species, detail, id }) => {
                           </Link>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ))} */}
               </TableBody>
             </Table>
           </TableContainer>

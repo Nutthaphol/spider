@@ -57,6 +57,7 @@ import SpeciesTable from "./shared/SpeciesTable";
 import Slider from "react-slick";
 import SlideArrow from "./shared/slideArrow";
 import PaperPopup from "./shared/PaperPopup";
+import locationService from "../../services/location.service";
 
 const theme = createTheme();
 
@@ -65,16 +66,6 @@ const useStyles = makeStyles(() => ({
     margin: theme.spacing(2, 0),
   },
 }));
-
-const position_ = [
-  {
-    position_id: 1,
-    location_id: 1,
-    position_name: "Doi Inthaonon",
-    lat_: 18.588,
-    long_: 98.4871,
-  },
-];
 
 const Home = () => {
   const classes = useStyles();
@@ -96,7 +87,7 @@ const Home = () => {
   const [family, setFamily] = useState([]);
   const [genus, setGenus] = useState([]);
   const [species, setSpecies] = useState([]);
-  const [map, setMap] = useState();
+  const [map, setMap] = useState(false);
   const [table, setTable] = useState();
   const [show, setShow] = useState([
     {
@@ -105,7 +96,7 @@ const Home = () => {
   ]);
   const [stack, setStack] = useState(1);
 
-  useEffect(() => {
+  useEffect(async () => {
     dispatch(getAllFamily());
     dispatch(getAllGenus());
     dispatch(getAllSpecies());
@@ -123,12 +114,14 @@ const Home = () => {
 
   const markAddress = (location_) => {
     let address_ = [];
-    location_.map((item) => {
-      const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
-      tmp.map((val) => {
-        address_.push(val);
+    if (location_ && dbaddress) {
+      location_.map((item) => {
+        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
+        tmp.map((val) => {
+          address_.push(val);
+        });
       });
-    });
+    }
     return address_;
   };
 
@@ -233,12 +226,6 @@ const Home = () => {
 
     const newData = reduceAddress();
 
-    console.log("data", data);
-    console.log("tmpFamily", tmpFamily);
-    console.log("tmpGenus", tmpGenus);
-    console.log("tmpSpecies", tmpSpecies);
-    console.log("tmpDetail", tmpDetail);
-
     const strucTmp = {
       latitude: "",
       longitude: "",
@@ -253,33 +240,36 @@ const Home = () => {
         (item) => item.latitude == lat && item.longitude == long
       );
     }
-    console.log("newData", newData);
 
+    dispatch({ type: "setDetail", payload: tmpDetail });
     setFamily(tmpFamily);
     setGenus(tmpGenus);
     setSpecies(tmpSpecies);
     setDetail(tmpDetail);
 
-    setMap(newData);
+    return newData;
+    // setMap(newData);
   };
 
   const tableShow = (location_) => {
     let detail_ = [];
-    location_.map((item) => {
-      const tmp = dbdetail.find((val) => val.id == item.detail_id);
-      if (
-        detail_
-          .map((e) => {
-            return e.id;
-          })
-          .indexOf(tmp.id) === -1
-      ) {
-        tmp.family = dbfamily.find((val) => val.id == tmp.family_id).name;
-        tmp.genus = dbgenus.find((val) => val.id == tmp.genus_id).name;
-        tmp.species = dbspecies.find((val) => val.id == tmp.species_id).name;
-        detail_.push(tmp);
-      }
-    });
+    if (location_ && dbdetail) {
+      location_.map((item) => {
+        const tmp = dbdetail.find((val) => val.id == item.detail_id);
+        if (
+          detail_
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(tmp.id) === -1
+        ) {
+          tmp.family = dbfamily.find((val) => val.id == tmp.family_id).name;
+          tmp.genus = dbgenus.find((val) => val.id == tmp.genus_id).name;
+          tmp.species = dbspecies.find((val) => val.id == tmp.species_id).name;
+          detail_.push(tmp);
+        }
+      });
+    }
 
     return detail_;
     console.log("data", detail_);
@@ -308,7 +298,8 @@ const Home = () => {
     } else {
       location_ = dblocation;
     }
-    mapMarker(location_);
+    const data = mapMarker(location_);
+    setMap(data);
     const detail_ = tableShow(location_);
   };
 
@@ -318,6 +309,7 @@ const Home = () => {
       tmpShow[1] ? (tmpShow[1].id = id) : tmpShow.push({ id: id });
     } else if (type == "species") {
       tmpShow[2] ? (tmpShow[2].id = id) : tmpShow.push({ id: id });
+      console.log("genus id ", id);
     }
     // tmpShow.id = id;
     console.log("tmp show", tmpShow);
@@ -477,41 +469,41 @@ const Home = () => {
                       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-
-                    {map &&
-                      map.map((val, index) => (
-                        <Marker
-                          key={index}
-                          position={[val.latitude, val.longitude]}
-                        >
-                          {val.data.length > 1 ? (
-                            <Popup style={{ width: "480px" }}>
-                              <Slider {...settings}>
-                                {val.data.map((val2, index2) => (
-                                  <PaperPopup
-                                    key={index2}
-                                    positionName={val2.positionName}
-                                    province={val2.province}
-                                    family={val2.family}
-                                    genus={val2.genus}
-                                    species={val2.species}
-                                  />
-                                ))}
-                              </Slider>
-                            </Popup>
-                          ) : (
-                            <Popup>
-                              <PaperPopup
-                                positionName={val.data[0].positionName}
-                                province={val.data[0].province}
-                                family={val.data[0].family}
-                                genus={val.data[0].genus}
-                                species={val.data[0].species}
-                              />
-                            </Popup>
-                          )}
-                        </Marker>
-                      ))}
+                    {map
+                      ? map.map((val, index) => (
+                          <Marker
+                            key={index}
+                            position={[val.latitude, val.longitude]}
+                          >
+                            {val.data.length > 1 ? (
+                              <Popup style={{ width: "480px" }}>
+                                <Slider {...settings}>
+                                  {val.data.map((val2, index2) => (
+                                    <PaperPopup
+                                      key={index2}
+                                      positionName={val2.positionName}
+                                      province={val2.province}
+                                      family={val2.family}
+                                      genus={val2.genus}
+                                      species={val2.species}
+                                    />
+                                  ))}
+                                </Slider>
+                              </Popup>
+                            ) : (
+                              <Popup>
+                                <PaperPopup
+                                  positionName={val.data[0].positionName}
+                                  province={val.data[0].province}
+                                  family={val.data[0].family}
+                                  genus={val.data[0].genus}
+                                  species={val.data[0].species}
+                                />
+                              </Popup>
+                            )}
+                          </Marker>
+                        ))
+                      : ""}
                   </MapContainer>
                 </Box>
               </Grid>
@@ -583,6 +575,7 @@ const Home = () => {
                       detail={detail}
                       id={show[2].id}
                       family={family}
+                      location={location}
                     />
                   </div>
                 )

@@ -23,7 +23,24 @@ import {
 
 const theme = createTheme();
 
-const FamilyTable = ({ family, detail, genus, ToNext }) => {
+const FamilyTable = (props) => {
+  const { family, detail, genus, ToNext } = props;
+
+  const filterCountGenus = (id) => {
+    const family_filter = detail
+      .filter((item) => item.family_id === id)
+      .filter(
+        (item, index, self) =>
+          self
+            .map((e) => {
+              return e.genus_id;
+            })
+            .indexOf(item.genus_id) === index
+      );
+
+    const number = family_filter.length;
+    return number;
+  };
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -39,13 +56,42 @@ const FamilyTable = ({ family, detail, genus, ToNext }) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Family</TableCell>
-                  <TableCell align="center">Author</TableCell>
-                  <TableCell align="center"> # genera</TableCell>
-                  <TableCell align="center">Action</TableCell>
+                  <TableCell align="left">Author</TableCell>
+                  <TableCell align="left"> # genera</TableCell>
+                  <TableCell align="left">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {family &&
+                {detail &&
+                  detail
+                    .filter(
+                      (item, index, self) =>
+                        self
+                          .map((e) => {
+                            return e.family_id;
+                          })
+                          .indexOf(item.family_id) === index
+                    )
+                    .map((val, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{val.family}</TableCell>
+                        <TableCell align="left">{val.author}</TableCell>
+                        <TableCell align="left">
+                          {filterCountGenus(val.family_id)}
+                        </TableCell>
+                        <TableCell align="left">
+                          {" "}
+                          <Link
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => ToNext("genus", val.id)}
+                            underline="hover"
+                          >
+                            Genera
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                {/* {family &&
                   family
                     // .filter(
                     //   (item) =>
@@ -79,7 +125,7 @@ const FamilyTable = ({ family, detail, genus, ToNext }) => {
                           </Link>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ))} */}
               </TableBody>
             </Table>
           </TableContainer>

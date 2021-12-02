@@ -11,7 +11,7 @@ const postImage = async (data) => {
   return res;
 };
 
-const getFromDetail = async (id) => {
+const getImage = async (id) => {
   const res = await httpClient
     .get("image/getfromdetail/" + id)
     .then((response) => {
@@ -22,5 +22,5 @@ const getFromDetail = async (id) => {
 
 export default {
   postImage,
-  getFromDetail,
+  getImage,
 };

@@ -23,7 +23,24 @@ import {
 
 const theme = createTheme();
 
-const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
+const GenusTable = (props) => {
+  const { family, genus, detail, species, ToNext, id } = props;
+
+  const filterCountSpecies = (id) => {
+    const genus_filter = detail
+      .filter((item) => item.genus_id === id)
+      .filter(
+        (item, index, self) =>
+          self
+            .map((e) => {
+              return e.species_id;
+            })
+            .indexOf(item.species_id) === index
+      );
+
+    const number = genus_filter.length;
+    return number;
+  };
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -39,38 +56,39 @@ const GenusTable = ({ family, genus, detail, species, ToNext, id }) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Genus</TableCell>
-                  <TableCell align="center">Author</TableCell>
-                  <TableCell align="center"> # species</TableCell>
-                  <TableCell align="center">Action</TableCell>
+                  <TableCell align="left">Author</TableCell>
+                  <TableCell align="left"> # species</TableCell>
+                  <TableCell align="left">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {genus &&
-                  genus
-                    .filter((item) => item.family_id == id)
+                {detail &&
+                  detail
+                    .filter(
+                      (item, index, self) =>
+                        self
+                          .map((e) => {
+                            return e.genus_id;
+                          })
+                          .indexOf(item.genus_id) === index
+                    )
+                    .filter((item) => item.family_id === id)
                     .map((val, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <i>{val.name}</i>
+                          <i>{val.genus}</i>
                         </TableCell>
-                        <TableCell align="center">
-                          {detail &&
-                            detail
-                              // .slice(0, 1)
-                              .find((item) => item.genus_id == val.id).author}
+                        <TableCell align="left">{val.author}</TableCell>
+                        <TableCell align="left">
+                          {filterCountSpecies(val.genus_id)}
                         </TableCell>
-                        <TableCell align="center">
-                          {
-                            species.filter((item) => item.genus_id == val.id)
-                              .length
-                          }
-                        </TableCell>
-                        <TableCell align="center">
+                        <TableCell>
                           <Link
                             sx={{
                               cursor: "pointer",
                             }}
-                            onClick={() => ToNext("species", val.id)}
+                            onClick={() => ToNext("species", val.genus_id)}
+                            underline="hover"
                           >
                             species
                           </Link>

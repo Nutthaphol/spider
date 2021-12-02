@@ -16,3 +16,20 @@ export const getAllDetail = () => async (dispatch) => {
     });
   }
 };
+
+export const getDetail = (id) => async (dispatch) => {
+  try {
+    const res = await detailService.getDetail(id);
+    console.log("action detail res", res);
+    if (res) {
+      dispatch({
+        type: DETAIL_SUCCESS,
+        payload: res,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: DETAIL_FAILED,
+    });
+  }
+};

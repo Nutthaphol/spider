@@ -9,6 +9,8 @@ import district from "./district";
 import detail from "./detail";
 import location from "./location";
 import address from "./address";
+import image from "./image";
+import paper from "./paper";
 
 const appReducer = combineReducers({
   family,
@@ -20,6 +22,8 @@ const appReducer = combineReducers({
   detail,
   location,
   address,
+  image,
+  paper,
 });
 
 const rootReducer = (state, action) => {

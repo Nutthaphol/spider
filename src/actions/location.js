@@ -16,3 +16,17 @@ export const getAllLocation = () => async (dispatch) => {
     });
   }
 };
+
+export const getLocation = (id) => async (dispatch) => {
+  try {
+    const res = locationService.getLocation(id);
+    if (res) {
+      dispatch({
+        type: LOCATION_SUCCESS,
+        payload: res,
+      });
+    }
+  } catch (err) {
+    dispatch({ type: LOCATION_FAILED });
+  }
+};

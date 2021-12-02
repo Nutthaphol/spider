@@ -34,6 +34,14 @@ export const ADDRESS_SUCCESS = "ADDRESS_SUCCESS";
 export const ADDRESS_FAILED = "ADDRESS_FAILED";
 export const ADDRESS_FETCHING = "ADDRESS_FETCHING";
 
+export const IMAGE_SUCCESS = "IMAGE_SUCCESS";
+export const IMAGE_FAILED = "IMAGE_FAILED";
+export const IMAGE_FETCHING = "IMAGE_FETCHING";
+
+export const PAPER_SUCCESS = "PAPER_SUCCESS";
+export const PAPER_FAILED = "PAPER_FAILED";
+export const PAPER_FETCHING = "PAPER_FETCHING";
+
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";

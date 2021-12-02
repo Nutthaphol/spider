@@ -18,3 +18,20 @@ export const getAllSpecies = () => async (dispatch) => {
     });
   }
 };
+
+export const getDetailSpecies = (id) => async (dispatch) => {
+  try {
+    const res = await speciesService.getSpecies(id);
+
+    if (res) {
+      dispatch({
+        type: SPECIES_SUCCESS,
+        payload: res,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: SPECIES_FAILED,
+    });
+  }
+};
