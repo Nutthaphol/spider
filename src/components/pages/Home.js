@@ -129,6 +129,7 @@ const Home = () => {
     const address_ = markAddress(location_);
 
     let data = [];
+    let skip = false;
 
     let tmpFamily = [];
     let tmpGenus = [];
@@ -138,65 +139,71 @@ const Home = () => {
     address_.map((item, index) => {
       const loc_ = location_.find((val) => val.id === item.location_id);
 
-      const detail_ = dbdetail.find((val) => val.id == loc_.detail_id);
+      const detail_ = dbdetail.find((val) => val.id == loc_.detail_id) || false;
       if (
+        detail_ ||
         tmpDetail
           .map((e) => {
             return e.id;
           })
           .indexOf(detail_.id) == -1
       ) {
-        tmpDetail.push(detail_);
+        if (detail_) {
+          tmpDetail.push(detail_);
+          skip = true;
+        }
       }
 
-      const provinceName = dbprovince.find((val) => val.id == loc_.province);
+      if (skip) {
+        const provinceName = dbprovince.find((val) => val.id == loc_.province);
 
-      const family_ = dbfamily.find((val) => val.id == detail_.family_id);
+        const family_ = dbfamily.find((val) => val.id == detail_.family_id);
 
-      if (
-        tmpFamily
-          .map((e) => {
-            return e.id;
-          })
-          .indexOf(family_.id) == -1
-      ) {
-        tmpFamily.push(family_);
+        if (
+          tmpFamily
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(family_.id) == -1
+        ) {
+          tmpFamily.push(family_);
+        }
+
+        const genus_ = dbgenus.find((val) => val.id == detail_.genus_id);
+
+        if (
+          tmpGenus
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(genus_.id) == -1
+        ) {
+          tmpGenus.push(genus_);
+        }
+
+        const species_ = dbspecies.find((val) => val.id == detail_.species_id);
+        if (
+          tmpSpecies
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(species_.id) == -1
+        ) {
+          tmpSpecies.push(species_);
+        }
+
+        const mock = {
+          positionName: item.name,
+          latitude: item.latitude,
+          longitude: item.longitude,
+          province: provinceName.name_en,
+          family: family_.name,
+          genus: genus_.name,
+          species: species_.name,
+        };
+
+        data.push(mock);
       }
-
-      const genus_ = dbgenus.find((val) => val.id == detail_.genus_id);
-
-      if (
-        tmpGenus
-          .map((e) => {
-            return e.id;
-          })
-          .indexOf(genus_.id) == -1
-      ) {
-        tmpGenus.push(genus_);
-      }
-
-      const species_ = dbspecies.find((val) => val.id == detail_.species_id);
-      if (
-        tmpSpecies
-          .map((e) => {
-            return e.id;
-          })
-          .indexOf(species_.id) == -1
-      ) {
-        tmpSpecies.push(species_);
-      }
-
-      const mock = {
-        positionName: item.name,
-        latitude: item.latitude,
-        longitude: item.longitude,
-        province: provinceName.name_en,
-        family: family_.name,
-        genus: genus_.name,
-        species: species_.name,
-      };
-
-      data.push(mock);
     });
 
     const reduceAddress = () => {
@@ -270,7 +277,6 @@ const Home = () => {
         }
       });
     }
-
     return detail_;
     console.log("data", detail_);
   };

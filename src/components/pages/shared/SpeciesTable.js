@@ -63,7 +63,7 @@ const SpeciesTable = ({ genus, species, detail, id, location }) => {
                         <TableCell align="left">{val.author}</TableCell>
                         <TableCell align="left">
                           <Link
-                            href={`detail/${val.id}`}
+                            href={"detail/" + val.id}
                             sx={{
                               cursor: "pointer",
                             }}

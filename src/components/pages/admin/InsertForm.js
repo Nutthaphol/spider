@@ -69,7 +69,9 @@ const theme = createTheme();
 
 const useStyles = makeStyles(() => ({
   paper: {
-    paddingf: "50px",
+    padding: "10px",
+    boxShadow: "none",
+    border: "1px solid #B3B6B7",
   },
   divider: {
     marginTop: "10px",
@@ -284,11 +286,11 @@ const InsertForm = () => {
     return detail_id;
   };
 
-  function onKeyDown(keyEvent) {
+  const onKeyDown = (keyEvent) => {
     if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
       keyEvent.preventDefault();
     }
-  }
+  };
 
   // render form component
   return (
@@ -558,6 +560,7 @@ const InsertForm = () => {
                           <MapView listEx={values.data.location} />
                         </div>
                       </Grid>
+                      {/* End map view */}
                       <Grid item xs={12}>
                         <Typography variant="subtitle1">Altitude</Typography>
                         <Field
@@ -618,6 +621,7 @@ const InsertForm = () => {
                       <Grid item xs={12}>
                         <Divider style={{ marginTop: "1rem" }} />
                       </Grid>
+                      {/* End Detail */}
                       <Grid item xs={12}>
                         <FieldArray name="data.location">
                           {({ push, pop, remove }) => (
@@ -960,8 +964,6 @@ const InsertForm = () => {
                                   onClick={() =>
                                     push({
                                       name: "",
-                                      latitude: "",
-                                      longitude: "",
                                     })
                                   }
                                 >

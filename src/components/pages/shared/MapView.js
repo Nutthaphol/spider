@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 const MapView = ({ listEx, listNormal, zoom }) => {
   const [position_, setPosition_] = useState();
-  const [listNormal_, setlistNormal_] = useState(listNormal);
   const [center, setCenter] = useState();
   useEffect(() => {
     console.log("listEx", listEx);
@@ -16,17 +15,8 @@ const MapView = ({ listEx, listNormal, zoom }) => {
       }
       setPosition_(data);
       setCenter([parseFloat(data[0].latitude), parseFloat(data[0].longitude)]);
-    } else if (listNormal_) {
-      let data = [];
-      for (let i = 0; i < listNormal_.length; i++) {
-        data.push(listNormal_[i]);
-      }
-      setPosition_(data);
-      setCenter([parseFloat(data[0].latitude), parseFloat(data[0].longitude)]);
-    } else {
-      setCenter([13, 108]);
     }
-  }, []);
+  }, [listEx]);
   return (
     <div style={{ height: "100%" }}>
       {position_ ? (
@@ -46,15 +36,18 @@ const MapView = ({ listEx, listNormal, zoom }) => {
           />
           {position_
             .filter((item) => {
-              // console.log("parseFloat(item.latitude)", parseFloat(item.latitude));
-              // console.log(
-              //   "parseFloat(item.longitude)",
-              //   parseFloat(item.longitude)
-              // );
-              // console.log(
-              //   !isNaN(parseFloat(item.latitude)) &&
-              //     !isNaN(parseFloat(item.longitude))
-              // );
+              console.log(
+                "parseFloat(item.latitude)",
+                parseFloat(item.latitude)
+              );
+              console.log(
+                "parseFloat(item.longitude)",
+                parseFloat(item.longitude)
+              );
+              console.log(
+                !isNaN(parseFloat(item.latitude)) &&
+                  !isNaN(parseFloat(item.longitude))
+              );
               if (
                 !isNaN(parseFloat(item.latitude)) &&
                 !isNaN(parseFloat(item.longitude))

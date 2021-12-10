@@ -61,6 +61,18 @@ const postImageFn = async (files) => {
   });
 };
 
+const updateDetailTypeFn = async (type) => {
+  return detailService.updateDetailType(type).then((res) => {
+    return res;
+  });
+};
+
+const updateDetailFn = async (detail) => {
+  return detailService.updateDetail(detail).then((res) => {
+    return res;
+  });
+};
+
 export {
   postFamilyFn,
   postGenusFn,
@@ -70,4 +82,6 @@ export {
   postAddressFn,
   postPaperFn,
   postImageFn,
+  updateDetailFn,
+  updateDetailTypeFn,
 };

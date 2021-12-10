@@ -41,7 +41,7 @@ const CheckData = () => {
   }, []);
 
   const handleOnClick = async () => {
-    const tmpDetail = id ? await detailService.getDetail(id) : false;
+    const tmpDetail = id ? await detailService.getAllDetailAdmin(id) : false;
 
     if (tmpDetail) {
       const image_ = await imageService.getImage(id);
@@ -180,7 +180,7 @@ const CheckData = () => {
                   detail.image.map((image, index) => (
                     <img
                       key={index}
-                      src={image.path}
+                      src={`/${image.path}`}
                       //   width="100%"
                       style={{
                         maxHeight: "360px",

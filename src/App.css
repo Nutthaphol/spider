@@ -24,6 +24,10 @@
   padding-top: 100px;
   width: 100%;
 }
+
+body {
+  background-color: #f6fcff;
+}
 /* 
 .MuiPaper-root {
   background-color: #404040;

@@ -8,6 +8,8 @@ import {
   Paper,
   ClickAwayListener,
   Link,
+  Icon,
+  Divider,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import {
@@ -17,13 +19,14 @@ import {
 } from "@mui/material/styles";
 
 import makeStyles from "@mui/styles/makeStyles";
+import { ArrowDropDown } from "@mui/icons-material";
 
-const theme = createTheme();
+const theme = createTheme({});
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiPaper-root": {
-      borderRadius: 6,
+      borderRadius: "4px",
       // marginTop: theme.spacing(1),
       minWidth: 140,
       color:
@@ -33,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
       boxShadow:
         "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
       "& .MuiMenu-list": {
-        padding: "2px 0",
+        padding: "0 0 0 0",
+        // padding: "10px 0",
       },
     },
   },
@@ -60,9 +64,18 @@ const MenuBar = (props) => {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
-          sx={{ color: "white" }}
+          sx={{
+            color: "white",
+            textTransform: "none",
+            fontWeight: 600,
+            borderRight: "1px solid #fff",
+            borderRadius: "0",
+          }}
         >
-          Insert
+          {message}{" "}
+          <Icon sx={{ display: "flex", alignItems: "center" }}>
+            <ArrowDropDown />
+          </Icon>
         </Button>
         <Menu
           className={classes.root}
@@ -87,7 +100,9 @@ const MenuBar = (props) => {
                 underline="none"
                 sx={{ color: "black" }}
               >
-                <MenuItem>{val.label}</MenuItem>
+                <MenuItem sx={{ borderBottom: "1px solid #d4d5d6" }}>
+                  {val.label}
+                </MenuItem>
               </Link>
             ))}
         </Menu>

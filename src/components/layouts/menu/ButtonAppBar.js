@@ -10,6 +10,12 @@ const ButtonAppBar = (props) => {
       align="right"
       href={link}
       endIcon={icon}
+      sx={{
+        textTransform: "none",
+        fontWeight: 600,
+        borderRight: "1px solid #fff",
+        borderRadius: "0",
+      }}
     >
       {message}
     </Button>

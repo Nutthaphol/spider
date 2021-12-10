@@ -13,6 +13,8 @@ import Login from "./components/pages/Login";
 import InsertForm from "./components/pages/admin/InsertForm";
 import CheckData from "./components/pages/user/CheckData";
 import Detail from "./components/pages/user/Detail";
+import Manage from "./components/pages/admin/Manage";
+import EditDetailForm from "./components/pages/admin/EditDetailForm";
 
 const theme = createTheme();
 
@@ -62,6 +64,12 @@ const Routers = () => {
             <Route exact path="/detail/:id" component={Detail} />
 
             <AdminRoute exact path="/Form" component={InsertForm} />
+            <AdminRoute exact path="/Manage" component={Manage} />
+            <AdminRoute
+              exact
+              path="/editDetailForm/:id"
+              component={EditDetailForm}
+            />
           </Switch>
         </Container>
       </ThemeProvider>

@@ -1,6 +1,10 @@
 export const insertList = [
   {
-    path: "Form",
+    path: "/Manage",
+    label: "Manage",
+  },
+  {
+    path: "/Form",
     label: "Form",
   },
 ];

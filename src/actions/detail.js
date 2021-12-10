@@ -17,9 +17,41 @@ export const getAllDetail = () => async (dispatch) => {
   }
 };
 
+export const getAllDetailAdmin = () => async (dispatch) => {
+  try {
+    const res = await detailService.getAllDetailAdmin();
+    if (res) {
+      dispatch({
+        type: DETAIL_SUCCESS,
+        payload: res,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: DETAIL_FAILED,
+    });
+  }
+};
+
 export const getDetail = (id) => async (dispatch) => {
   try {
     const res = await detailService.getDetail(id);
+    console.log("action detail res", res);
+    if (res) {
+      dispatch({
+        type: DETAIL_SUCCESS,
+        payload: res,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: DETAIL_FAILED,
+    });
+  }
+};
+export const getDetailAdmin = (id) => async (dispatch) => {
+  try {
+    const res = await detailService.getDetailAdmin(id);
     console.log("action detail res", res);
     if (res) {
       dispatch({

@@ -12,7 +12,7 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-const theme = createTheme();
+const theme = createTheme({});
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -60,7 +60,7 @@ const Header = () => {
               <ButtonAppBar message="Home" link={"/"} />
               {statusMenu && (
                 <MenuBar
-                  message="Insert"
+                  message="Manage"
                   icon={<KeyboardArrowDown />}
                   listButton={insertList}
                 />
@@ -77,6 +77,10 @@ const Header = () => {
                     window.location.reload();
                     dispatch(logout());
                   }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: 600,
+                  }}
                 >
                   Logout
                 </Button>
@@ -86,7 +90,8 @@ const Header = () => {
                   color="inherit"
                   align="right"
                   size="small"
-                  href="login"
+                  href={`/login`}
+                  sx={{ textTransform: "none", fontWeight: 600 }}
                 >
                   Login
                 </Button>
