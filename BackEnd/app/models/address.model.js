@@ -5,10 +5,43 @@ const postAddress = (data, callback) => {
     location_id,
     name,
     latitude,
-    longitude
-) VALUES (?,?,?,?)`;
+    longitude,
+    active
+) VALUES (?,?,?,?,?)`;
 
-  const paramt = [data.location_id, data.name, data.latitude, data.longitude];
+  const paramt = [
+    data.location_id,
+    data.name,
+    data.latitude,
+    data.longitude,
+    true,
+  ];
+
+  connection.query(query, paramt, (error, result) => {
+    if (error) {
+      console.log("error addrass   ", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+const updateAddress = (data, callback) => {
+  const query = `UPDATE address
+  SET name = ?,
+      latitude = ?,
+      longitude = ?,
+      active = ?
+  WHERE id = ?`;
+
+  const paramt = [
+    data.name,
+    data.latitude,
+    data.longitude,
+    data.active,
+    data.id,
+  ];
 
   connection.query(query, paramt, (error, result) => {
     if (error) {
@@ -21,6 +54,19 @@ const postAddress = (data, callback) => {
 };
 
 const getAddress = (id, callback) => {
+  const query = `SELECT * FROM address WHERE location_id = ${id} AND active = 1`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get address error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+const getAddressAdmin = (id, callback) => {
   const query = `SELECT * FROM address WHERE location_id = ${id}`;
 
   connection.query(query, (error, result) => {
@@ -61,5 +107,7 @@ const getFromLocation = (location_id, callback) => {
 
 exports.postAddress = postAddress;
 exports.getAddress = getAddress;
+exports.getAddressAdmin = getAddressAdmin;
 exports.getAllAddress = getAllAddress;
 exports.getFromLocation = getFromLocation;
+exports.updateAddress = updateAddress;

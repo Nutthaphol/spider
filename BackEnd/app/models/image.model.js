@@ -18,8 +18,37 @@ const postImage = (data, callback) => {
     callback(null, result);
   });
 };
+const updateImage = (data, callback) => {
+  const query = `UPDATE image 
+        set active = ?
+        WHERE id = ?`;
 
-const getFromDetail = (id, callback) => {
+  const paramt = [data.active, data.id];
+
+  connection.query(query, paramt, (error, result) => {
+    if (error) {
+      console.log("error image   ", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+const getImage = (id, callback) => {
+  const query = `SELECT * FROM image WHERE detail_id = ${id} AND active = 1`;
+
+  connection.query(query, (error, result) => {
+    if (error) {
+      console.log("get img from detail error", error);
+      callback(error, null);
+      return;
+    }
+    callback(null, result);
+  });
+};
+
+const getImageAdmin = (id, callback) => {
   const query = `SELECT * FROM image WHERE detail_id = ${id}`;
 
   connection.query(query, (error, result) => {
@@ -33,4 +62,6 @@ const getFromDetail = (id, callback) => {
 };
 
 exports.postImage = postImage;
-exports.getFromDetail = getFromDetail;
+exports.getImage = getImage;
+exports.getImageAdmin = getImageAdmin;
+exports.updateImage = updateImage;

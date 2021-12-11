@@ -73,7 +73,8 @@ const updateDetail = (data, callback) => {
   method = ?,
   habitat = ?,
   microhabitat = ?,
-  designate = ?
+  designate = ?,
+  active = ?
   WHERE id = ?
   `;
 
@@ -87,6 +88,7 @@ const updateDetail = (data, callback) => {
     data.habitat,
     data.microhabitat,
     data.designate,
+    data.active,
     data.id,
   ];
   connection.query(query, paramt, (error, result) => {

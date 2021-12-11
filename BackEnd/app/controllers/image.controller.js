@@ -25,10 +25,42 @@ exports.postImage = (req, res) => {
   console.log(filename, path, detail_id);
 };
 
-exports.getFromDetail = (req, res) => {
+exports.updateImage = (req, res) => {
+  const data = req.body.data;
+
+  db.updateImage(data, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "Insert data is fail." });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};
+
+exports.getImage = (req, res) => {
   const id = req.params.id;
 
-  db.getFromDetail(id, (error, result) => {
+  db.getImage(id, (error, result) => {
+    try {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({ message: "image not fount" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};
+
+exports.getImageAdmin = (req, res) => {
+  const id = req.params.id;
+
+  db.getImageAdmin(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
