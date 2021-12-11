@@ -64,6 +64,7 @@ const FamilyTable = (props) => {
               <TableBody>
                 {detail &&
                   detail
+                    // unique family type
                     .filter(
                       (item, index, self) =>
                         self
@@ -83,7 +84,9 @@ const FamilyTable = (props) => {
                           {" "}
                           <Link
                             sx={{ cursor: "pointer" }}
-                            onClick={() => ToNext("genus", val.id)}
+                            onClick={() => {
+                              ToNext("genus", val.family_id);
+                            }}
                             underline="hover"
                           >
                             Genera

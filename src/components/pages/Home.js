@@ -295,15 +295,29 @@ const Home = () => {
 
     if (province && district) {
       location_ = dblocation.filter(
-        (item) => item.province == province && item.district == district
+        (item) =>
+          item.province == province &&
+          item.district == district &&
+          dbdetail.find((val) => val.id == item.detail_id)
       );
     } else if (province) {
-      location_ = dblocation.filter((item) => item.province == province);
+      location_ = dblocation.filter(
+        (item) =>
+          item.province == province &&
+          dbdetail.find((val) => val.id == item.detail_id)
+      );
     } else if (district) {
-      location_ = dblocation.filter((item) => item.district == district);
+      location_ = dblocation.filter(
+        (item) =>
+          item.district == district &&
+          dbdetail.find((val) => val.id == item.detail_id)
+      );
     } else {
-      location_ = dblocation;
+      location_ = dblocation.filter((item) =>
+        dbdetail.find((val) => val.id == item.detail_id)
+      );
     }
+    console.log("location_", location_);
     const data = mapMarker(location_);
     setMap(data);
     const detail_ = tableShow(location_);

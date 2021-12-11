@@ -7,12 +7,28 @@ const postAddress = async (data) => {
     .then((response) => {
       return response.data;
     });
-  // console.log("family post res", res);
+  return res;
+};
+
+const updateAddress = async (data) => {
+  console.log("services", data);
+  const res = await httpClient
+    .post("address/updateAddress", { data })
+    .then((response) => {
+      return response.data;
+    });
   return res;
 };
 
 const getAddress = async (id) => {
   const res = await httpClient.get("address/" + id).then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
+const getAddressAdmin = async (id) => {
+  const res = await httpClient.get("admin/address/" + id).then((response) => {
     return response.data;
   });
   return res;
@@ -39,4 +55,6 @@ export default {
   getAddress,
   getAllAddress,
   getFromLocationId,
+  updateAddress,
+  getAddressAdmin,
 };

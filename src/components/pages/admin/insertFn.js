@@ -63,13 +63,37 @@ const postImageFn = async (files) => {
 
 const updateDetailTypeFn = async (type) => {
   return detailService.updateDetailType(type).then((res) => {
-    return res;
+    return type.id;
   });
 };
 
 const updateDetailFn = async (detail) => {
   return detailService.updateDetail(detail).then((res) => {
-    return res;
+    return detail.id;
+  });
+};
+
+const updateLocationFn = async (location) => {
+  return locationService.updateLocation(location).then((res) => {
+    return location.id;
+  });
+};
+
+const updateAddressFn = async (address) => {
+  return addressService.updateAddress(address).then((res) => {
+    return address.id;
+  });
+};
+
+const updatePaperFn = async (paper) => {
+  return paperService.updatePaper(paper).then((res) => {
+    return paper.id;
+  });
+};
+
+const updateImage = async (image) => {
+  return imageService.updateImage(image).then((res) => {
+    return image.id;
   });
 };
 
@@ -84,4 +108,8 @@ export {
   postImageFn,
   updateDetailFn,
   updateDetailTypeFn,
+  updateLocationFn,
+  updateAddressFn,
+  updatePaperFn,
+  updateImage,
 };

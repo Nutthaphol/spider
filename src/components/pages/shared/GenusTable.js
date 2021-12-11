@@ -62,8 +62,10 @@ const GenusTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {console.log("detail", detail)}
                 {detail &&
                   detail
+                    // unique genus type
                     .filter(
                       (item, index, self) =>
                         self
@@ -72,6 +74,7 @@ const GenusTable = (props) => {
                           })
                           .indexOf(item.genus_id) === index
                     )
+                    // filter genus of family
                     .filter((item) => item.family_id === id)
                     .map((val, index) => (
                       <TableRow key={index}>

@@ -232,8 +232,12 @@ const Detail = (props) => {
                     })}
                   </Typography>
                 </Box>
+                <br />
+                <br />
+                <Divider />
+                <br />
                 <Typography variant="h5" gutterBottom>
-                  Reference
+                  Picture
                 </Typography>
                 {detail.image.map((image, index) => (
                   <img

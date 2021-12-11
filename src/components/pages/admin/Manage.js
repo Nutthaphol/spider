@@ -40,6 +40,8 @@ import paperService from "../../../services/paper.service";
 import imageService from "../../../services/image.service";
 import { getAllProvinces } from "../../../actions/province";
 import { getAllDistrict } from "../../../actions/district";
+import detailService from "../../../services/detail.service";
+import { updateDetailFn } from "./insertFn";
 
 const theme = createTheme();
 
@@ -48,6 +50,9 @@ const useStyles = makeStyles(() => ({
     padding: "20px",
     boxShadow: "none",
     border: "1px solid #B3B6B7",
+  },
+  deleteBg: {
+    backgroundColor: "rgba(255, 36, 29, 0.4)",
   },
 }));
 
@@ -63,15 +68,25 @@ const Manage = () => {
 
   const [openDetail, setOpenDetail] = useState(false);
   const [logDetail, setLogDetail] = useState(-1);
+  const [onDetail, setOnDetail] = useState(null);
 
   useEffect(() => {
     dispatch(getAllFamily());
     dispatch(getAllGenus());
     dispatch(getAllSpecies());
-    dispatch(getAllDetail());
     dispatch(getAllProvinces());
     dispatch(getAllDistrict());
-  }, []);
+    dispatch(getAllDetail());
+
+    const preData = async () => {
+      const preDetail = await detailService.getAllDetailAdmin();
+      setOnDetail(preDetail);
+    };
+
+    if (onDetail == null) {
+      preData();
+    }
+  }, [onDetail]);
 
   const preDetail = async (id) => {
     const selectDetail = detail.find((item) => item.id == id);
@@ -107,6 +122,41 @@ const Manage = () => {
 
   const handelOnClose = () => {
     setOpenDetail(false);
+  };
+
+  const handleOnClickDelete = async (id) => {
+    const detail_ = [...onDetail];
+    const index = detail_
+      .map((e) => {
+        return e.id;
+      })
+      .indexOf(id);
+
+    detail_[index].active = 0;
+
+    let res = false;
+    res = await updateDetailFn(detail_[index]);
+    if (res == id) {
+      setOnDetail(detail_);
+    }
+  };
+
+  const handleOnClickActive = async (id) => {
+    const detail_ = [...onDetail];
+    const index = detail_
+      .map((e) => {
+        return e.id;
+      })
+      .indexOf(id);
+
+    detail_[index].active = 1;
+    console.log("detail", detail_[index]);
+
+    let res = false;
+    res = await updateDetailFn(detail_[index]);
+    if (res == id) {
+      setOnDetail(detail_);
+    }
   };
 
   return (
@@ -176,9 +226,12 @@ const Manage = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {detail &&
-                      detail.map((val, index) => (
-                        <TableRow key={index}>
+                    {onDetail &&
+                      onDetail.map((val, index) => (
+                        <TableRow
+                          key={index}
+                          className={val.active == 0 && classes.deleteBg}
+                        >
                           <TableCell align="left">
                             <Link
                               underline="hover"
@@ -234,13 +287,25 @@ const Manage = () => {
                               >
                                 Edit
                               </Button>
-                              <Button
-                                size="small"
-                                variant="contained"
-                                color="error"
-                              >
-                                Delete
-                              </Button>
+                              {val.active == 1 ? (
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                  color="error"
+                                  onClick={() => handleOnClickDelete(val.id)}
+                                >
+                                  Delete
+                                </Button>
+                              ) : (
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                  color="success"
+                                  onClick={() => handleOnClickActive(val.id)}
+                                >
+                                  Active
+                                </Button>
+                              )}
                             </Box>
                           </TableCell>
                         </TableRow>

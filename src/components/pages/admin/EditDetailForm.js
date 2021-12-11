@@ -42,6 +42,7 @@ import {
   Backspace,
   Delete,
   DeleteOutline,
+  SettingsBackupRestore,
 } from "@mui/icons-material";
 import MapView from "../shared/MapView";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,7 +52,6 @@ import { useDropzone } from "react-dropzone";
 import { getAllFamily } from "../../../actions/family";
 import { getAllGenus } from "../../../actions/genus";
 import { getAllSpecies } from "../../../actions/species";
-import { getAllDetail } from "../../../actions/detail";
 import { Box } from "@mui/system";
 
 import familyService from "../../../services/family.service";
@@ -64,7 +64,18 @@ import imageService from "../../../services/image.service";
 import { getAllProvinces } from "../../../actions/province";
 import { getAllDistrict } from "../../../actions/district";
 import detailService from "../../../services/detail.service";
-import { updateDetailFn, updateDetailTypeFn } from "./insertFn";
+import {
+  postAddressFn,
+  postImageFn,
+  postLocationFn,
+  postPaperFn,
+  updateAddressFn,
+  updateDetailFn,
+  updateDetailTypeFn,
+  updateImage,
+  updateLocationFn,
+  updatePaperFn,
+} from "./insertFn";
 
 const theme = createTheme({});
 
@@ -102,11 +113,11 @@ const EditDetailForm = (props) => {
 
     if (detail == null && detailId) {
       const tmpDetail = detailId
-        ? await detailService.getDetail(detailId)
+        ? await detailService.getDetailAdmin(detailId)
         : false;
 
       if (tmpDetail) {
-        const image_ = await imageService.getImage(detailId);
+        const image_ = await imageService.getImageAdmin(detailId);
         tmpDetail.image = image_;
 
         const family_ = await familyService.getFamily(tmpDetail.family_id);
@@ -116,15 +127,15 @@ const EditDetailForm = (props) => {
         const species_ = await speciesService.getSpecies(tmpDetail.species_id);
         tmpDetail.species = species_[0].name;
 
-        const location_ = await locationService.getLocation(detailId);
+        const location_ = await locationService.getLocationAdmin(detailId);
         for (let i = 0; i < location_.length; i++) {
-          location_[i].address = await addressService.getAddress(
+          location_[i].address = await addressService.getAddressAdmin(
             location_[i].id
           );
         }
         tmpDetail.location = location_;
 
-        const paper_ = await paperService.getPaper(detailId);
+        const paper_ = await paperService.getPaperAdmin(detailId);
         tmpDetail.paper = paper_;
 
         console.log("tmp", tmpDetail);
@@ -169,8 +180,11 @@ const EditDetailForm = (props) => {
       genus_id: parseInt(values.genus_id),
       species_id: parseInt(values.species_id),
     };
-    setType(type_);
-    const res = updateDetailTypeFn(type_);
+    let res = false;
+    res = await updateDetailTypeFn(type_);
+    if (res == type_.id) {
+      setType(true);
+    }
     console.log("res update type", res);
   };
 
@@ -178,76 +192,105 @@ const EditDetailForm = (props) => {
     const general_ = values;
     general_.id = detail.id;
     setGeneral(general_);
-    const res = updateDetailFn(general_);
-  };
-
-  const handleLocationSubmit = (values) => {
-    let location_ = values.location;
-    // for (let i = 0; i < location_.length; i++) {
-    //   location_[i].id = parseInt(location_[i].id);
-    //   location_[i].detail_id = parseInt(location_[i].detail_id);
-    //   location_[i].province = parseInt(location_[i].province);
-    //   location_[i].district = parseInt(location_[i].district);
-    //   for (let j = 0; j < location_[i].address.length; j++) {
-    //     location_[i].address[j].id = parseInt(location_[i].address[j].id);
-    //     location_[i].address[j].location_id = parseInt(
-    //       location_[i].address[j].location_id
-    //     );
-    //   }
-    // }
-
-    setLocation(location_);
-  };
-
-  const handlePaperSubmit = (values) => {
-    let paper_ = values.paper;
-    for (let i = 0; i < paper_.length; i++) {
-      paper_[i].id = parseInt(paper_[i].id);
-      paper_[i].detail_id = parseInt(paper_[i].detail_id);
+    let res = false;
+    res = updateDetailFn(general_);
+    if (res == general_.id) {
+      setGeneral(true);
     }
-    setPaper(paper_);
+  };
+
+  const handleLocationSubmit = async (values) => {
+    let location_ = values.location;
+    let checkError = false;
+
+    for (let i = 0; i < location_.length; i++) {
+      let resLocation = false;
+      const onLocation = { ...location_[i] };
+      delete onLocation.address;
+
+      console.log("onLocation", onLocation);
+      if (location_[i].id == -1) {
+        resLocation = await postLocationFn(onLocation, detail.id);
+      } else {
+        resLocation = await updateLocationFn(onLocation, detail.id);
+      }
+      if (resLocation) {
+        checkError = true;
+      } else {
+        checkError = false;
+      }
+      for (let j = 0; j < location_[i].address.length; j++) {
+        const onAddress = { ...location_[i].address[j] };
+        console.log("resLocation", resLocation);
+        let resAddress = false;
+        if (onAddress.id == -1) {
+          resAddress = await postAddressFn(onAddress, resLocation);
+        } else {
+          resAddress = await updateAddressFn(onAddress);
+        }
+        if (resAddress) {
+          checkError = true;
+        } else {
+          checkError = false;
+        }
+      }
+    }
+
+    if (checkError) {
+      setLocation(true);
+    }
+  };
+
+  const handlePaperSubmit = async (values) => {
+    let paper_ = values.paper;
+    let checkError = false;
+
+    for (let i = 0; i < paper_.length; i++) {
+      const onPaper = { ...paper_[i] };
+      let res = false;
+      if (onPaper.id == -1) {
+        res = await postPaperFn(onPaper, detail.id);
+      } else {
+        res = await updatePaperFn(onPaper);
+      }
+      if (res) {
+        checkError = true;
+      } else {
+        checkError = false;
+      }
+    }
+    if (checkError) {
+      setPaper(paper_);
+    }
   };
 
   const handleImageSubmit = (values) => {
     let image_ = values.image;
-    // for (let i = 0; i < image_.length; i++) {
-    //   image_[i].id = parseInt(image_[i].id);
-    //   image_[i].detail_id = parseInt(image_[i].detail_id);
-    // }
-    setImage(image_);
+
+    let checkError = true;
+    for (let i = 0; i < image_.length; i++) {
+      const onImage = { ...image_[i] };
+      let res = false;
+      if (onImage.id == -1) {
+        const formData = new FormData();
+        formData.append("image", onImage.name);
+        formData.append("detail_id", detail.id);
+        res = postImageFn(formData);
+      } else {
+        res = updateImage(onImage);
+      }
+
+      if (res) {
+        checkError = true;
+      } else {
+        checkError = false;
+      }
+    }
+
+    if (checkError) {
+      setImage(true);
+    }
   };
-
-  // const handleUpdateAll = () => {
-  //   const finalData = { ...final };
-
-  //   if (type) {
-  //     finalData.family_id = type.family_id;
-  //     finalData.genus_id = type.genus_id;
-  //     finalData.species_id = type.species_id;
-  //   }
-
-  //   if (detail) {
-  //     finalData.author = detail.author;
-  //     finalData.publish_year = detail.publish_year;
-  //     finalData.country = detail.country;
-  //     finalData.country_other = detail.country_other;
-  //     finalData.altitude = detail.altitude;
-  //     finalData.method = detail.method;
-  //     finalData.habita = detail.habita;
-  //     finalData.microhabitat = detail.microhabitat;
-  //     finalData.designate = detail.designate;
-  //   }
-
-  //   if (location) {
-  //     finalData.location = location;
-  //   }
-
-  //   if (paper) {
-  //     finalData.paper = paper;
-  //   }
-
-  //   setFinal(finalData);
-  // };
 
   return (
     <div className={`page`}>
@@ -599,14 +642,14 @@ const EditDetailForm = (props) => {
                                   color="warning"
                                   onClick={() =>
                                     push({
-                                      id: "newLocation",
+                                      id: -1,
                                       detail_id: values.location[0].detail_id,
                                       province: "",
                                       district: "",
                                       locality: "",
                                       address: [
                                         {
-                                          id: "newLocation",
+                                          id: -1,
                                           location_id: "newLocation",
                                           name: "",
                                           latitude: "",
@@ -737,16 +780,39 @@ const EditDetailForm = (props) => {
                                               fullWidth
                                             />
                                             <div style={{ flexGrow: 1 }} />
-                                            <IconButton
-                                              color="error"
-                                              sx={{ marginLeft: "1rem" }}
-                                              onClick={() => {
-                                                values.location.length > 1 &&
-                                                  remove(index);
-                                              }}
-                                            >
-                                              <DeleteOutline />
-                                            </IconButton>
+                                            {val.active == 1 ? (
+                                              <IconButton
+                                                color="error"
+                                                sx={{ marginLeft: "1rem" }}
+                                                onClick={() => {
+                                                  values.location.length > 1 &&
+                                                  val.id == -1
+                                                    ? remove(index)
+                                                    : setFieldValue(
+                                                        `location[${index}].active`,
+                                                        0
+                                                      );
+                                                }}
+                                              >
+                                                <DeleteOutline />
+                                              </IconButton>
+                                            ) : (
+                                              <IconButton
+                                                color="success"
+                                                sx={{ marginLeft: "1rem" }}
+                                                onClick={() => {
+                                                  values.location.length > 1 &&
+                                                  val.id == -1
+                                                    ? remove(index)
+                                                    : setFieldValue(
+                                                        `location[${index}].active`,
+                                                        1
+                                                      );
+                                                }}
+                                              >
+                                                <SettingsBackupRestore />
+                                              </IconButton>
+                                            )}
                                           </Box>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -777,10 +843,7 @@ const EditDetailForm = (props) => {
                                                     size="small"
                                                     onClick={() => {
                                                       push({
-                                                        id: "newAddress",
-                                                        location_id:
-                                                          values.location[index]
-                                                            .id,
+                                                        id: -1,
                                                         name: "",
                                                         latitude: "",
                                                         longitude: "",
@@ -795,7 +858,7 @@ const EditDetailForm = (props) => {
                                                   values.location[
                                                     index
                                                   ].address.map(
-                                                    (val, subIndex) => (
+                                                    (val2, subIndex) => (
                                                       <Grid
                                                         item
                                                         xs={12}
@@ -863,20 +926,42 @@ const EditDetailForm = (props) => {
                                                             />
                                                           </Grid>
                                                           <Grid item xs={1}>
-                                                            <IconButton
-                                                              color="error"
-                                                              onClick={() => {
-                                                                values.location[
-                                                                  index
-                                                                ].address
-                                                                  .length > 1 &&
-                                                                  remove(
-                                                                    subIndex
+                                                            {val2.active ==
+                                                            1 ? (
+                                                              <IconButton
+                                                                color="error"
+                                                                onClick={() => {
+                                                                  values
+                                                                    .location[
+                                                                    index
+                                                                  ].address
+                                                                    .length >
+                                                                    1 &&
+                                                                  val2.id == -1
+                                                                    ? remove(
+                                                                        subIndex
+                                                                      )
+                                                                    : setFieldValue(
+                                                                        `location[${index}].address[${subIndex}].active`,
+                                                                        0
+                                                                      );
+                                                                }}
+                                                              >
+                                                                <Backspace />
+                                                              </IconButton>
+                                                            ) : (
+                                                              <IconButton
+                                                                color="success"
+                                                                onClick={() => {
+                                                                  setFieldValue(
+                                                                    `location[${index}].address[${subIndex}].active`,
+                                                                    1
                                                                   );
-                                                              }}
-                                                            >
-                                                              <Backspace />
-                                                            </IconButton>
+                                                                }}
+                                                              >
+                                                                <SettingsBackupRestore />
+                                                              </IconButton>
+                                                            )}
                                                           </Grid>
                                                         </Grid>
                                                       </Grid>
@@ -953,8 +1038,8 @@ const EditDetailForm = (props) => {
                                 size="small"
                                 onClick={() =>
                                   push({
-                                    id: "newPaper",
-                                    detail_id: values.paper[0].detail_id,
+                                    id: -1,
+                                    detail_id: detail.id,
                                     name: "",
                                   })
                                 }
@@ -987,14 +1072,33 @@ const EditDetailForm = (props) => {
                                     fullWidth
                                     placeholder="Paper name"
                                   />
-                                  <IconButton
-                                    color="error"
-                                    onClick={() => {
-                                      values.paper.length > 1 && remove(index);
-                                    }}
-                                  >
-                                    <Backspace />
-                                  </IconButton>
+                                  {val.active == 1 ? (
+                                    <IconButton
+                                      color="error"
+                                      onClick={() => {
+                                        values.paper.length > 1 && val.id == -1
+                                          ? remove(index)
+                                          : setFieldValue(
+                                              `paper[${index}].active`,
+                                              0
+                                            );
+                                      }}
+                                    >
+                                      <Backspace />
+                                    </IconButton>
+                                  ) : (
+                                    <IconButton
+                                      color="success"
+                                      onClick={() => {
+                                        setFieldValue(
+                                          `paper[${index}].active`,
+                                          1
+                                        );
+                                      }}
+                                    >
+                                      <SettingsBackupRestore />
+                                    </IconButton>
+                                  )}
                                 </Grid>
                               ))}
                           </Grid>
@@ -1060,7 +1164,7 @@ const EditDetailForm = (props) => {
                                     const file = e.currentTarget.files[i];
                                     reader.onloadend = () => {
                                       push({
-                                        id: "newImage",
+                                        id: -1,
                                         detail_id: detail.id,
                                         name: file,
                                         path: reader.result,
@@ -1100,7 +1204,7 @@ const EditDetailForm = (props) => {
                                       <Box>
                                         <img
                                           src={
-                                            val.id != "newImage"
+                                            val.id != -1
                                               ? `/${val.path}`
                                               : val.path
                                           }
@@ -1133,7 +1237,11 @@ const EditDetailForm = (props) => {
                                     <Box sx={{ textAlign: "center" }}>
                                       <Box>
                                         <img
-                                          src={`/${val.path}`}
+                                          src={
+                                            val.id != -1
+                                              ? `/${val.path}`
+                                              : val.path
+                                          }
                                           // width="100%"
                                           style={{
                                             maxHeight: "245px",
@@ -1172,9 +1280,6 @@ const EditDetailForm = (props) => {
                           Save
                         </Button>
                       </Box>
-                      {/* <Box style={{ display: "flex" }}>
-                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
-                      </Box> */}
                     </Form>
                   )}
                 </Formik>
