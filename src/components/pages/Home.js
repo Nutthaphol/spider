@@ -20,6 +20,13 @@ import {
   List,
   ListItem,
   ListItemText,
+  Icon,
+  Modal,
+  Fade,
+  Dialog,
+  DialogContent,
+  Collapse,
+  Alert,
 } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,6 +49,7 @@ import {
   KeyboardArrowRight,
   Search,
   KeyboardArrowLeft,
+  ChatBubbleOutline,
 } from "@mui/icons-material";
 import { getAllFamily } from "../../actions/family";
 import { getAllGenus } from "../../actions/genus";
@@ -64,6 +72,9 @@ const theme = createTheme();
 const useStyles = makeStyles(() => ({
   divider: {
     margin: theme.spacing(2, 0),
+  },
+  dialog: {
+    backgroundColor: "rgba(78, 255, 61, 0.5)",
   },
 }));
 
@@ -95,6 +106,7 @@ const Home = () => {
     },
   ]);
   const [stack, setStack] = useState(1);
+  const [guid, setGuid] = useState(true);
 
   useEffect(async () => {
     dispatch(getAllFamily());
@@ -285,6 +297,7 @@ const Home = () => {
     // ONLY PROVICE
     const map = [];
     let location_ = "";
+    setGuid(false);
 
     setShow([
       {
@@ -320,6 +333,7 @@ const Home = () => {
     console.log("location_", location_);
     const data = mapMarker(location_);
     setMap(data);
+    setLocation(location_);
     const detail_ = tableShow(location_);
   };
 
@@ -389,7 +403,22 @@ const Home = () => {
       <ThemeProvider theme={theme}>
         <Box className={`page`}>
           <Container sx={{ maxWidth: "lg" }}>
+            {/* <Dialog open={guid} onClose={() => setGuid(false)}>
+              <DialogContent className={classes.dialog}>
+                <Typography variant="h6" component="div">
+                  Click 'SHOW' to display spider species
+                </Typography>
+              </DialogContent>
+            </Dialog> */}
             <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Collapse in={guid}>
+                  <Alert icon={false} sx={{ textAlign: "center" }} color="info">
+                    Click 'Show' to display spider species (คลิก 'Show'
+                    เพื่อแสดงสปีชีส์แมงมุม)
+                  </Alert>
+                </Collapse>
+              </Grid>
               <Grid
                 item
                 sx={{
@@ -456,13 +485,19 @@ const Home = () => {
                     />
                   </Grid>
                   <Grid item>
-                    <Button
-                      variant="outlined"
-                      sx={{ minWidth: "100px", height: "40px" }}
-                      onClick={() => handleOnChangeAddress()}
-                    >
-                      select
-                    </Button>
+                    <Box sx={{ position: "relative" }}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          minWidth: "100px",
+                          height: "40px",
+                          textTransform: "none",
+                        }}
+                        onClick={() => handleOnChangeAddress()}
+                      >
+                        Show
+                      </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>
@@ -533,37 +568,16 @@ const Home = () => {
             <div>
               {stack == 1 ? (
                 <div>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    sx={{ marginBottom: "10px" }}
-                  >
-                    <Typography variant="h5">Family : List</Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <ButtonStack />
-                  </Box>
                   <FamilyTable
                     family={family}
                     genus={genus}
                     detail={detail}
                     ToNext={ToNext}
+                    ButtonStack={ButtonStack}
                   />
                 </div>
               ) : stack == 2 ? (
                 <div>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    sx={{ marginBottom: "10px" }}
-                  >
-                    <Typography variant="h5">
-                      Family:{" "}
-                      {family &&
-                        family.find((item) => item.id == show[1].id).name}
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <ButtonStack />
-                  </Box>
                   <GenusTable
                     genus={genus}
                     species={species}
@@ -571,24 +585,12 @@ const Home = () => {
                     id={show[1].id}
                     family={family}
                     ToNext={ToNext}
+                    ButtonStack={ButtonStack}
                   />
                 </div>
               ) : (
                 stack == 3 && (
                   <div>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      sx={{ marginBottom: "10px" }}
-                    >
-                      <Typography variant="h5">
-                        Genus:{" "}
-                        {genus &&
-                          genus.find((item) => item.id == show[2].id).name}
-                      </Typography>
-                      <Box sx={{ flexGrow: 1 }} />
-                      <ButtonStack />
-                    </Box>
                     <SpeciesTable
                       genus={genus}
                       species={species}
@@ -596,6 +598,7 @@ const Home = () => {
                       id={show[2].id}
                       family={family}
                       location={location}
+                      ButtonStack={ButtonStack}
                     />
                   </div>
                 )

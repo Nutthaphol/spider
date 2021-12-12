@@ -9,6 +9,7 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 
 import {
+  Box,
   Button,
   Link,
   Paper,
@@ -19,12 +20,18 @@ import {
   TableHead,
   TableRow,
   Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 
 const theme = createTheme();
 
 const GenusTable = (props) => {
-  const { family, genus, detail, species, ToNext, id } = props;
+  const { family, genus, detail, species, ToNext, id, ButtonStack } = props;
+
+  const [selectGenus, setSelectGenus] = useState(0);
 
   const filterCountSpecies = (id) => {
     const genus_filter = detail
@@ -41,10 +48,53 @@ const GenusTable = (props) => {
     const number = genus_filter.length;
     return number;
   };
+  const handleOnChangeSelectGenus = (e) => {
+    setSelectGenus(e.target.value);
+  };
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="h6" component={`div`}>
+              Filter type
+            </Typography>
+            <Box sx={{ flexGrow: 0.02 }} />
+            <Box sx={{ width: 160 }}>
+              <FormControl fullWidth>
+                <InputLabel id="Type-Of-Genus" size="small">
+                  Genus
+                </InputLabel>
+                <Select
+                  label="Genus"
+                  labelId="Type-Of-Genus"
+                  onChange={(e) => handleOnChangeSelectGenus(e)}
+                  value={selectGenus}
+                  size="small"
+                >
+                  {genus &&
+                    genus
+                      .filter((item) => item.family_id == id)
+                      .map((val, index) => (
+                        <MenuItem key={index} value={val.id}>
+                          {val.name}
+                        </MenuItem>
+                      ))}
+                  <MenuItem value={0}>All</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+
+          <br />
+          <br />
+          <Box display="flex" alignItems="center" sx={{ marginBottom: "10px" }}>
+            <Typography variant="h5">
+              Family: {family && family.find((item) => item.id == id).name}
+            </Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <ButtonStack />
+          </Box>
           <TableContainer
             component={Paper}
             sx={{
@@ -76,6 +126,9 @@ const GenusTable = (props) => {
                     )
                     // filter genus of family
                     .filter((item) => item.family_id === id)
+                    .filter((item) =>
+                      selectGenus != 0 ? item.genus_id == selectGenus : true
+                    )
                     .map((val, index) => (
                       <TableRow key={index}>
                         <TableCell>

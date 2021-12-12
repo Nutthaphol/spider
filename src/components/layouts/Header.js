@@ -65,7 +65,7 @@ const Header = () => {
                   listButton={insertList}
                 />
               )}
-              <ButtonAppBar message="Check Data" link={"/check"} />
+              {/* <ButtonAppBar message="Check Data" link={"/check"} /> */}
               <div style={{ flexGrow: 1 }}></div>
               {currentUser ? (
                 <Button

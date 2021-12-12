@@ -9,9 +9,14 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 
 import {
+  Box,
   Button,
+  FormControl,
+  InputLabel,
   Link,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -24,7 +29,9 @@ import {
 const theme = createTheme();
 
 const FamilyTable = (props) => {
-  const { family, detail, genus, ToNext } = props;
+  const { family, detail, genus, ToNext, ButtonStack } = props;
+
+  const [selectFamily, setSelectFamily] = useState(0);
 
   const filterCountGenus = (id) => {
     const family_filter = detail
@@ -41,10 +48,50 @@ const FamilyTable = (props) => {
     const number = family_filter.length;
     return number;
   };
+
+  const handleOnChangeSelectFamily = (e) => {
+    setSelectFamily(e.target.value);
+  };
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="h6" component={`div`}>
+              Filter type
+            </Typography>
+            <Box sx={{ flexGrow: 0.02 }} />
+            <Box sx={{ width: 160 }}>
+              <FormControl fullWidth>
+                <InputLabel id="Type-Of-Family" size="small">
+                  Family
+                </InputLabel>
+                <Select
+                  label="Family"
+                  labelId="Type-Of-Family"
+                  onChange={(e) => handleOnChangeSelectFamily(e)}
+                  value={selectFamily}
+                  size="small"
+                >
+                  {family &&
+                    family.map((val, index) => (
+                      <MenuItem key={index} value={val.id}>
+                        {val.name}
+                      </MenuItem>
+                    ))}
+                  <MenuItem value={0}>All</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+
+          <br />
+          <br />
+          <Box display="flex" alignItems="center" sx={{ marginBottom: "10px" }}>
+            <Typography variant="h5">Family : List</Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <ButtonStack />
+          </Box>
           <TableContainer
             component={Paper}
             sx={{
@@ -72,6 +119,9 @@ const FamilyTable = (props) => {
                             return e.family_id;
                           })
                           .indexOf(item.family_id) === index
+                    )
+                    .filter((item) =>
+                      selectFamily != 0 ? item.family_id == selectFamily : true
                     )
                     .map((val, index) => (
                       <TableRow key={index}>

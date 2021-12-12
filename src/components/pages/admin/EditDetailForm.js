@@ -647,6 +647,7 @@ const EditDetailForm = (props) => {
                                       province: "",
                                       district: "",
                                       locality: "",
+                                      active: 1,
                                       address: [
                                         {
                                           id: -1,
@@ -654,6 +655,7 @@ const EditDetailForm = (props) => {
                                           name: "",
                                           latitude: "",
                                           longitude: "",
+                                          active: 1,
                                         },
                                       ],
                                     })
@@ -847,6 +849,7 @@ const EditDetailForm = (props) => {
                                                         name: "",
                                                         latitude: "",
                                                         longitude: "",
+                                                        active: 1,
                                                       });
                                                     }}
                                                   >
@@ -1041,6 +1044,7 @@ const EditDetailForm = (props) => {
                                     id: -1,
                                     detail_id: detail.id,
                                     name: "",
+                                    active: 1,
                                   })
                                 }
                               >
@@ -1224,10 +1228,13 @@ const EditDetailForm = (props) => {
                                         sx={{ textTransform: "none" }}
                                         color="error"
                                         onClick={() => {
-                                          setFieldValue(
-                                            `image[${index}].active`,
-                                            0
-                                          );
+                                          values.image.length > 1 &&
+                                          val.id == -1
+                                            ? remove(index)
+                                            : setFieldValue(
+                                                `image[${index}].active`,
+                                                0
+                                              );
                                         }}
                                       >
                                         Delete
@@ -1280,22 +1287,15 @@ const EditDetailForm = (props) => {
                           Save
                         </Button>
                       </Box>
+                      <Box style={{ display: "flex" }}>
+                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+                      </Box>
                     </Form>
                   )}
                 </Formik>
                 <br />
                 <Divider />
                 <br />
-                {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleUpdateAll()}
-                  >
-                    Update All
-                  </Button>
-                </Box> */}
               </Paper>
             )}
           </Container>
