@@ -16,12 +16,23 @@ verifyToken = (req, res, next) => {
         message: "Unauthorized!",
       });
     }
-    //req.params.id = decoded.id;
+    req.body.role = decoded.role;
     next();
+  });
+};
+
+isAdmin = (req, res, next) => {
+  if (req.body.role === "admin") {
+    next();
+    return;
+  }
+  res.status(403).send({
+    message: "Require Admin Role!",
   });
 };
 
 const authJwt = {
   verifyToken: verifyToken,
+  isAdmin: isAdmin,
 };
 module.exports = authJwt;
