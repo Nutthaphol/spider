@@ -7,7 +7,11 @@ const user = JSON.parse(localStorage.getItem("user"));
 axios.interceptors.request.use(async (config) => {
   // console.log(`config url: ${config.url}`);
   if (!isAbsoluteURLRegex.test(config.url)) {
-    config.url = join(process.env.REACT_APP_API_URL, config.url);
+    if (process.env.REACT_APP_API_URL) {
+      config.url = join(process.env.REACT_APP_API_URL, config.url);
+    } else {
+      config.url = join("api/", config.url);
+    }
     // console.log(`req url: ${config.url}`);
   }
 

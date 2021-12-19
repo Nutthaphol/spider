@@ -9,18 +9,20 @@ const fs = require("fs");
 const path = require("path");
 const app = express();
 
-// var corsOptions = {
-//   origin: [
-//     "http://localhost:3000",
-//     "http://localhost:8080",
-//     "http://localhost:3001",
-//   ],
-// };
-
 app.use(express.static("build"));
-// app.use(cors(corsOptions));
+
+var corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "http://localhost:3001",
+  ],
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/image", express.static("./app/image"));
@@ -50,11 +52,12 @@ require("./app/routes/image.route")(app, upload);
 require("./app/routes/province.route")(app);
 require("./app/routes/district.route")(app);
 
+const PORT = process.env.PORT || 8080;
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
-const PORT = process.env.PORT || 8080;
 app.listen(PORT, (res, req) => {
   console.log(`Back-end run on port ${PORT}`);
 });
