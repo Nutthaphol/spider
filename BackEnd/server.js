@@ -9,15 +9,16 @@ const fs = require("fs");
 const path = require("path");
 const app = express();
 
-var corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "http://localhost:3001",
-  ],
-};
+// var corsOptions = {
+//   origin: [
+//     "http://localhost:3000",
+//     "http://localhost:8080",
+//     "http://localhost:3001",
+//   ],
+// };
 
-app.use(cors(corsOptions));
+app.use(express.static("build"));
+// app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,16 +33,10 @@ app.get("/app/image/:filename", (req, res) => {
   );
   readStream.pipe(res);
 });
-// app.use(express.static("build"));
 
 app.get("/", (req, res) => {
   res.send(`Server is running !`);
 });
-
-// app.post("/api/post/postfulldata", upload.array("file"), (req, res) => {
-//   console.log("data", req.files);
-//   res.send(req.files);
-// });
 
 require("./app/routes/auth.route")(app);
 require("./app/routes/family.route")(app);
@@ -55,9 +50,9 @@ require("./app/routes/image.route")(app, upload);
 require("./app/routes/province.route")(app);
 require("./app/routes/district.route")(app);
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, (res, req) => {

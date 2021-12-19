@@ -1271,7 +1271,7 @@ const EditDetailForm = (props) => {
                                           );
                                         }}
                                       >
-                                        Revers
+                                        Active
                                       </Button>
                                     </Box>
                                   )}
