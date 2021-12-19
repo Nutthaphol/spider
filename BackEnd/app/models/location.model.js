@@ -5,10 +5,17 @@ const postLocation = (data, callback) => {
         detail_id,
         province,
         district,
-        locality
-  ) VALUES (?, ?, ?, ?)`;
+        locality,
+        active
+  ) VALUES (?, ?, ?, ?, ?)`;
 
-  const paramt = [data.detail_id, data.province, data.district, data.locality];
+  const paramt = [
+    data.detail_id,
+    data.province,
+    data.district,
+    data.locality,
+    true,
+  ];
 
   connection.query(query, paramt, (error, result) => {
     if (error) {

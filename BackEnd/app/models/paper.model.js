@@ -3,10 +3,11 @@ const connection = require("./database.model");
 const postPaper = (data, callback) => {
   const query = `INSERT INTO paper (
         detail_id,
-        name
-  ) VALUES (?, ?)`;
+        name,
+        active
+  ) VALUES (?, ?, ?)`;
 
-  const paramt = [data.detail_id, data.name];
+  const paramt = [data.detail_id, data.name, true];
 
   connection.query(query, paramt, (error, result) => {
     if (error) {

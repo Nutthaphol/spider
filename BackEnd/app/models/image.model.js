@@ -4,10 +4,11 @@ const postImage = (data, callback) => {
   const query = `INSERT INTO image (
         detail_id,
         name,
-        path
-  ) VALUES (?, ?, ?)`;
+        path,
+        active
+  ) VALUES (?, ?, ?, ?)`;
 
-  const paramt = [data.detail_id, data.name, data.path];
+  const paramt = [data.detail_id, data.name, data.path, true];
 
   connection.query(query, paramt, (error, result) => {
     if (error) {

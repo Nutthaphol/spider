@@ -9,10 +9,7 @@ axios.interceptors.request.use(async (config) => {
   if (!isAbsoluteURLRegex.test(config.url)) {
     if (process.env.REACT_APP_API_URL) {
       config.url = join(process.env.REACT_APP_API_URL, config.url);
-    } else {
-      config.url = join("api/", config.url);
     }
-    // console.log(`req url: ${config.url}`);
   }
 
   config.timeout = 900000; // 10 Second
