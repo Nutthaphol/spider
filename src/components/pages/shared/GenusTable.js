@@ -27,10 +27,31 @@ import {
 } from "@mui/material";
 
 const theme = createTheme();
+const useStyles = makeStyles(() => ({
+  textFilter: {
+    fontWeight: "600",
+  },
+  fieldFilter: {
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    backgroundColor: "#fff",
+    textAlign: "center",
+  },
+  table: {
+    boxShadow: "none",
+    borderRadius: "4px",
+    border: "1px solid #AEAEAE",
+  },
+  paperTable: {
+    boxShadow: "none",
+    padding: "1rem",
+  },
+}));
 
 const GenusTable = (props) => {
   const { family, genus, detail, species, ToNext, id, ButtonStack } = props;
-
+  const classes = useStyles();
   const [selectGenus, setSelectGenus] = useState(0);
 
   const filterCountSpecies = (id) => {
@@ -56,18 +77,18 @@ const GenusTable = (props) => {
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="h6" component={`div`}>
+            <Typography
+              variant="h6"
+              component={`div`}
+              className={classes.textFilter}
+            >
               Filter type
             </Typography>
             <Box sx={{ flexGrow: 0.02 }} />
             <Box sx={{ width: 160 }}>
               <FormControl fullWidth>
-                <InputLabel id="Type-Of-Genus" size="small">
-                  Genus
-                </InputLabel>
                 <Select
-                  label="Genus"
-                  labelId="Type-Of-Genus"
+                  className={classes.fieldFilter}
                   onChange={(e) => handleOnChangeSelectGenus(e)}
                   value={selectGenus}
                   size="small"
@@ -88,72 +109,72 @@ const GenusTable = (props) => {
 
           <br />
           <br />
-          <Box display="flex" alignItems="center" sx={{ marginBottom: "10px" }}>
-            <Typography variant="h5">
-              Family: {family && family.find((item) => item.id == id).name}
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <ButtonStack />
-          </Box>
-          <TableContainer
-            component={Paper}
-            sx={{
-              boxShadow: "none",
-              border: "1px solid #B3B6B7",
-            }}
-          >
-            <Table sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Genus</TableCell>
-                  <TableCell align="left">Author</TableCell>
-                  <TableCell align="left"> # species</TableCell>
-                  <TableCell align="left">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {console.log("detail", detail)}
-                {detail &&
-                  detail
-                    // unique genus type
-                    .filter(
-                      (item, index, self) =>
-                        self
-                          .map((e) => {
-                            return e.genus_id;
-                          })
-                          .indexOf(item.genus_id) === index
-                    )
-                    // filter genus of family
-                    .filter((item) => item.family_id === id)
-                    .filter((item) =>
-                      selectGenus != 0 ? item.genus_id == selectGenus : true
-                    )
-                    .map((val, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <i>{val.genus}</i>
-                        </TableCell>
-                        <TableCell align="left">{val.author}</TableCell>
-                        <TableCell align="left">
-                          {filterCountSpecies(val.genus_id)}
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            sx={{
-                              cursor: "pointer",
-                            }}
-                            onClick={() => ToNext("species", val.genus_id)}
-                            underline="hover"
-                          >
-                            species
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Paper className={classes.paperTable}>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ marginBottom: "10px" }}
+            >
+              <Typography variant="h5">
+                Family: {family && family.find((item) => item.id == id).name}
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <ButtonStack />
+            </Box>
+            <TableContainer component={Paper} className={classes.table}>
+              <Table sx={{ minWidth: 650 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Genus</TableCell>
+                    <TableCell align="left">Author</TableCell>
+                    <TableCell align="left"> # species</TableCell>
+                    <TableCell align="left">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {console.log("detail", detail)}
+                  {detail &&
+                    detail
+                      // unique genus type
+                      .filter(
+                        (item, index, self) =>
+                          self
+                            .map((e) => {
+                              return e.genus_id;
+                            })
+                            .indexOf(item.genus_id) === index
+                      )
+                      // filter genus of family
+                      .filter((item) => item.family_id === id)
+                      .filter((item) =>
+                        selectGenus != 0 ? item.genus_id == selectGenus : true
+                      )
+                      .map((val, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <i>{val.genus}</i>
+                          </TableCell>
+                          <TableCell align="left">{val.author}</TableCell>
+                          <TableCell align="left">
+                            {filterCountSpecies(val.genus_id)}
+                          </TableCell>
+                          <TableCell>
+                            <Link
+                              sx={{
+                                cursor: "pointer",
+                              }}
+                              onClick={() => ToNext("species", val.genus_id)}
+                              underline="hover"
+                            >
+                              species
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         </StyledEngineProvider>
       </ThemeProvider>
     </React.Fragment>

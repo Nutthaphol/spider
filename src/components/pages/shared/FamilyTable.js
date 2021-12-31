@@ -37,9 +37,16 @@ const useStyles = makeStyles(() => ({
       border: "none",
     },
     backgroundColor: "#fff",
+    textAlign: "center",
   },
   table: {
-    
+    boxShadow: "none",
+    borderRadius: "4px",
+    border: "1px solid #AEAEAE",
+  },
+  paperTable: {
+    boxShadow: "none",
+    padding: "1rem",
   },
 }));
 
@@ -87,7 +94,6 @@ const FamilyTable = (props) => {
                   onChange={(e) => handleOnChangeSelectFamily(e)}
                   value={selectFamily}
                   size="small"
-                  sx={{ textAlign: "center" }}
                   variant="outlined"
                   className={classes.fieldFilter}
                 >
@@ -105,64 +111,67 @@ const FamilyTable = (props) => {
 
           <br />
           <br />
-          <Box display="flex" alignItems="center" sx={{ marginBottom: "10px" }}>
-            <Typography variant="h5">Family : List</Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <ButtonStack />
-          </Box>
-          <TableContainer
-            component={Paper}
-            sx={{
-              boxShadow: "none",
-              border: "1px solid #B3B6B7",
-            }}
-          >
-            <Table sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Family</TableCell>
-                  <TableCell align="left">Author</TableCell>
-                  <TableCell align="left"> # genera</TableCell>
-                  <TableCell align="left">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {detail &&
-                  detail
-                    // unique family type
-                    .filter(
-                      (item, index, self) =>
-                        self
-                          .map((e) => {
-                            return e.family_id;
-                          })
-                          .indexOf(item.family_id) === index
-                    )
-                    .filter((item) =>
-                      selectFamily != 0 ? item.family_id == selectFamily : true
-                    )
-                    .map((val, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{val.family}</TableCell>
-                        <TableCell align="left">{val.author}</TableCell>
-                        <TableCell align="left">
-                          {filterCountGenus(val.family_id)}
-                        </TableCell>
-                        <TableCell align="left">
-                          {" "}
-                          <Link
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
-                              ToNext("genus", val.family_id);
-                            }}
-                            underline="hover"
-                          >
-                            Genera
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                {/* {family &&
+          <Paper className={classes.paperTable}>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ marginBottom: "10px" }}
+            >
+              <Typography variant="h5" sx={{ fontWeight: "600" }}>
+                Family : List
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <ButtonStack />
+            </Box>
+            <TableContainer className={classes.table} component={Paper}>
+              <Table sx={{ minWidth: 650 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Family</TableCell>
+                    <TableCell align="left">Author</TableCell>
+                    <TableCell align="left"> # genera</TableCell>
+                    <TableCell align="left">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {detail &&
+                    detail
+                      // unique family type
+                      .filter(
+                        (item, index, self) =>
+                          self
+                            .map((e) => {
+                              return e.family_id;
+                            })
+                            .indexOf(item.family_id) === index
+                      )
+                      .filter((item) =>
+                        selectFamily != 0
+                          ? item.family_id == selectFamily
+                          : true
+                      )
+                      .map((val, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{val.family}</TableCell>
+                          <TableCell align="left">{val.author}</TableCell>
+                          <TableCell align="left">
+                            {filterCountGenus(val.family_id)}
+                          </TableCell>
+                          <TableCell align="left">
+                            {" "}
+                            <Link
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                ToNext("genus", val.family_id);
+                              }}
+                              underline="hover"
+                            >
+                              Genera
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  {/* {family &&
                   family
                     // .filter(
                     //   (item) =>
@@ -197,9 +206,10 @@ const FamilyTable = (props) => {
                         </TableCell>
                       </TableRow>
                     ))} */}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         </StyledEngineProvider>
       </ThemeProvider>
     </React.Fragment>

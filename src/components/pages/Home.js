@@ -81,7 +81,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "rgba(78, 255, 61, 0.5)",
   },
   firstBox: {
-    // minHeight: "25vh",
+    minHeight: "180px",
     backgroundColor: "#8B0000",
     paddingTop: "32px",
     display: "flex",
@@ -557,6 +557,7 @@ const Home = () => {
                 height: "450px",
                 width: "100%",
                 margin: "20px",
+                marginBottom: "50px",
               }}
             >
               <Box
@@ -848,8 +849,12 @@ const Home = () => {
                 )
               )}
             </div>*/}
-            <Box sx={{ marginBottom: "25vh" }} />
           </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>
