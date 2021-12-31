@@ -4,8 +4,8 @@ const { authJwt } = require("../middleware");
 module.exports = (app, upload) => {
   app.post(
     "/api/image/postImage",
-    upload.single("image"),
     [authJwt.verifyToken, authJwt.isAdmin],
+    upload.single("image"),
     image.postImage
   );
   app.post(

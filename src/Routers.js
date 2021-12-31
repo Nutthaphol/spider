@@ -61,8 +61,8 @@ const Routers = () => {
             <Route exact path="/Home" component={Home} />
             <Route exact path="/detail/:id" component={Detail} />
 
-            <AdminRoute exact path="/Form" component={InsertForm} />
-            <AdminRoute exact path="/Manage" component={Manage} />
+            <AdminRoute exact path="/admin/Form" component={InsertForm} />
+            <AdminRoute exact path="/admin/Manage" component={Manage} />
             <AdminRoute
               exact
               path="/editDetailForm/:id"

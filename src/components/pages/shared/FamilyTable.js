@@ -28,8 +28,24 @@ import {
 
 const theme = createTheme();
 
+const useStyles = makeStyles(() => ({
+  textFilter: {
+    fontWeight: "600",
+  },
+  fieldFilter: {
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    backgroundColor: "#fff",
+  },
+  table: {
+    
+  },
+}));
+
 const FamilyTable = (props) => {
   const { family, detail, genus, ToNext, ButtonStack } = props;
+  const classes = useStyles();
 
   const [selectFamily, setSelectFamily] = useState(0);
 
@@ -57,21 +73,23 @@ const FamilyTable = (props) => {
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="h6" component={`div`}>
+            <Typography
+              variant="h6"
+              component={`div`}
+              className={classes.textFilter}
+            >
               Filter type
             </Typography>
             <Box sx={{ flexGrow: 0.02 }} />
             <Box sx={{ width: 160 }}>
               <FormControl fullWidth>
-                <InputLabel id="Type-Of-Family" size="small">
-                  Family
-                </InputLabel>
                 <Select
-                  label="Family"
-                  labelId="Type-Of-Family"
                   onChange={(e) => handleOnChangeSelectFamily(e)}
                   value={selectFamily}
                   size="small"
+                  sx={{ textAlign: "center" }}
+                  variant="outlined"
+                  className={classes.fieldFilter}
                 >
                   {family &&
                     family.map((val, index) => (

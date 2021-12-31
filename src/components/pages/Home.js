@@ -27,6 +27,7 @@ import {
   DialogContent,
   Collapse,
   Alert,
+  Tooltip,
 } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,11 +71,51 @@ import locationService from "../../services/location.service";
 const theme = createTheme();
 
 const useStyles = makeStyles(() => ({
+  root: {
+    paddingTop: "24px",
+  },
   divider: {
     margin: theme.spacing(2, 0),
   },
   dialog: {
     backgroundColor: "rgba(78, 255, 61, 0.5)",
+  },
+  firstBox: {
+    // minHeight: "25vh",
+    backgroundColor: "#8B0000",
+    paddingTop: "32px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  flocation: {
+    fontWeight: "600",
+    color: "#fff",
+  },
+  autocomplete: {
+    color: "#000",
+    backgroundColor: "#fff",
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FDD835",
+    },
+  },
+  textLabel: {
+    color: "red",
+    "&.MuiFormLabel-root .MuiInputLabel-root .Mui-focused": {
+      color: "#FDD835",
+    },
+  },
+  dispalyButton: {
+    minWidth: "100px",
+    height: "40px",
+    textTransform: "none",
+    backgroundColor: "#FDD835",
+    color: "#000",
+    "&:hover": {
+      background: "#fff",
+      backgroundColor: "#FFEE24",
+      color: "#000",
+    },
   },
 }));
 
@@ -402,32 +443,235 @@ const Home = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <Box className={`page`}>
+          <Box className={classes.firstBox}>
+            <Box sx={{ width: "100%", textAlign: "center" }}>
+              <Typography variant="h3" className={classes.flocation}>
+                Filter location
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "24px 30%",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Box sx={{ flexBasis: 1, flexGrow: 1, margin: "5px" }}>
+                  <Autocomplete
+                    disablePortal
+                    size="small"
+                    onChange={(e, value) => {
+                      value ? setProvince(value.id) : setProvince("");
+                    }}
+                    classes={{ inputRoot: classes.autocomplete }}
+                    sx={{ width: 240 }}
+                    options={
+                      dbprovince
+                        ? dbprovince
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                        : [""]
+                    }
+                    getOptionLabel={(options) => {
+                      return options.name_en + " (" + options.name_th + ")";
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Province (All)" />
+                    )}
+                  />
+                </Box>
+                <Box sx={{ flexBasis: 1, flexGrow: 1, margin: "5px" }}>
+                  <Autocomplete
+                    disablePortal
+                    size="small"
+                    classes={{
+                      inputRoot: classes.autocomplete,
+                    }}
+                    onChange={(e, value) => {
+                      value ? setDistrict(value.id) : setDistrict("");
+                    }}
+                    sx={{ width: 240 }}
+                    options={
+                      province
+                        ? dbdistrict
+                            .filter((item) => item.province_id == province)
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                        : dbdistrict
+                        ? dbdistrict
+                            .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                            .map((item) => item)
+                        : [""]
+                    }
+                    getOptionLabel={(options) => {
+                      return options.name_en + " (" + options.name_th + ")";
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputLabelProps={{
+                          classes: {
+                            focused: classes.textLabel,
+                          },
+                        }}
+                        label="district (All)"
+                      />
+                    )}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    flexBasis: 1,
+                    flexGrow: 1,
+                    margin: "6px",
+                    padding: "0 32px",
+                  }}
+                >
+                  <Tooltip
+                    title={
+                      <Typography variant="subtitle1">
+                        Click 'Display' to display spider species (คลิก
+                        'Display' เพื่อแสดงสปีชีส์แมงมุม)
+                      </Typography>
+                    }
+                    arrow
+                    open={guid}
+                  >
+                    <Button
+                      variant="contained"
+                      className={classes.dispalyButton}
+                      onClick={() => handleOnChangeAddress()}
+                      fullWidth
+                    >
+                      Display
+                    </Button>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
           <Container sx={{ maxWidth: "lg" }}>
-            {/* <Dialog open={guid} onClose={() => setGuid(false)}>
-              <DialogContent className={classes.dialog}>
-                <Typography variant="h6" component="div">
-                  Click 'SHOW' to display spider species
-                </Typography>
-              </DialogContent>
-            </Dialog> */}
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
+            <Box
+              sx={{
+                height: "450px",
+                width: "100%",
+                margin: "20px",
+              }}
+            >
+              <Box
+                sx={{
+                  height: "100%",
+                  border: "1px solid #040404",
+                  borderRadius: "4px",
+                }}
+              >
+                <MapContainer
+                  className="map-view"
+                  center={[13, 100]}
+                  zoom={5}
+                  style={{ borderRadius: "4px" }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  {map
+                    ? map.map((val, index) => (
+                        <Marker
+                          key={index}
+                          position={[val.latitude, val.longitude]}
+                        >
+                          {val.data.length > 1 ? (
+                            <Popup style={{ width: "480px" }}>
+                              <Slider {...settings}>
+                                {val.data.map((val2, index2) => (
+                                  <PaperPopup
+                                    key={index2}
+                                    positionName={val2.positionName}
+                                    province={val2.province}
+                                    family={val2.family}
+                                    genus={val2.genus}
+                                    species={val2.species}
+                                  />
+                                ))}
+                              </Slider>
+                            </Popup>
+                          ) : (
+                            <Popup>
+                              <PaperPopup
+                                positionName={val.data[0].positionName}
+                                province={val.data[0].province}
+                                family={val.data[0].family}
+                                genus={val.data[0].genus}
+                                species={val.data[0].species}
+                              />
+                            </Popup>
+                          )}
+                        </Marker>
+                      ))
+                    : ""}
+                </MapContainer>
+                <Box sx={{ mt: "48px" }}>
+                  {stack == 1 ? (
+                    <div>
+                      <FamilyTable
+                        family={family}
+                        genus={genus}
+                        detail={detail}
+                        ToNext={ToNext}
+                        ButtonStack={ButtonStack}
+                      />
+                    </div>
+                  ) : stack == 2 ? (
+                    <div>
+                      <GenusTable
+                        genus={genus}
+                        species={species}
+                        detail={detail}
+                        id={show[1].id}
+                        family={family}
+                        ToNext={ToNext}
+                        ButtonStack={ButtonStack}
+                      />
+                    </div>
+                  ) : (
+                    stack == 3 && (
+                      <div>
+                        <SpeciesTable
+                          genus={genus}
+                          species={species}
+                          detail={detail}
+                          id={show[2].id}
+                          family={family}
+                          location={location}
+                          ButtonStack={ButtonStack}
+                        />
+                      </div>
+                    )
+                  )}
+                </Box>
+              </Box>
+            </Box>
+
+            {/* <Grid container spacing={4}> */}
+            {/* <Grid item xs={12}>
                 <Collapse in={guid}>
                   <Alert icon={false} sx={{ textAlign: "center" }} color="info">
                     Click 'Show' to display spider species (คลิก 'Show'
                     เพื่อแสดงสปีชีส์แมงมุม)
                   </Alert>
                 </Collapse>
-              </Grid>
-              <Grid
+              </Grid> */}
+            {/* <Grid
                 item
                 sx={{
                   width: "100%",
                   display: "flex",
                   alignItem: "center",
                 }}
-              >
-                <Grid container spacing={2}>
+              > */}
+            {/* <Grid container spacing={2}>
                   <Grid item>
                     <Typography variant="h5" sx={{ flexGrow: 0.05 }}>
                       Filter location
@@ -499,9 +743,9 @@ const Home = () => {
                       </Button>
                     </Box>
                   </Grid>
-                </Grid>
-              </Grid>
-              <Grid
+                </Grid> */}
+            {/* </Grid> */}
+            {/* <Grid
                 item
                 sx={{
                   height: "600px",
@@ -603,7 +847,7 @@ const Home = () => {
                   </div>
                 )
               )}
-            </div>
+            </div>*/}
             <Box sx={{ marginBottom: "25vh" }} />
           </Container>
         </Box>

@@ -20,13 +20,12 @@
 }
 
 .page {
-  padding: 24px;
-  padding-top: 100px;
+  /* padding: 24px; */
   width: 100%;
 }
 
 body {
-  background-color: #f6fcff;
+  background-color: #e5e5e5;
 }
 /* 
 .MuiPaper-root {

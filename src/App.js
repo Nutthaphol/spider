@@ -11,7 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 function App() {
   return (
     <Router>
-      <div style={{ display: "flex" }}>
+      <div>
         <Fragment>
           <Header />
         </Fragment>
