@@ -14,6 +14,7 @@ verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).send({
         message: "Unauthorized!",
+        toLogout: true,
       });
     }
     req.body.role = decoded.role;

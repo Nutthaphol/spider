@@ -18,6 +18,9 @@ const login = (username, password) => {
       // })
       .then((response) => {
         if (response.data.accessToken) {
+          const data = response.data;
+          const now = new Date();
+          data.timeout = now.getTime() + 43200;
           localStorage.setItem("user", JSON.stringify(response.data));
           console.log(`set local storage`);
         }

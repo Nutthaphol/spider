@@ -24,6 +24,7 @@ exports.signin = (req, res) => {
           { id: profile.id, role: profile.auth },
           config.secret,
           {
+            // expiresIn: 1000, // 12 hours
             expiresIn: 43200, // 12 hours
           }
         );

@@ -442,7 +442,7 @@ const Home = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Box className={`page`}>
+        <Box className={`home`}>
           <Box className={classes.firstBox}>
             <Box sx={{ width: "100%", textAlign: "center" }}>
               <Typography variant="h3" className={classes.flocation}>
