@@ -1,4 +1,5 @@
 const user = require("../controllers/auth.controller");
+const { authJwt } = require("../middleware");
 
 module.exports = (app) => {
   app.use(function (req, res, next) {
@@ -11,4 +12,5 @@ module.exports = (app) => {
   });
 
   app.post("/api/auth/signin", user.signin);
+  app.get("/api/auth/expirationTime", [authJwt.expiration]);
 };

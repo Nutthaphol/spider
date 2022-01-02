@@ -6,6 +6,7 @@ import axios from "axios";
 import Header from "./components/layouts/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Footer from "./components/layouts/Footer";
 // import "leaflet/dist/leaflet.css";
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
         </Fragment>
         <Routers />
         <div style={{ marginTop: "100px", height: "100px" }}></div>
+        <Fragment>
+          <Footer />
+        </Fragment>
       </div>
     </Router>
   );

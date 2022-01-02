@@ -197,51 +197,53 @@ const Login = (props) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <Card className={classes.rootCard}>
-            {/* Insert Title */}
-            <CardHeader style={{ textAlign: "center" }} title="Login" />
-            <CardContent>
-              {serverMessage && (
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  style={{ color: "#C82626" }}
-                  gutterBottom
-                >
-                  {serverMessage}
-                </Typography>
-              )}
-              <Formik
-                onSubmit={(values, { setSubmitting, resetForm }) => {
-                  dispatch(login(values.username, values.password))
-                    .then(() => {
-                      handleMessage(false);
-                      props.history.push("/");
-                      window.location.reload();
+        <div style={{ height: "100vh" }}>
+          <div className={classes.root}>
+            <Card className={classes.rootCard}>
+              {/* Insert Title */}
+              <CardHeader style={{ textAlign: "center" }} title="Login" />
+              <CardContent>
+                {serverMessage && (
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    style={{ color: "#C82626" }}
+                    gutterBottom
+                  >
+                    {serverMessage}
+                  </Typography>
+                )}
+                <Formik
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    dispatch(login(values.username, values.password))
+                      .then(() => {
+                        handleMessage(false);
+                        props.history.push("/");
+                        window.location.reload();
 
-                      // else {
-                      //   // props.history.push("/login");
-                      //   // window.location.reload();
-                      //   resetForm();
-                      //   handleMessage(data);
-                      // }
-                    })
-                    .catch((error) => {
-                      resetForm();
-                      handleMessage(error);
-                    });
-                }}
-                initialValues={{
-                  username: "",
-                  password: "",
-                  showPassword: false,
-                }}
-                validate={validate}
-              >
-                {(props) => showForm(props)}
-              </Formik>
-            </CardContent>
-          </Card>
+                        // else {
+                        //   // props.history.push("/login");
+                        //   // window.location.reload();
+                        //   resetForm();
+                        //   handleMessage(data);
+                        // }
+                      })
+                      .catch((error) => {
+                        resetForm();
+                        handleMessage(error);
+                      });
+                  }}
+                  initialValues={{
+                    username: "",
+                    password: "",
+                    showPassword: false,
+                  }}
+                  validate={validate}
+                >
+                  {(props) => showForm(props)}
+                </Formik>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </ThemeProvider>
     </StyledEngineProvider>

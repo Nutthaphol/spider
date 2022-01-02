@@ -6,28 +6,20 @@ import { httpClient } from "./httpClient";
 // const API_URL = "auth/";
 
 const login = (username, password) => {
-  return (
-    httpClient
-      .post("auth/signin", {
-        username,
-        password,
-      })
-      // .post(join(API_URL, "signin"), {
-      //   username,
-      //   password,
-      // })
-      .then((response) => {
-        if (response.data.accessToken) {
-          const data = response.data;
-          const now = new Date();
-          data.timeout = now.getTime() + 43200;
-          localStorage.setItem("user", JSON.stringify(response.data));
-          console.log(`set local storage`);
-        }
-        console.log(`data ${response.data}`);
-        return response.data;
-      })
-  );
+  return httpClient
+    .post("auth/signin", {
+      username,
+      password,
+    })
+    .then((response) => {
+      if (response.data.accessToken) {
+        const data = response.data;
+        localStorage.setItem("user", JSON.stringify(response.data));
+
+        console.log(`set local storage`);
+      }
+      return response.data;
+    });
 };
 
 const logout = () => {

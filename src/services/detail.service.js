@@ -7,7 +7,6 @@ const postDetail = async (data) => {
     .then((response) => {
       return response.data;
     });
-  //   console.log("detail post res", res);
   return res;
 };
 
@@ -18,7 +17,6 @@ const updateDetailType = async (data) => {
     .then((response) => {
       return response.data;
     });
-  //   console.log("detail post res", res);
   return res;
 };
 
@@ -29,7 +27,6 @@ const updateDetail = async (data) => {
     .then((response) => {
       return response.data;
     });
-  //   console.log("detail post res", res);
   return res;
 };
 
@@ -37,7 +34,6 @@ const getDetail = async (id) => {
   const res = await httpClient.get("detail/get/" + id).then((response) => {
     return response.data;
   });
-  console.log("get detail", res);
   return res;
 };
 
@@ -47,7 +43,6 @@ const getDetailAdmin = async (id) => {
     .then((response) => {
       return response.data;
     });
-  console.log("get detail", res);
   return res;
 };
 

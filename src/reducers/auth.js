@@ -1,11 +1,6 @@
 import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "../actions/types";
 
 const user = JSON.parse(localStorage.getItem("user"));
-const now = new Date();
-
-if (user && now.getTime() > user.timeout) {
-  localStorage.removeItem("user");
-}
 
 const initialState = user
   ? { isLoggedIn: true, user }

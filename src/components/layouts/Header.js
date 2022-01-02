@@ -77,7 +77,14 @@ const Header = () => {
       <ThemeProvider theme={theme}>
         {console.log(`currentUser : ${currentUser}`)}
         <AppBar position="sticky" color="default" className={classes.appBar}>
-          <Icon sx={{ position: "absolute", top: 0, fontSize: "2.75rem" }}>
+          <Icon
+            sx={{
+              position: "absolute",
+              top: 0,
+              fontSize: "2.75rem",
+              position: "absolute",
+            }}
+          >
             <img
               src={`${process.env.PUBLIC_URL}/assets/logo/spider-web-logo.svg`}
               width="100%"

@@ -67,6 +67,7 @@ import Slider from "react-slick";
 import SlideArrow from "./shared/slideArrow";
 import PaperPopup from "./shared/PaperPopup";
 import locationService from "../../services/location.service";
+import { runLogoutTimer } from "../../actions/auth";
 
 const theme = createTheme();
 
@@ -150,6 +151,7 @@ const Home = () => {
   const [guid, setGuid] = useState(true);
 
   useEffect(async () => {
+    dispatch(runLogoutTimer());
     dispatch(getAllFamily());
     dispatch(getAllGenus());
     dispatch(getAllSpecies());

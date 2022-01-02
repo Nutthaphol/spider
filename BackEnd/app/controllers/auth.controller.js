@@ -24,7 +24,6 @@ exports.signin = (req, res) => {
           { id: profile.id, role: profile.auth },
           config.secret,
           {
-            // expiresIn: 1000, // 12 hours
             expiresIn: 43200, // 12 hours
           }
         );
@@ -33,6 +32,7 @@ exports.signin = (req, res) => {
           username: profile.username,
           roles: profile.auth,
           accessToken: token,
+          expiresIn: 43200,
         });
       } else {
         return res.status(404).send({ message: "User Not found." });

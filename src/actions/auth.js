@@ -36,3 +36,13 @@ export const logout = () => (dispatch) => {
     type: LOGOUT,
   });
 };
+
+export const runLogoutTimer = () => (dispatch) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    const timer = user.expiresIn * 1000;
+    setTimeout(() => {
+      dispatch(logout());
+    }, timer);
+  }
+};
