@@ -57,7 +57,7 @@ const Footer = (props) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Paper className={classes.footer}>
+        <Paper className={classes.footer} sx={{ position: "static" }}>
           <Container maxWidth="xl">
             <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
               <Box sx={{ flexGrow: 1, flexBasis: 1 }}>

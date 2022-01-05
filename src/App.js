@@ -17,10 +17,7 @@ function App() {
           <Header />
         </Fragment>
         <Routers />
-        <div style={{ marginTop: "100px", height: "100px" }}></div>
-        <Fragment>
-          <Footer />
-        </Fragment>
+        <Footer />
       </div>
     </Router>
   );

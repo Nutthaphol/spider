@@ -60,15 +60,16 @@ const AppbarMenu = ({ data }) => {
                     }}
                   >
                     {val.collapse.map((collapse, idx) => (
-                      <MenuItem key={idx} href={collapse.path}>
-                        <Link
-                          underline="none"
-                          color="#000"
-                          href={collapse.path}
-                        >
+                      <Link
+                        underline="none"
+                        color="#000"
+                        href={collapse.path}
+                        key={idx}
+                      >
+                        <MenuItem href={collapse.path}>
                           {collapse.label}
-                        </Link>
-                      </MenuItem>
+                        </MenuItem>
+                      </Link>
                     ))}
                   </Menu>
                 </Fragment>

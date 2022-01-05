@@ -28,6 +28,9 @@ import {
   Collapse,
   Alert,
   Tooltip,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,6 +77,7 @@ const theme = createTheme();
 const useStyles = makeStyles(() => ({
   root: {
     paddingTop: "24px",
+    position: "relative",
   },
   divider: {
     margin: theme.spacing(2, 0),
@@ -101,9 +105,17 @@ const useStyles = makeStyles(() => ({
     },
   },
   textLabel: {
-    color: "red",
-    "&.MuiFormLabel-root .MuiInputLabel-root .Mui-focused": {
-      color: "#FDD835",
+    "& .MuiInputLabel-outlined.Mui-focused": {
+      color: "#8B0000",
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      borderRadius: "4px",
+      padding: "0 2px 0 2px",
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "#8B0000",
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      borderRadius: "4px",
+      padding: "0 2px 0 2px",
     },
   },
   dispalyButton: {
@@ -149,6 +161,7 @@ const Home = () => {
   ]);
   const [stack, setStack] = useState(1);
   const [guid, setGuid] = useState(true);
+  const [notFount, setNotFount] = useState(false);
 
   useEffect(async () => {
     dispatch(runLogoutTimer());
@@ -375,6 +388,10 @@ const Home = () => {
     }
     console.log("location_", location_);
     const data = mapMarker(location_);
+
+    if (data.length == 0) {
+      setNotFount(true);
+    }
     setMap(data);
     setLocation(location_);
     const detail_ = tableShow(location_);
@@ -466,8 +483,13 @@ const Home = () => {
                     onChange={(e, value) => {
                       value ? setProvince(value.id) : setProvince("");
                     }}
-                    classes={{ inputRoot: classes.autocomplete }}
-                    sx={{ width: 240 }}
+                    classes={{
+                      root: classes.textLabel,
+                      inputRoot: classes.autocomplete,
+                    }}
+                    sx={{
+                      width: 240,
+                    }}
                     options={
                       dbprovince
                         ? dbprovince
@@ -479,7 +501,10 @@ const Home = () => {
                       return options.name_en + " (" + options.name_th + ")";
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Province (All)" />
+                      <TextField
+                        {...params}
+                        label={province == "" ? "Province (All)" : "Province"}
+                      />
                     )}
                   />
                 </Box>
@@ -488,6 +513,7 @@ const Home = () => {
                     disablePortal
                     size="small"
                     classes={{
+                      root: classes.textLabel,
                       inputRoot: classes.autocomplete,
                     }}
                     onChange={(e, value) => {
@@ -517,7 +543,7 @@ const Home = () => {
                             focused: classes.textLabel,
                           },
                         }}
-                        label="district (All)"
+                        label={district == "" ? "district (All)" : "district"}
                       />
                     )}
                   />
@@ -615,46 +641,47 @@ const Home = () => {
                       ))
                     : ""}
                 </MapContainer>
-                <Box sx={{ mt: "48px" }}>
-                  {stack == 1 ? (
-                    <div>
-                      <FamilyTable
-                        family={family}
-                        genus={genus}
-                        detail={detail}
-                        ToNext={ToNext}
-                        ButtonStack={ButtonStack}
-                      />
-                    </div>
-                  ) : stack == 2 ? (
-                    <div>
-                      <GenusTable
-                        genus={genus}
-                        species={species}
-                        detail={detail}
-                        id={show[1].id}
-                        family={family}
-                        ToNext={ToNext}
-                        ButtonStack={ButtonStack}
-                      />
-                    </div>
-                  ) : (
-                    stack == 3 && (
-                      <div>
-                        <SpeciesTable
-                          genus={genus}
-                          species={species}
-                          detail={detail}
-                          id={show[2].id}
-                          family={family}
-                          location={location}
-                          ButtonStack={ButtonStack}
-                        />
-                      </div>
-                    )
-                  )}
-                </Box>
               </Box>
+            </Box>
+
+            <Box sx={{ mt: "48px" }}>
+              {stack == 1 ? (
+                <Box sx={{ position: "relative" }}>
+                  <FamilyTable
+                    family={family}
+                    genus={genus}
+                    detail={detail}
+                    ToNext={ToNext}
+                    ButtonStack={ButtonStack}
+                  />
+                </Box>
+              ) : stack == 2 ? (
+                <div>
+                  <GenusTable
+                    genus={genus}
+                    species={species}
+                    detail={detail}
+                    id={show[1].id}
+                    family={family}
+                    ToNext={ToNext}
+                    ButtonStack={ButtonStack}
+                  />
+                </div>
+              ) : (
+                stack == 3 && (
+                  <div>
+                    <SpeciesTable
+                      genus={genus}
+                      species={species}
+                      detail={detail}
+                      id={show[2].id}
+                      family={family}
+                      location={location}
+                      ButtonStack={ButtonStack}
+                    />
+                  </div>
+                )
+              )}
             </Box>
 
             {/* <Grid container spacing={4}> */}
@@ -851,12 +878,25 @@ const Home = () => {
                 )
               )}
             </div>*/}
+            <Dialog
+              open={notFount}
+              onClose={() => setNotFount(false)}
+              maxWidth="xs"
+            >
+              <DialogContent sx={{ textAlign: "center" }}>
+                <DialogContentText>Spider not fount.</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => setNotFount(false)}
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Container>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>

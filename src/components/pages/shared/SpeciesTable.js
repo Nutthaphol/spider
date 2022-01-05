@@ -47,6 +47,7 @@ const useStyles = makeStyles(() => ({
   paperTable: {
     boxShadow: "none",
     padding: "1rem",
+    position: "relative",
   },
 }));
 
