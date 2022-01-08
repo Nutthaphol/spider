@@ -1,7 +1,7 @@
 const db = require("../models/province.model");
 
-exports.getAllProvince = (req, res) => {
-  db.getAllProvinces((error, result) => {
+exports.getAllProvince = async (req, res) => {
+  await db.getAllProvinces((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -9,6 +9,7 @@ exports.getAllProvince = (req, res) => {
         res.status(404).send(error);
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

@@ -1,7 +1,7 @@
 const db = require("../models/district.model");
 
-exports.getAllDistrict = (req, res) => {
-  db.getAllDistricts((error, result) => {
+exports.getAllDistrict = async (req, res) => {
+  await db.getAllDistricts((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -9,6 +9,7 @@ exports.getAllDistrict = (req, res) => {
         res.status(404).send(error);
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

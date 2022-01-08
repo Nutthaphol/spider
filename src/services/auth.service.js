@@ -5,8 +5,8 @@ import { httpClient } from "./httpClient";
 // const API_URL = join(process.env.REACT_APP_API_URL, "auth/");
 // const API_URL = "auth/";
 
-const login = (username, password) => {
-  return httpClient
+const login = async (username, password) => {
+  return await httpClient
     .post("auth/signin", {
       username,
       password,

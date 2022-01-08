@@ -1,8 +1,8 @@
 const db = require("../models/detail.model");
 
-exports.postDetail = (req, res) => {
+exports.postDetail = async (req, res) => {
   const data = req.body.data;
-  db.postDetail(data, (error, result) => {
+  await db.postDetail(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -10,14 +10,15 @@ exports.postDetail = (req, res) => {
         return res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.updateDetailType = (req, res) => {
+exports.updateDetailType = async (req, res) => {
   const data = req.body.data;
-  db.updateDetailType(data, (error, result) => {
+  await db.updateDetailType(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -25,14 +26,15 @@ exports.updateDetailType = (req, res) => {
         return res.status(404).send({ message: "Update type is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.updateDetail = (req, res) => {
+exports.updateDetail = async (req, res) => {
   const data = req.body.data;
-  db.updateDetail(data, (error, result) => {
+  await db.updateDetail(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -40,16 +42,17 @@ exports.updateDetail = (req, res) => {
         return res.status(404).send({ message: "Update is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getDetail = (req, res) => {
+exports.getDetail = async (req, res) => {
   const id = req.params.id;
   console.log("id ", id);
 
-  db.getDetail(id, (error, result) => {
+  await db.getDetail(id, (error, result) => {
     try {
       if (result) {
         console.log("result", result);
@@ -58,16 +61,17 @@ exports.getDetail = (req, res) => {
         res.status(404).send({ message: "detail not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getDetailAdmin = (req, res) => {
+exports.getDetailAdmin = async (req, res) => {
   const id = req.params.id;
   console.log("id ", id);
 
-  db.getDetailAdmin(id, (error, result) => {
+  await db.getDetailAdmin(id, (error, result) => {
     try {
       if (result) {
         console.log("result", result);
@@ -76,13 +80,14 @@ exports.getDetailAdmin = (req, res) => {
         res.status(404).send({ message: "detail not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getAllDetail = (req, res) => {
-  db.getAllDetail((error, result) => {
+exports.getAllDetail = async (req, res) => {
+  await db.getAllDetail((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -90,13 +95,14 @@ exports.getAllDetail = (req, res) => {
         res.status(404).send({ message: "detail not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getAllDetailAdmin = (req, res) => {
-  db.getAllDetailAdmin((error, result) => {
+exports.getAllDetailAdmin = async (req, res) => {
+  await db.getAllDetailAdmin((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -104,6 +110,7 @@ exports.getAllDetailAdmin = (req, res) => {
         res.status(404).send({ message: "detail not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

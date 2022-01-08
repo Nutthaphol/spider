@@ -1,9 +1,9 @@
 const db = require("../models/paper.model");
 
-exports.postPaper = (req, res) => {
+exports.postPaper = async (req, res) => {
   const data = req.body.data;
 
-  db.postPaper(data, (error, result) => {
+  await db.postPaper(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -11,15 +11,16 @@ exports.postPaper = (req, res) => {
         res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.updatePaper = (req, res) => {
+exports.updatePaper = async (req, res) => {
   const data = req.body.data;
 
-  db.updatePaper(data, (error, result) => {
+  await db.updatePaper(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -27,15 +28,16 @@ exports.updatePaper = (req, res) => {
         res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getPaper = (req, res) => {
+exports.getPaper = async (req, res) => {
   const id = req.params.id;
 
-  db.getPaper(id, (error, result) => {
+  await db.getPaper(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -43,15 +45,16 @@ exports.getPaper = (req, res) => {
         res.status(404).send({ message: "paper not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getPaperAdmin = (req, res) => {
+exports.getPaperAdmin = async (req, res) => {
   const id = req.params.id;
 
-  db.getPaperAdmin(id, (error, result) => {
+  await db.getPaperAdmin(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -59,6 +62,7 @@ exports.getPaperAdmin = (req, res) => {
         res.status(404).send({ message: "paper not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

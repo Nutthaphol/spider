@@ -1,9 +1,9 @@
 const db = require("../models/address.model");
 
-exports.postAddress = (req, res) => {
+exports.postAddress = async (req, res) => {
   const data = req.body.data;
 
-  db.postAddress(data, (error, result) => {
+  await db.postAddress(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -11,16 +11,16 @@ exports.postAddress = (req, res) => {
         res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.updateAddress = (req, res) => {
+exports.updateAddress = async (req, res) => {
   const data = req.body.data;
-  console.log("data, ", data);
 
-  db.updateAddress(data, (error, result) => {
+  await db.updateAddress(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -28,15 +28,16 @@ exports.updateAddress = (req, res) => {
         res.status(404).send({ message: "Update address is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getAddress = (req, res) => {
+exports.getAddress = async (req, res) => {
   const id = req.params.id;
 
-  db.getAddress(id, (error, result) => {
+  await db.getAddress(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -49,10 +50,10 @@ exports.getAddress = (req, res) => {
   });
 };
 
-exports.getAddressAdmin = (req, res) => {
+exports.getAddressAdmin = async (req, res) => {
   const id = req.params.id;
 
-  db.getAddressAdmin(id, (error, result) => {
+  await db.getAddressAdmin(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -65,8 +66,8 @@ exports.getAddressAdmin = (req, res) => {
   });
 };
 
-exports.getAllAddress = (req, res) => {
-  db.getAllAddress((error, result) => {
+exports.getAllAddress = async (req, res) => {
+  await db.getAllAddress((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -79,9 +80,9 @@ exports.getAllAddress = (req, res) => {
   });
 };
 
-exports.getFromLocation = (req, res) => {
+exports.getFromLocation = async (req, res) => {
   const location_id = req.params.id;
-  db.getFromLocation(location_id, (error, result) => {
+  await db.getFromLocation(location_id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);

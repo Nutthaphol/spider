@@ -32,7 +32,7 @@ axios.interceptors.response.use(
     if (axios.isCancel(error)) {
       return Promise.reject(error);
     } else if (!error.response) {
-      alert(JSON.stringify(error));
+      // alert(JSON.stringify(error));
       return Promise.reject({
         code: "NOT_CONNECT_NETWORK",
         message: "Cannot connect to server, Please try again.",

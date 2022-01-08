@@ -4,8 +4,8 @@ const getAllUser = db.getAllUser;
 
 var jwt = require("jsonwebtoken");
 
-exports.signin = (req, res) => {
-  getAllUser((error, result) => {
+exports.signin = async (req, res) => {
+  await getAllUser((error, result) => {
     try {
       let profile = result.find((item) => item.username === req.body.username);
 

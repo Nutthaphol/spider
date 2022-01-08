@@ -9,7 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const app = express();
 
-// app.use(express.static("build"));
+app.use(express.static("build"));
 
 var corsOptions = {
   origin: [
@@ -29,7 +29,6 @@ app.use("/image", express.static("./app/image"));
 
 app.get("/app/image/:filename", (req, res) => {
   const filename = req.params.filename;
-  console.log("params", filename);
   const readStream = fs.createReadStream(
     path.join(__dirname, "app/image/", filename)
   );
@@ -54,9 +53,9 @@ require("./app/routes/district.route")(app);
 
 const PORT = process.env.PORT || 8080;
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
 
 app.listen(PORT, (res, req) => {
   console.log(`Back-end run on port ${PORT}`);

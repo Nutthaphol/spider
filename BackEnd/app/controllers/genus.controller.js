@@ -1,7 +1,7 @@
 const db = require("../models/genus.model");
 
-exports.allGenus = (req, res) => {
-  db.getAllGenus((error, result) => {
+exports.allGenus = async (req, res) => {
+  await db.getAllGenus((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -9,14 +9,15 @@ exports.allGenus = (req, res) => {
         return res.status(404).send({ message: "Data not found" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.postGenus = (req, res) => {
+exports.postGenus = async (req, res) => {
   const data = req.body;
-  db.postGenus(data, (error, result) => {
+  await db.postGenus(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -24,15 +25,16 @@ exports.postGenus = (req, res) => {
         return res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getGenus = (req, res) => {
+exports.getGenus = async (req, res) => {
   const id = req.params.id;
 
-  db.getGenus(id, (error, result) => {
+  await db.getGenus(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -40,6 +42,7 @@ exports.getGenus = (req, res) => {
         return res.status(404).send({ message: "genus not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

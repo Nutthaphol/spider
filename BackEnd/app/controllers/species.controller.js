@@ -1,7 +1,7 @@
 const db = require("../models/species.model");
 
-exports.allSpecies = (req, res) => {
-  db.getAllSpecies((error, result) => {
+exports.allSpecies = async (req, res) => {
+  await db.getAllSpecies((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -9,15 +9,16 @@ exports.allSpecies = (req, res) => {
         return res.status(404).send({ message: "Data not found" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.postSpecies = (req, res) => {
+exports.postSpecies = async (req, res) => {
   const data = req.body;
 
-  db.postSpecies(data, (error, result) => {
+  await db.postSpecies(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -25,14 +26,15 @@ exports.postSpecies = (req, res) => {
         return res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
-exports.getSpecies = (req, res) => {
+exports.getSpecies = async (req, res) => {
   const id = req.params.id;
 
-  db.getSpecies(id, (error, result) => {
+  await db.getSpecies(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -40,6 +42,7 @@ exports.getSpecies = (req, res) => {
         return res.status(404).send({ message: "species not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

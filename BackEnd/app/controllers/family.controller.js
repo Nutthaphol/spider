@@ -1,7 +1,7 @@
 const db = require("../models/family.model");
 
-exports.allFamily = (req, res) => {
-  db.getAllFamily((error, result) => {
+exports.allFamily = async (req, res) => {
+  await db.getAllFamily((error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -9,14 +9,15 @@ exports.allFamily = (req, res) => {
         return res.status(404).send({ message: "Data not found" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.postFamily = (req, res) => {
+exports.postFamily = async (req, res) => {
   const name = req.body.data;
-  db.postFamily(name, (error, result) => {
+  await db.postFamily(name, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -24,14 +25,15 @@ exports.postFamily = (req, res) => {
         return res.status(404).send({ message: "Insert is fail" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getFamily = (req, res) => {
+exports.getFamily = async (req, res) => {
   const id = req.params.id;
-  db.getFamily(id, (error, result) => {
+  await db.getFamily(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -39,6 +41,7 @@ exports.getFamily = (req, res) => {
         res.status(404).send({ message: "family not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });

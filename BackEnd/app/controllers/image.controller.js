@@ -1,6 +1,6 @@
 const db = require("../models/image.model");
 
-exports.postImage = (req, res) => {
+exports.postImage = async (req, res) => {
   const { filename, path } = req.file;
   const detail_id = req.body.detail_id;
 
@@ -10,7 +10,7 @@ exports.postImage = (req, res) => {
     path: path,
   };
 
-  db.postImage(data, (error, result) => {
+  await db.postImage(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -18,6 +18,7 @@ exports.postImage = (req, res) => {
         res.status(404).send({ message: "Insert data is fail." });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
@@ -25,10 +26,10 @@ exports.postImage = (req, res) => {
   console.log(filename, path, detail_id);
 };
 
-exports.updateImage = (req, res) => {
+exports.updateImage = async (req, res) => {
   const data = req.body.data;
 
-  db.updateImage(data, (error, result) => {
+  await db.updateImage(data, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -36,15 +37,16 @@ exports.updateImage = (req, res) => {
         res.status(404).send({ message: "Insert data is fail." });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getImage = (req, res) => {
+exports.getImage = async (req, res) => {
   const id = req.params.id;
 
-  db.getImage(id, (error, result) => {
+  await db.getImage(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -52,15 +54,16 @@ exports.getImage = (req, res) => {
         res.status(404).send({ message: "image not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
 };
 
-exports.getImageAdmin = (req, res) => {
+exports.getImageAdmin = async (req, res) => {
   const id = req.params.id;
 
-  db.getImageAdmin(id, (error, result) => {
+  await db.getImageAdmin(id, (error, result) => {
     try {
       if (result) {
         res.status(200).send(result);
@@ -68,6 +71,7 @@ exports.getImageAdmin = (req, res) => {
         res.status(404).send({ message: "image not fount" });
       }
     } catch (error) {
+      console.log(`error.message : ${error.message}`);
       res.status(500).send({ message: error.message });
     }
   });
