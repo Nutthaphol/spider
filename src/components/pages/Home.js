@@ -543,7 +543,7 @@ const Home = () => {
                             focused: classes.textLabel,
                           },
                         }}
-                        label={district == "" ? "district (All)" : "district"}
+                        label={district == "" ? "District (All)" : "District"}
                       />
                     )}
                   />
@@ -599,6 +599,7 @@ const Home = () => {
                   className="map-view"
                   center={[13, 100]}
                   zoom={5}
+                  scrollWheelZoom={false}
                   style={{ borderRadius: "4px" }}
                 >
                   <TileLayer
