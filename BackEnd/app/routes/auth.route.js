@@ -11,5 +11,4 @@ module.exports = (app) => {
   });
 
   app.post("/api/auth/signin", user.signin);
-  app.get("/api/auth/expirationTime", [authJwt.expiration]);
 };

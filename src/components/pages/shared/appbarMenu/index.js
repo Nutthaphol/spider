@@ -13,7 +13,7 @@ const theme = createTheme();
 const useStyles = makeStyles(() => ({
   button: {
     textTransform: "none",
-    color: "#fff",
+    color: "darkslategray",
     fontWeight: "600",
     fontSize: "16px",
   },
@@ -40,6 +40,7 @@ const AppbarMenu = ({ data }) => {
               {val.collapse ? (
                 <Fragment>
                   <Button
+                    disableRipple
                     id="collapse-button"
                     aria-controls={open ? "collapse-menu" : null}
                     aria-haspopup="true"
@@ -74,7 +75,11 @@ const AppbarMenu = ({ data }) => {
                   </Menu>
                 </Fragment>
               ) : (
-                <Button className={classes.button} href={val.path}>
+                <Button
+                  className={classes.button}
+                  href={val.path}
+                  disableRipple
+                >
                   {val.label}
                 </Button>
               )}

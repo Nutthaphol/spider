@@ -5,7 +5,6 @@ const MapView = ({ listEx, listNormal, zoom }) => {
   const [position_, setPosition_] = useState();
   const [center, setCenter] = useState();
   useEffect(() => {
-    console.log("listEx", listEx);
     if (listEx) {
       let data = [];
       for (let i = 0; i < listEx.length; i++) {
@@ -36,18 +35,6 @@ const MapView = ({ listEx, listNormal, zoom }) => {
           />
           {position_
             .filter((item) => {
-              console.log(
-                "parseFloat(item.latitude)",
-                parseFloat(item.latitude)
-              );
-              console.log(
-                "parseFloat(item.longitude)",
-                parseFloat(item.longitude)
-              );
-              console.log(
-                !isNaN(parseFloat(item.latitude)) &&
-                  !isNaN(parseFloat(item.longitude))
-              );
               if (
                 !isNaN(parseFloat(item.latitude)) &&
                 !isNaN(parseFloat(item.longitude))

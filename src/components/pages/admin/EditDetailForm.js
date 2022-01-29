@@ -191,6 +191,7 @@ const EditDetailForm = (props) => {
   const handleGeneralSubmit = (values) => {
     const general_ = values;
     general_.id = detail.id;
+    general_.active = 1;
     setGeneral(general_);
     let res = false;
     res = updateDetailFn(general_);
@@ -305,7 +306,7 @@ const EditDetailForm = (props) => {
                   sx={{ fontWeight: 600 }}
                   gutterBottom
                 >
-                  Edit from ID #{oldDetail && oldDetail.id}
+                  Edit from ID #{detail && detail.id}
                 </Typography>
                 <Divider />
                 <br />
@@ -1161,6 +1162,7 @@ const EditDetailForm = (props) => {
                                 accept="image/*"
                                 multiple
                                 hidden
+                                // reloading same files is not possible in onChange event
                                 onChange={(e) => {
                                   const tmp = e.currentTarget.files;
                                   for (let i = 0; i < tmp.length; i++) {
@@ -1178,13 +1180,9 @@ const EditDetailForm = (props) => {
                                     console.log("loop", i, "file", file);
                                     reader.readAsDataURL(file);
                                   }
+                                  // reloading same files need to be set event value = null
+                                  e.target.value = null;
                                 }}
-                                // onChange={(event) => {
-                                //   setFieldValue(
-                                //     "file",
-                                //     event.currentTarget.files[0]
-                                //   );
-                                // }}
                               />
 
                               <Button

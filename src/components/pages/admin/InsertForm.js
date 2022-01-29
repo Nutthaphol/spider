@@ -14,6 +14,7 @@ import {
   Alert,
   Dialog,
   DialogTitle,
+  Icon,
 } from "@mui/material";
 import {
   ThemeProvider,
@@ -100,6 +101,12 @@ const useStyles = makeStyles(() => ({
     //   position: "absolute",
     // },
   },
+  uploadImage: {
+    height: "160px",
+    width: "auto",
+    padding: "8px",
+    margin: "8px",
+  },
 }));
 
 const InsertForm = () => {
@@ -161,7 +168,7 @@ const InsertForm = () => {
     },
   ]);
   const [files, setFiles] = useState([]);
-  const [uploads, setUploads] = useState();
+  const [uploads, setUploads] = useState([]);
 
   useEffect(() => {
     dispatch(getAllFamily());
@@ -175,7 +182,6 @@ const InsertForm = () => {
       const date = new Date();
       const tmpYesrs = [];
       let nowYear = date.getFullYear();
-      console.log(`now year : ${nowYear}`);
       for (let i = nowYear; i > nowYear - 100; i--) {
         tmpYesrs.push(i);
       }
@@ -186,17 +192,32 @@ const InsertForm = () => {
   }, []);
 
   // onDrop of react Drop zone
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = (acceptedFiles) => {
     // Do something with the files
     let formData = new FormData();
     acceptedFiles.map((file) => formData.append("image", file));
-    setFiles(
-      acceptedFiles.map((file) =>
-        Object.assign(file, { preview: URL.createObjectURL(file) })
-      )
+    let files_ = [...files];
+    console.log("files_", files_);
+
+    const preFiles = acceptedFiles.map((file) =>
+      Object.assign(file, { preview: URL.createObjectURL(file) })
     );
-    setUploads(acceptedFiles);
-  }, []);
+
+    console.log("preFiles", preFiles);
+    files_ = files_.concat(preFiles);
+    // setFiles(
+    //   acceptedFiles.map((file) =>
+    //     Object.assign(file, { preview: URL.createObjectURL(file) })
+    //   )
+    // );
+
+    setFiles(files_);
+    console.log("after concat", files);
+
+    let uploads_ = [...uploads];
+    uploads_ = uploads_.concat(acceptedFiles);
+    setUploads(uploads_);
+  };
 
   // set react Drop zone
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -290,6 +311,17 @@ const InsertForm = () => {
     if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
       keyEvent.preventDefault();
     }
+  };
+
+  const handleOnClickDeleteImage = (index) => {
+    let files_ = [...files];
+    let uploads_ = [...uploads];
+
+    files_.splice(index, 1);
+    uploads_.splice(index, 1);
+
+    setFiles(files_);
+    setUploads(uploads_);
   };
 
   // render form component
@@ -1023,7 +1055,7 @@ const InsertForm = () => {
                           <Box {...getRootProps({ className: "dropzone" })}>
                             <Box className="inner-dropzone">
                               <input {...getInputProps()} />
-                              <Fragment>{thumbs}</Fragment>
+                              {/* <Fragment>{thumbs}</Fragment> */}
                               <div
                                 className={`placeholder ${
                                   classes.placeholder
@@ -1049,14 +1081,39 @@ const InsertForm = () => {
                             </Box>
                           </Box>
                         </Box>
-                        <Button
+                        {/* <Button
                           variant="text"
                           size="small"
                           color="error"
                           onClick={() => setFiles([])}
                         >
                           Clear
-                        </Button>
+                        </Button> */}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                          {files &&
+                            files.map((file, index) => (
+                              <Box key={index} sx={{ textAlign: "center" }}>
+                                <img
+                                  key={file.name}
+                                  src={file.preview}
+                                  className={classes.uploadImage}
+                                />
+                                <br />
+                                <Button
+                                  disableRipple
+                                  variant="contained"
+                                  color="error"
+                                  onClick={() =>
+                                    handleOnClickDeleteImage(index)
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </Box>
+                            ))}
+                        </Box>
                       </Grid>
 
                       {/* main grid */}
@@ -1066,7 +1123,7 @@ const InsertForm = () => {
                       <Grid item xs={12}>
                         <Button
                           type="submit"
-                          variant="outlined"
+                          variant="contained"
                           color="primary"
                         >
                           Submit

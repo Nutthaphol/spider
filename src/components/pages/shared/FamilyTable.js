@@ -34,9 +34,21 @@ const useStyles = makeStyles(() => ({
   },
   fieldFilter: {
     "& .MuiOutlinedInput-notchedOutline": {
-      border: "none",
+      border: "2px solid #000",
     },
-    backgroundColor: "#fff",
+    "& .Mui-focused.MuiOutlinedInput-notchedOutline": {
+      borderColor: "#000",
+    },
+    backgroundColor: "#ED7044",
+    color: "#fff",
+    "&:hover": {
+      background: "#fff",
+      backgroundColor: "#ED7044",
+      color: "#fff",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "#fff",
+    },
     textAlign: "center",
   },
   table: {
@@ -46,8 +58,16 @@ const useStyles = makeStyles(() => ({
   },
   paperTable: {
     boxShadow: "none",
-    padding: "1rem",
+    // padding: "1rem",
     position: "relative",
+  },
+  headerText: {
+    fontWeight: "600",
+    fontSize: "18px",
+    borderBottom: "none",
+  },
+  cellTable: {
+    borderBottom: "none",
   },
 }));
 
@@ -80,16 +100,14 @@ const FamilyTable = (props) => {
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography
-              variant="h6"
-              component={`div`}
-              className={classes.textFilter}
-            >
-              Filter type
-            </Typography>
-            <Box sx={{ flexGrow: 0.02 }} />
-            <Box sx={{ width: 160 }}>
+          <Box
+            sx={{
+              width: "100%",
+              position: "relative",
+              textAlign: "center",
+            }}
+          >
+            <Box sx={{ width: 160, position: "absolute" }}>
               <FormControl fullWidth>
                 <Select
                   onChange={(e) => handleOnChangeSelectFamily(e)}
@@ -108,12 +126,19 @@ const FamilyTable = (props) => {
                 </Select>
               </FormControl>
             </Box>
+            <Typography
+              variant="h4"
+              component={`div`}
+              className={classes.textFilter}
+            >
+              FAMILY LIST
+            </Typography>
           </Box>
 
           <br />
           <br />
           <Paper className={classes.paperTable}>
-            <Box
+            {/* <Box
               display="flex"
               alignItems="center"
               sx={{ marginBottom: "10px" }}
@@ -123,56 +148,101 @@ const FamilyTable = (props) => {
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <ButtonStack />
-            </Box>
-            <TableContainer className={classes.table} component={Paper}>
-              <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Family</TableCell>
-                    <TableCell align="left">Author</TableCell>
-                    <TableCell align="left"> # genera</TableCell>
-                    <TableCell align="left">Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {detail &&
-                    detail
-                      // unique family type
-                      .filter(
-                        (item, index, self) =>
-                          self
-                            .map((e) => {
-                              return e.family_id;
-                            })
-                            .indexOf(item.family_id) === index
-                      )
-                      .filter((item) =>
-                        selectFamily != 0
-                          ? item.family_id == selectFamily
-                          : true
-                      )
-                      .map((val, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{val.family}</TableCell>
-                          <TableCell align="left">{val.author}</TableCell>
-                          <TableCell align="left">
-                            {filterCountGenus(val.family_id)}
-                          </TableCell>
-                          <TableCell align="left">
-                            {" "}
-                            <Link
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                ToNext("genus", val.family_id);
-                              }}
-                              underline="hover"
-                            >
-                              Genera
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  {/* {family &&
+            </Box> */}
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell className={classes.headerText} align="center">
+                    FAMILY
+                  </TableCell>
+                  <TableCell className={classes.headerText} align="center">
+                    AUTHOR
+                  </TableCell>
+                  <TableCell className={classes.headerText} align="center">
+                    GENERA
+                  </TableCell>
+                  <TableCell className={classes.headerText} align="center">
+                    ACTION
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {detail &&
+                  detail
+                    // unique family type
+                    .filter(
+                      (item, index, self) =>
+                        self
+                          .map((e) => {
+                            return e.family_id;
+                          })
+                          .indexOf(item.family_id) === index
+                    )
+                    .filter((item) =>
+                      selectFamily != 0 ? item.family_id == selectFamily : true
+                    )
+                    .map((val, index) => (
+                      <TableRow key={index}>
+                        <TableCell
+                          className={classes.cellTable}
+                          sx={{
+                            backgroundColor:
+                              index % 2 == 0
+                                ? "rgba(237, 112, 68, 0.2)"
+                                : "transparent",
+                          }}
+                          align="center"
+                        >
+                          {val.family}
+                        </TableCell>
+                        <TableCell
+                          className={classes.cellTable}
+                          sx={{
+                            backgroundColor:
+                              index % 2 == 0
+                                ? "rgba(237, 112, 68, 0.2)"
+                                : "transparent",
+                          }}
+                          align="center"
+                        >
+                          {val.author}
+                        </TableCell>
+                        <TableCell
+                          className={classes.cellTable}
+                          sx={{
+                            backgroundColor:
+                              index % 2 == 0
+                                ? "rgba(237, 112, 68, 0.2)"
+                                : "transparent",
+                          }}
+                          align="center"
+                        >
+                          {filterCountGenus(val.family_id)}
+                        </TableCell>
+                        <TableCell
+                          className={classes.cellTable}
+                          sx={{
+                            backgroundColor:
+                              index % 2 == 0
+                                ? "rgba(237, 112, 68, 0.2)"
+                                : "transparent",
+                          }}
+                          align="center"
+                        >
+                          {" "}
+                          <Link
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              ToNext("genus", val.family_id);
+                            }}
+                            // underline="hover"
+                          >
+                            Genera
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                {/* {family &&
                   family
                     // .filter(
                     //   (item) =>
@@ -207,9 +277,8 @@ const FamilyTable = (props) => {
                         </TableCell>
                       </TableRow>
                     ))} */}
-                </TableBody>
-              </Table>
-            </TableContainer>
+              </TableBody>
+            </Table>
           </Paper>
         </StyledEngineProvider>
       </ThemeProvider>

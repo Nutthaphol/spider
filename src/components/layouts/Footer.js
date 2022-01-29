@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     width: "100%",
     height: "100px",
-    backgroundColor: "#8B0000",
+    backgroundColor: "#F4CB49",
     borderRadius: "0",
     padding: "20px 0 20px 0",
     color: "#fff",
@@ -58,57 +58,7 @@ const Footer = (props) => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <Paper className={classes.footer} sx={{ position: "static" }}>
-          <Container maxWidth="xl">
-            <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-              <Box sx={{ flexGrow: 1, flexBasis: 1 }}>
-                {/* <Typography variant="subtitle2">Account</Typography> */}
-                <List
-                  component="nav"
-                  disablePadding
-                  //   subheader={
-                  //     <ListSubheader className={classes.subheader} disableGutters>
-                  //       Account
-                  //     </ListSubheader>
-                  //   }
-                >
-                  {currentUser ? (
-                    <ListItem disableGutters>
-                      <ListItemText
-                        primary={
-                          <Fragment>
-                            <Button
-                              href="/login"
-                              className={classes.button}
-                              onClick={() => {
-                                dispatch(logout());
-                              }}
-                            >
-                              logout
-                            </Button>
-                          </Fragment>
-                        }
-                      />
-                    </ListItem>
-                  ) : (
-                    <ListItem disableGutters>
-                      <ListItemText
-                        primary={
-                          <Fragment>
-                            <Button href="/login" className={classes.button}>
-                              login
-                            </Button>
-                          </Fragment>
-                        }
-                      />
-                    </ListItem>
-                  )}
-                </List>
-              </Box>
-              <Box sx={{ flexGrow: 1, flexBasis: 1 }}></Box>
-              <Box sx={{ flexGrow: 1, flexBasis: 1 }}></Box>
-              <Box sx={{ flexGrow: 1, flexBasis: 1 }}></Box>
-            </Box>
-          </Container>
+          <Container maxWidth="xl"></Container>
         </Paper>
       </ThemeProvider>
     </StyledEngineProvider>

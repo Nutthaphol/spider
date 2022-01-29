@@ -58,7 +58,7 @@ exports.getDetail = async (req, res) => {
         console.log("result", result);
         res.status(200).send(result[0]);
       } else {
-        res.status(404).send({ message: "detail not fount" });
+        res.status(404).send({ message: "detail not found" });
       }
     } catch (error) {
       console.log(`error.message : ${error.message}`);
@@ -77,7 +77,7 @@ exports.getDetailAdmin = async (req, res) => {
         console.log("result", result);
         res.status(200).send(result[0]);
       } else {
-        res.status(404).send({ message: "detail not fount" });
+        res.status(404).send({ message: "detail not found" });
       }
     } catch (error) {
       console.log(`error.message : ${error.message}`);
@@ -92,7 +92,7 @@ exports.getAllDetail = async (req, res) => {
       if (result) {
         res.status(200).send(result);
       } else {
-        res.status(404).send({ message: "detail not fount" });
+        res.status(404).send({ message: "detail not found" });
       }
     } catch (error) {
       console.log(`error.message : ${error.message}`);
@@ -107,7 +107,7 @@ exports.getAllDetailAdmin = async (req, res) => {
       if (result) {
         res.status(200).send(result);
       } else {
-        res.status(404).send({ message: "detail not fount" });
+        res.status(404).send({ message: "detail not found" });
       }
     } catch (error) {
       console.log(`error.message : ${error.message}`);

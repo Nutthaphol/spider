@@ -12,12 +12,24 @@ import Footer from "./components/layouts/Footer";
 function App() {
   return (
     <Router>
-      <div>
-        <Fragment>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+          minHeight: "100vh",
+        }}
+      >
+        <div>
           <Header />
-        </Fragment>
-        <Routers />
-        <Footer />
+        </div>
+        <div style={{ flexGrow: 1 }}>
+          <Routers />
+        </div>
+        <div>
+          <Footer />
+        </div>
       </div>
     </Router>
   );

@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../actions/auth";
+import { login, logout } from "../../actions/auth";
 import UserMenu from "./user";
 import {
   ThemeProvider,
@@ -29,7 +29,8 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         colorDefault: {
-          backgroundColor: "#8B0000",
+          // backgroundColor: "#8B0000",
+          backgroundColor: "#F4CB49",
         },
       },
     },
@@ -59,6 +60,12 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     color: "#fff",
   },
+  button: {
+    textTransform: "none",
+    color: "darkslategray",
+    fontWeight: "600",
+    fontSize: "16px",
+  },
 }));
 
 const Header = () => {
@@ -75,9 +82,8 @@ const Header = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        {console.log(`currentUser : ${currentUser}`)}
         <AppBar position="sticky" color="default" className={classes.appBar}>
-          <Icon
+          {/* <Icon
             sx={{
               position: "absolute",
               top: 0,
@@ -89,19 +95,34 @@ const Header = () => {
               src={`${process.env.PUBLIC_URL}/assets/logo/spider-web-logo.svg`}
               width="100%"
             />
-          </Icon>
+          </Icon> */}
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              className={classes.logo}
-              sx={{ mr: 4 }}
-            >
-              Spider Thailand
-            </Typography>
-            <UserMenu />
-            {admin && <AdminMenu />}
+            <Box sx={{ display: "flex", width: "100%" }}>
+              <Box sx={{ flexGrow: 1, flexBasis: 1 }} />
+              <Box>
+                {admin && <AdminMenu />}
+                <UserMenu />
+                {currentUser ? (
+                  <Button
+                    disableRipple
+                    className={classes.button}
+                    onClick={() => {
+                      dispatch(logout());
+                    }}
+                  >
+                    Log out
+                  </Button>
+                ) : (
+                  <Button
+                    disableRipple
+                    href="/login"
+                    className={classes.button}
+                  >
+                    login
+                  </Button>
+                )}
+              </Box>
+            </Box>
           </Toolbar>
         </AppBar>
       </ThemeProvider>
@@ -110,54 +131,3 @@ const Header = () => {
 };
 
 export default Header;
-
-{
-  /* <Menu /> */
-}
-{
-  /* <ButtonAppBar message="Home" link={"/"} />
-              {statusMenu && (
-                <MenuBar
-                  message="Manage"
-                  icon={<KeyboardArrowDown />}
-                  listButton={insertList}
-              )}
-                /> */
-}
-{
-  /* <ButtonAppBar message="Check Data" link={"/check"} /> */
-}
-{
-  /* <div style={{ flexGrow: 1 }}></div> */
-}
-{
-  /* {currentUser ? (
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  align="right"
-                  size="small"
-                  onClick={() => {
-                    window.location.reload();
-                    dispatch(logout());
-                  }}
-                  sx={{
-                    textTransform: "none",
-                    fontWeight: 600,
-                  }}
-                >
-                  Logout
-                </Button>
-              ) : (
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  align="right"
-                  size="small"
-                  href={`/login`}
-                  sx={{ textTransform: "none", fontWeight: 600 }}
-                >
-                  Login
-                </Button>
-              )} */
-}

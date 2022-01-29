@@ -7,6 +7,14 @@ const UserMenu = () => {
       path: "/home",
       label: "Home",
     },
+    {
+      path: "/about",
+      label: "About",
+    },
+    {
+      path: "/contact",
+      label: "Contact",
+    },
   ];
 
   return <AppbarMenu data={user} />;

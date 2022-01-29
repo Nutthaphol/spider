@@ -2,7 +2,7 @@ import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "./types";
 
 import authService from "../services/auth.service";
 
-export const login = async (username, password) => (dispatch) => {
+export const login = (username, password) => (dispatch) => {
   return authService.login(username, password).then(
     (data) => {
       dispatch({

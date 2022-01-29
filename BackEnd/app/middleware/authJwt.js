@@ -31,24 +31,8 @@ isAdmin = (req, res, next) => {
   });
 };
 
-expiration = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
-  jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({
-        expire: true,
-      });
-    }
-    return res.status(200).send({
-      expire: false,
-    });
-  });
-};
-
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  expiration: expiration,
 };
 module.exports = authJwt;

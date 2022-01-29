@@ -32,7 +32,7 @@ const Routers = () => {
   const AdminRoute = ({ component: Component, ...rest }) => {
     if (currentUser) {
       {
-        console.log(`check auth ${currentUser.roles === "admin"}`);
+        // console.log(`check auth ${currentUser.roles === "admin"}`);
       }
       return (
         <Route

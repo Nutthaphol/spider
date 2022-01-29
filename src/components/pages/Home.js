@@ -99,36 +99,58 @@ const useStyles = makeStyles(() => ({
   },
   autocomplete: {
     color: "#000",
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FDD835",
+      // borderColor: "#FDD835",
+      borderColor: "#000",
     },
   },
   textLabel: {
+    backgroundColor: "#fff",
     "& .MuiInputLabel-outlined.Mui-focused": {
-      color: "#8B0000",
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
       borderRadius: "4px",
-      padding: "0 2px 0 2px",
+      // padding: "0 2px 0 2px",
+      // textAlign: "center",
+      // transformOrigin: "top",
+      // transform: "translate(0px, -9px) scale(0.75)",
+      // width: "100%",
+      // maxWidth: "calc(133% - 24px)",
     },
     "& .MuiInputLabel-outlined": {
-      color: "#8B0000",
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      color: "#000",
       borderRadius: "4px",
-      padding: "0 2px 0 2px",
+      textAlign: "center",
+      // transformOrigin: "top",
+      // width: "100%",
+      // maxWidth: "calc(100% - 24px)",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      // textAlign: "center",
+      borderWidth: "2px",
+      borderColor: "#000",
+      boxShadow:
+        "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
+    },
+    "& MuiFormLabel-root.MuiInputLabel-root": {
+      // transform: "translate(0px, -9px) scale(0.75)",
     },
   },
   dispalyButton: {
-    minWidth: "100px",
     height: "40px",
     textTransform: "none",
-    backgroundColor: "#FDD835",
-    color: "#000",
+    backgroundColor: "#ED7044",
+    color: "#fff",
     "&:hover": {
       background: "#fff",
-      backgroundColor: "#FFEE24",
-      color: "#000",
+      backgroundColor: "#ED7044",
+      color: "#fff",
     },
+    border: "2px solid #000",
+  },
+  braner: {
+    height: "320px",
+    width: "100%",
+    marginBottom: "20px",
   },
 }));
 
@@ -164,21 +186,39 @@ const Home = () => {
   const [notFount, setNotFount] = useState(false);
 
   useEffect(async () => {
-    dispatch(runLogoutTimer());
-    dispatch(getAllFamily());
-    dispatch(getAllGenus());
-    dispatch(getAllSpecies());
-    dispatch(getAllDetail());
-    dispatch(getAllDistrict());
-    dispatch(getAllProvinces());
-    dispatch(getAllLocation());
-    dispatch(getAllAddress());
-    if (currentUser) {
-      console.log(`id = ${currentUser.username}`);
-    }
+    !dbfamily && dispatch(getAllFamily());
+    !dbgenus && dispatch(getAllGenus());
+    !dbspecies && dispatch(getAllSpecies());
+    !dbprovince && dispatch(getAllDetail());
+    !dbdistrict && dispatch(getAllDistrict());
+    !dbdetail && dispatch(getAllProvinces());
+    !dblocation && dispatch(getAllLocation());
+    !dbaddress && dispatch(getAllAddress());
 
-    setAddress(dbaddress);
-  }, []);
+    if (
+      dbfamily &&
+      dbgenus &&
+      dbspecies &&
+      dbprovince &&
+      dbdistrict &&
+      dbdetail &&
+      dblocation &&
+      dbaddress
+    ) {
+      console.log("done");
+      setAddress(dbaddress);
+      handleOnChangeAddress();
+    }
+  }, [
+    dbfamily,
+    dbgenus,
+    dbspecies,
+    dbprovince,
+    dbdistrict,
+    dbdetail,
+    dblocation,
+    dbaddress,
+  ]);
 
   const markAddress = (location_) => {
     let address_ = [];
@@ -462,7 +502,256 @@ const Home = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <Box className={`home`}>
-          <Box className={classes.firstBox}>
+          <Box
+            className={classes.braner}
+            sx={{
+              background: "rgba(244, 203, 73 ,0.4)",
+            }}
+          />
+          <Container maxWidth="lg">
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                {/* <Box
+                  sx={{
+                    width: "100%",
+                    textAlign: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      color: "darkslategray",
+                      // visibility: province == "" ? "hidden" : "none",
+                      fontSize: "18px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Province
+                  </Typography>
+                </Box> */}
+                <Autocomplete
+                  disablePortal
+                  size="small"
+                  onChange={(e, value) => {
+                    value ? setProvince(value.id) : setProvince("");
+                  }}
+                  classes={{
+                    root: classes.textLabel,
+                    inputRoot: classes.autocomplete,
+                  }}
+                  options={
+                    dbprovince
+                      ? dbprovince
+                          .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                          .map((item) => item)
+                      : [""]
+                  }
+                  getOptionLabel={(options) => {
+                    return options.name_en + " (" + options.name_th + ")";
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label={province == "" ? "Province (All)" : "Province"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                {/* <Box
+                  sx={{
+                    width: "100%",
+                    textAlign: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      color: "darkslategray",
+                      // visibility: district == "" ? "hidden" : "none",
+                      fontSize: "18px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    District
+                  </Typography>
+                </Box> */}
+                <Autocomplete
+                  disablePortal
+                  size="small"
+                  sx={{ textAlign: "left" }}
+                  classes={{
+                    root: classes.textLabel,
+                    inputRoot: classes.autocomplete,
+                  }}
+                  onChange={(e, value) => {
+                    value ? setDistrict(value.id) : setDistrict("");
+                  }}
+                  options={
+                    province
+                      ? dbdistrict
+                          .filter((item) => item.province_id == province)
+                          .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                          .map((item) => item)
+                      : dbdistrict
+                      ? dbdistrict
+                          .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
+                          .map((item) => item)
+                      : [""]
+                  }
+                  getOptionLabel={(options) => {
+                    return options.name_en + " (" + options.name_th + ")";
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label={district == "" ? "District (All)" : "District"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                {/* <Box
+                  sx={{
+                    width: "100%",
+                    textAlign: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      color: "darkslategray",
+                      visibility: "hidden",
+                      fontSize: "18px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Mock
+                  </Typography>
+                </Box> */}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.dispalyButton}
+                  onClick={() => handleOnChangeAddress()}
+                  fullWidth
+                >
+                  CLICK "HERE" FOR SEARCH
+                </Button>
+              </Grid>
+            </Grid>
+            <Box
+              sx={{
+                height: "450px",
+                // margin: "20px",
+                margin: "50px 0",
+              }}
+            >
+              <Box
+                sx={{
+                  height: "100%",
+                  border: "1px solid #040404",
+                  borderRadius: "4px",
+                }}
+              >
+                <MapContainer
+                  className="map-view"
+                  center={[13, 100]}
+                  zoom={5}
+                  style={{ borderRadius: "4px" }}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  {map
+                    ? map.map((val, index) => (
+                        <Marker
+                          key={index}
+                          position={[val.latitude, val.longitude]}
+                        >
+                          {val.data.length > 1 ? (
+                            <Popup style={{ width: "480px" }}>
+                              <Slider {...settings}>
+                                {val.data.map((val2, index2) => (
+                                  <PaperPopup
+                                    key={index2}
+                                    positionName={val2.positionName}
+                                    province={val2.province}
+                                    family={val2.family}
+                                    genus={val2.genus}
+                                    species={val2.species}
+                                  />
+                                ))}
+                              </Slider>
+                            </Popup>
+                          ) : (
+                            <Popup>
+                              <PaperPopup
+                                positionName={val.data[0].positionName}
+                                province={val.data[0].province}
+                                family={val.data[0].family}
+                                genus={val.data[0].genus}
+                                species={val.data[0].species}
+                              />
+                            </Popup>
+                          )}
+                        </Marker>
+                      ))
+                    : ""}
+                </MapContainer>
+              </Box>
+            </Box>
+            <Box sx={{ mt: "48px" }}>
+              {stack == 1 ? (
+                <Box sx={{ position: "relative" }}>
+                  <FamilyTable
+                    family={family}
+                    genus={genus}
+                    detail={detail}
+                    ToNext={ToNext}
+                    ButtonStack={ButtonStack}
+                  />
+                </Box>
+              ) : stack == 2 ? (
+                <div>
+                  <GenusTable
+                    genus={genus}
+                    species={species}
+                    detail={detail}
+                    id={show[1].id}
+                    family={family}
+                    ToNext={ToNext}
+                    ButtonStack={ButtonStack}
+                  />
+                </div>
+              ) : (
+                stack == 3 && (
+                  <div>
+                    <SpeciesTable
+                      genus={genus}
+                      species={species}
+                      detail={detail}
+                      id={show[2].id}
+                      family={family}
+                      location={location}
+                      ButtonStack={ButtonStack}
+                    />
+                  </div>
+                )
+              )}
+            </Box>
+          </Container>
+          {/* <Box className={classes.firstBox}>
             <Box sx={{ width: "100%", textAlign: "center" }}>
               <Typography variant="h3" className={classes.flocation}>
                 Filter location
@@ -472,11 +761,18 @@ const Home = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  margin: "24px 30%",
+                  margin: "24px 20%",
                   flexWrap: "wrap",
                 }}
               >
-                <Box sx={{ flexBasis: 1, flexGrow: 1, margin: "5px" }}>
+                <Box
+                  sx={{
+                    flexBasis: 1,
+                    flexGrow: 1,
+                    margin: "5px",
+                    width: "240px",
+                  }}
+                >
                   <Autocomplete
                     disablePortal
                     size="small"
@@ -508,10 +804,18 @@ const Home = () => {
                     )}
                   />
                 </Box>
-                <Box sx={{ flexBasis: 1, flexGrow: 1, margin: "5px" }}>
+                <Box
+                  sx={{
+                    flexBasis: 1,
+                    flexGrow: 1,
+                    margin: "5px",
+                    width: "240px",
+                  }}
+                >
                   <Autocomplete
                     disablePortal
                     size="small"
+                    sx={{ textAlign: "left" }}
                     classes={{
                       root: classes.textLabel,
                       inputRoot: classes.autocomplete,
@@ -538,11 +842,6 @@ const Home = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        InputLabelProps={{
-                          classes: {
-                            focused: classes.textLabel,
-                          },
-                        }}
                         label={district == "" ? "District (All)" : "District"}
                       />
                     )}
@@ -571,6 +870,7 @@ const Home = () => {
                       className={classes.dispalyButton}
                       onClick={() => handleOnChangeAddress()}
                       fullWidth
+                      sx={{ width: "240px" }}
                     >
                       Display
                     </Button>
@@ -599,8 +899,8 @@ const Home = () => {
                   className="map-view"
                   center={[13, 100]}
                   zoom={5}
-                  scrollWheelZoom={false}
                   style={{ borderRadius: "4px" }}
+                  scrollWheelZoom={false}
                 >
                   <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -685,207 +985,13 @@ const Home = () => {
               )}
             </Box>
 
-            {/* <Grid container spacing={4}> */}
-            {/* <Grid item xs={12}>
-                <Collapse in={guid}>
-                  <Alert icon={false} sx={{ textAlign: "center" }} color="info">
-                    Click 'Show' to display spider species (คลิก 'Show'
-                    เพื่อแสดงสปีชีส์แมงมุม)
-                  </Alert>
-                </Collapse>
-              </Grid> */}
-            {/* <Grid
-                item
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItem: "center",
-                }}
-              > */}
-            {/* <Grid container spacing={2}>
-                  <Grid item>
-                    <Typography variant="h5" sx={{ flexGrow: 0.05 }}>
-                      Filter location
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Autocomplete
-                      disablePortal
-                      size="small"
-                      onChange={(e, value) => {
-                        value ? setProvince(value.id) : setProvince("");
-                      }}
-                      sx={{ width: 240 }}
-                      options={
-                        dbprovince
-                          ? dbprovince
-                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                              .map((item) => item)
-                          : [""]
-                      }
-                      getOptionLabel={(options) => {
-                        return options.name_en + " (" + options.name_th + ")";
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Province (All)" />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Autocomplete
-                      disablePortal
-                      size="small"
-                      onChange={(e, value) => {
-                        value ? setDistrict(value.id) : setDistrict("");
-                      }}
-                      sx={{ width: 240 }}
-                      options={
-                        province
-                          ? dbdistrict
-                              .filter((item) => item.province_id == province)
-                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                              .map((item) => item)
-                          : dbdistrict
-                          ? dbdistrict
-                              .sort((a, b) => (a.name_en > b.name_en ? 1 : -1))
-                              .map((item) => item)
-                          : [""]
-                      }
-                      getOptionLabel={(options) => {
-                        return options.name_en + " (" + options.name_th + ")";
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="district (All)" />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{ position: "relative" }}>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          minWidth: "100px",
-                          height: "40px",
-                          textTransform: "none",
-                        }}
-                        onClick={() => handleOnChangeAddress()}
-                      >
-                        Show
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid> */}
-            {/* </Grid> */}
-            {/* <Grid
-                item
-                sx={{
-                  height: "600px",
-                  width: "100%",
-                  margin: "20px",
-                }}
-              >
-                <Box
-                  sx={{
-                    height: "100%",
-                    border: "1px solid #040404",
-                  }}
-                >
-                  <MapContainer
-                    className="map-view"
-                    center={[13, 100]}
-                    zoom={5}
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {map
-                      ? map.map((val, index) => (
-                          <Marker
-                            key={index}
-                            position={[val.latitude, val.longitude]}
-                          >
-                            {val.data.length > 1 ? (
-                              <Popup style={{ width: "480px" }}>
-                                <Slider {...settings}>
-                                  {val.data.map((val2, index2) => (
-                                    <PaperPopup
-                                      key={index2}
-                                      positionName={val2.positionName}
-                                      province={val2.province}
-                                      family={val2.family}
-                                      genus={val2.genus}
-                                      species={val2.species}
-                                    />
-                                  ))}
-                                </Slider>
-                              </Popup>
-                            ) : (
-                              <Popup>
-                                <PaperPopup
-                                  positionName={val.data[0].positionName}
-                                  province={val.data[0].province}
-                                  family={val.data[0].family}
-                                  genus={val.data[0].genus}
-                                  species={val.data[0].species}
-                                />
-                              </Popup>
-                            )}
-                          </Marker>
-                        ))
-                      : ""}
-                  </MapContainer>
-                </Box>
-              </Grid>
-            </Grid>
-            <br />
-            <br />
-            <div>
-              {stack == 1 ? (
-                <div>
-                  <FamilyTable
-                    family={family}
-                    genus={genus}
-                    detail={detail}
-                    ToNext={ToNext}
-                    ButtonStack={ButtonStack}
-                  />
-                </div>
-              ) : stack == 2 ? (
-                <div>
-                  <GenusTable
-                    genus={genus}
-                    species={species}
-                    detail={detail}
-                    id={show[1].id}
-                    family={family}
-                    ToNext={ToNext}
-                    ButtonStack={ButtonStack}
-                  />
-                </div>
-              ) : (
-                stack == 3 && (
-                  <div>
-                    <SpeciesTable
-                      genus={genus}
-                      species={species}
-                      detail={detail}
-                      id={show[2].id}
-                      family={family}
-                      location={location}
-                      ButtonStack={ButtonStack}
-                    />
-                  </div>
-                )
-              )}
-            </div>*/}
             <Dialog
               open={notFount}
               onClose={() => setNotFount(false)}
               maxWidth="xs"
             >
               <DialogContent sx={{ textAlign: "center" }}>
-                <DialogContentText>Spider not fount.</DialogContentText>
+                <DialogContentText>Spider not found.</DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button
@@ -897,7 +1003,7 @@ const Home = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-          </Container>
+          </Container> */}
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>
