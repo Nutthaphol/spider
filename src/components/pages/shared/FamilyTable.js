@@ -60,6 +60,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: "none",
     // padding: "1rem",
     position: "relative",
+    overflow: "scroll",
   },
   headerText: {
     fontWeight: "600",
@@ -105,9 +106,26 @@ const FamilyTable = (props) => {
               width: "100%",
               position: "relative",
               textAlign: "center",
+              [theme.breakpoints.down("sm")]: {
+                display: "flex",
+                flexDirection: "column-reverse",
+              },
             }}
           >
-            <Box sx={{ width: 160, position: "absolute" }}>
+            <Box
+              sx={{
+                width: 160,
+
+                [theme.breakpoints.up("sm")]: { position: "absolute" },
+                [theme.breakpoints.down("sm")]: {
+                  position: "relative",
+                  width: "100%",
+                  textAlign: "center",
+                  height: "100%",
+                  margin: "16px 0",
+                },
+              }}
+            >
               <FormControl fullWidth>
                 <Select
                   onChange={(e) => handleOnChangeSelectFamily(e)}

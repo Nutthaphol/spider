@@ -21,15 +21,11 @@ function App() {
           minHeight: "100vh",
         }}
       >
-        <div>
-          <Header />
-        </div>
+        <Header />
         <div style={{ flexGrow: 1 }}>
           <Routers />
         </div>
-        <div>
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </Router>
   );

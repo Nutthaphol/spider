@@ -24,6 +24,8 @@ import {
 } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import AdminMenu from "./admin";
+import AppbarMenu from "../pages/shared/appbarMenu";
+import MobileMenu from "../pages/shared/MobileMenu";
 const theme = createTheme({
   components: {
     MuiAppBar: {
@@ -53,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
     "&.MuiPaper-root.MuiAppBar-root": {
       boxShadow: "0 1 8px rgba(11,11,11,0.30)",
     },
+    position: "sticky",
+    position: "-webkit-sticky",
   },
   logo: {
     fontFamily: "SeoulHangang CEB",
@@ -72,13 +76,19 @@ const Header = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
-  const [admin, setAdmin] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [listMenu, setListMenu] = useState([]);
 
   useEffect(() => {
     if (currentUser && currentUser.roles == "admin") {
-      setAdmin(true);
+      const listMenu_ = UserMenu.concat(AdminMenu);
+      setListMenu(listMenu_);
+    } else {
+      setListMenu(UserMenu);
     }
-  }, [admin]);
+
+    setIsMobile(window.innerWidth <= 600);
+  }, []);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -97,16 +107,31 @@ const Header = () => {
             />
           </Icon> */}
           <Toolbar>
-            <Box sx={{ display: "flex", width: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                flexDirection: isMobile ? "row-reverse" : "row",
+              }}
+            >
               <Box sx={{ flexGrow: 1, flexBasis: 1 }} />
-              <Box>
-                {admin && <AdminMenu />}
+              {!isMobile ? (
+                <Box>
+                  <AppbarMenu data={listMenu} />
+                </Box>
+              ) : (
+                <Box>
+                  <MobileMenu data={listMenu} />
+                </Box>
+              )}
+              {/* {admin && <AdminMenu />}
                 <UserMenu />
                 {currentUser ? (
                   <Button
                     disableRipple
                     className={classes.button}
                     onClick={() => {
+                      window.location.reload();
                       dispatch(logout());
                     }}
                   >
@@ -120,8 +145,7 @@ const Header = () => {
                   >
                     login
                   </Button>
-                )}
-              </Box>
+                )} */}
             </Box>
           </Toolbar>
         </AppBar>

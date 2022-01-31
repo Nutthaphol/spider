@@ -58,6 +58,7 @@ const useStyles = makeStyles(() => ({
   paperTable: {
     boxShadow: "none",
     padding: "1rem",
+    overflow: "scroll",
   },
   headerText: {
     fontWeight: "600",
@@ -100,11 +101,33 @@ const GenusTable = (props) => {
             sx={{
               width: "100%",
               position: "relative",
-              textAlign: "center",
+              display: "flex",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
             }}
           >
-            <Box sx={{ width: 160, position: "absolute" }}>
-              <FormControl fullWidth>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h4"
+                component={`div`}
+                className={classes.textFilter}
+              >
+                Family: {family && family.find((item) => item.id == id).name}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                flexGrow: 1,
+                width: 160,
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ margin: "0 8px" }}>
+                <Typography>FILTER GENERA</Typography>
+              </Box>
+              <FormControl fullWidth sx={{ maxWidth: 240 }}>
                 <Select
                   className={classes.fieldFilter}
                   onChange={(e) => handleOnChangeSelectGenus(e)}
@@ -119,20 +142,12 @@ const GenusTable = (props) => {
                           {val.name}
                         </MenuItem>
                       ))}
-                  <MenuItem value={0}>All</MenuItem>
+                  <MenuItem value={0}>ALL</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-            <Typography
-              variant="h4"
-              component={`div`}
-              className={classes.textFilter}
-            >
-              Family: {family && family.find((item) => item.id == id).name}
-            </Typography>
           </Box>
 
-          <br />
           <br />
           <Paper className={classes.paperTable}>
             <Box

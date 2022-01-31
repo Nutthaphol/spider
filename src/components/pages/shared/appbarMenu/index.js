@@ -7,6 +7,8 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import { Button, Link, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../../../actions/auth";
 
 const theme = createTheme();
 
@@ -21,16 +23,22 @@ const useStyles = makeStyles(() => ({
 
 const AppbarMenu = ({ data }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const [anchorEl, setAnchorEl] = useState(false);
   const [open, setOpen] = useState(false);
+  const { user: currentUser } = useSelector((state) => state.auth);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setOpen(!open);
   };
+
   const handleClose = () => {
     setAnchorEl(false);
     setOpen(false);
   };
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -85,6 +93,22 @@ const AppbarMenu = ({ data }) => {
               )}
             </Fragment>
           ))}
+        {currentUser ? (
+          <Button
+            disableRipple
+            className={classes.button}
+            onClick={() => {
+              window.location.reload();
+              dispatch(logout());
+            }}
+          >
+            Log out
+          </Button>
+        ) : (
+          <Button disableRipple href="/login" className={classes.button}>
+            login
+          </Button>
+        )}
       </ThemeProvider>
     </StyledEngineProvider>
   );

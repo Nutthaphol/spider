@@ -109,23 +109,14 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#fff",
     "& .MuiInputLabel-outlined.Mui-focused": {
       borderRadius: "4px",
-      // padding: "0 2px 0 2px",
-      // textAlign: "center",
-      // transformOrigin: "top",
-      // transform: "translate(0px, -9px) scale(0.75)",
-      // width: "100%",
-      // maxWidth: "calc(133% - 24px)",
     },
     "& .MuiInputLabel-outlined": {
       color: "#000",
       borderRadius: "4px",
+      width: "100%",
       textAlign: "center",
-      // transformOrigin: "top",
-      // width: "100%",
-      // maxWidth: "calc(100% - 24px)",
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      // textAlign: "center",
       borderWidth: "2px",
       borderColor: "#000",
       boxShadow:
@@ -555,6 +546,25 @@ const Home = () => {
                     <TextField
                       {...params}
                       fullWidth
+                      sx={{
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          borderRadius: "4px",
+                          maxWidth:
+                            province == ""
+                              ? "calc(100% - 260px)"
+                              : "calc(100% - 290px)",
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#000",
+                          borderRadius: "4px",
+                          width: "100%",
+                          textAlign: "center",
+                          maxWidth:
+                            province == ""
+                              ? "calc(100% - 14px)"
+                              : "calc(100% - 290px)",
+                        },
+                      }}
                       label={province == "" ? "Province (All)" : "Province"}
                     />
                   )}
@@ -611,6 +621,25 @@ const Home = () => {
                     <TextField
                       {...params}
                       fullWidth
+                      sx={{
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          borderRadius: "4px",
+                          maxWidth:
+                            district == ""
+                              ? "calc(100% - 274px)"
+                              : "calc(100% - 298px)",
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#000",
+                          borderRadius: "4px",
+                          width: "100%",
+                          textAlign: "center",
+                          maxWidth:
+                            district == ""
+                              ? "calc(100% - 14px)"
+                              : "calc(100% - 298px)",
+                        },
+                      }}
                       label={district == "" ? "District (All)" : "District"}
                     />
                   )}

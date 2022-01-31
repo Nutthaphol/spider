@@ -230,7 +230,7 @@ const Manage = () => {
                       onDetail.map((val, index) => (
                         <TableRow
                           key={index}
-                          className={val.active == 0 && classes.deleteBg}
+                          className={val.active == 0 ? classes.deleteBg : ""}
                         >
                           <TableCell align="left">
                             <Link

@@ -60,6 +60,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: "none",
     padding: "1rem",
     position: "relative",
+    overflow: "scroll",
   },
   headerText: {
     fontWeight: "600",
@@ -93,11 +94,33 @@ const SpeciesTable = ({
             sx={{
               width: "100%",
               position: "relative",
-              textAlign: "center",
+              display: "flex",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
             }}
           >
-            <Box sx={{ width: 160, position: "absolute" }}>
-              <FormControl fullWidth>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h4"
+                component={`div`}
+                className={classes.textFilter}
+              >
+                Genus: {genus && genus.find((item) => item.id == id).name}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: 160,
+                flexGrow: 1,
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ margin: "0 8px" }}>
+                <Typography>FILTER SPECIES</Typography>
+              </Box>
+              <FormControl fullWidth sx={{ maxWidth: 240 }}>
                 <Select
                   onChange={(e) => handleOnChangeSelectSpecies(e)}
                   value={selectSpecies}
@@ -112,20 +135,12 @@ const SpeciesTable = ({
                           {val.name}
                         </MenuItem>
                       ))}
-                  <MenuItem value={0}>All</MenuItem>
+                  <MenuItem value={0}>ALL</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-            <Typography
-              variant="h4"
-              component={`div`}
-              className={classes.textFilter}
-            >
-              Genus: {genus && genus.find((item) => item.id == id).name}
-            </Typography>
           </Box>
 
-          <br />
           <br />
           <Paper className={classes.paperTable}>
             {/* <Box

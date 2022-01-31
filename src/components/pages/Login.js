@@ -111,10 +111,10 @@ const PasswordField = ({ isSubmitting, values, handleChange, error }) => {
 const LoginButton = withStyles(() => ({
   root: {
     marginTop: 10,
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
+    color: theme.palette.getContrastText("#ED7044"),
+    backgroundColor: "#ED7044",
     "&:hover": {
-      backgroundColor: green[700],
+      backgroundColor: "#EE9236",
     },
   },
 }))(Button);
