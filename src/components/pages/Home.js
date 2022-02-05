@@ -145,6 +145,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const logoScale = {
+  desktop: `url(${process.env.PUBLIC_URL}/assets/logo/desktop_logo.png)`,
+  tablet: `url(${process.env.PUBLIC_URL}/assets/logo/tablet_logo.png)`,
+  mobile: `url(${process.env.PUBLIC_URL}/assets/logo/mobile_logo.png)`,
+};
+
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -494,9 +500,31 @@ const Home = () => {
       <ThemeProvider theme={theme}>
         <Box className={`home`}>
           <Box
-            className={classes.braner}
+            // className={classes.braner}
             sx={{
-              background: "rgba(244, 203, 73 ,0.4)",
+              bgcolor: "rgba(244, 203, 73 ,0.4)",
+              // backgroundImage: `url(${process.env.PUBLIC_URL}/assets/logo/brannerLogo.png)`,
+              [theme.breakpoints.up("xs")]: {
+                backgroundImage: logoScale.mobile,
+              },
+              [theme.breakpoints.up("sm")]: {
+                backgroundImage: logoScale.tablet,
+              },
+              [theme.breakpoints.up("md")]: {
+                backgroundImage: logoScale.desktop,
+              },
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              // width: "100%",
+              height: "360px",
+              mb: 5,
+              // background: `url(${process.env.PUBLIC_URL}/assets/logo/brannerLogo.png) no-repeat center center fixed`,
+              // "-webkit-background-size": "cover",
+              // "-moz-background-size": "cover",
+              // "-o-background-size": "cover",
+              // backgroundSize: "cover",
+              // height: "400px",
             }}
           />
           <Container maxWidth="lg">

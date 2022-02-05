@@ -1,4 +1,5 @@
 const connection = require("./database.model");
+const { unlink } = require("fs");
 
 const postImage = (data, callback) => {
   const query = `INSERT INTO image (
@@ -20,11 +21,24 @@ const postImage = (data, callback) => {
   });
 };
 const updateImage = (data, callback) => {
-  const query = `UPDATE image 
-        set active = ?
-        WHERE id = ?`;
+  let query;
+  let paramt;
+  if (data.active == 1) {
+    query = `UPDATE image
+    set active = ?
+    WHERE id = ?`;
+    paramt = [data.active, data.id];
+  } else if (data.active == 0) {
+    query = `DELETE FROM image
+          WHERE id = ?`;
+    paramt = [data.id];
 
-  const paramt = [data.active, data.id];
+    console.log("delete image", data);
+    unlink("./app/image/" + data.name, (err) => {
+      if (err) throw err;
+      console.log("delete image comples");
+    });
+  }
 
   connection.query(query, paramt, (error, result) => {
     if (error) {

@@ -1,7 +1,7 @@
 const image = require("../controllers/image.controller");
 const { authJwt } = require("../middleware");
 
-module.exports = (app, upload) => {
+module.exports = (app, upload, unlink) => {
   app.use(function (req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",

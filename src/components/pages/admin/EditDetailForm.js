@@ -278,6 +278,16 @@ const EditDetailForm = (props) => {
         formData.append("detail_id", detail.id);
         res = postImageFn(formData);
       } else {
+        if (onImage.active == 0) {
+          let detail_ = detail;
+          const index = detail_.image
+            .map((e) => {
+              return e.id;
+            })
+            .indexOf(onImage.id);
+          detail_.image.splice(index, 1);
+          setDetail(detail_);
+        }
         res = updateImage(onImage);
       }
 
@@ -1198,25 +1208,33 @@ const EditDetailForm = (props) => {
                             <Box>
                               <br />
                             </Box>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={4}>
                               {values.image.map((val, index) => (
                                 <Grid item key={index}>
                                   {val.active == 1 ? (
                                     <Box sx={{ textAlign: "center" }}>
-                                      <Box>
-                                        <img
+                                      <Box
+                                        sx={{
+                                          position: "relative",
+                                          width: "100%",
+                                          overflow: "hidden",
+                                          margin: "5px",
+                                          padding: "5px",
+                                          border: "2px solid #b8b8b8",
+                                        }}
+                                      >
+                                        <Box
+                                          component="img"
                                           src={
                                             val.id != -1
                                               ? `/${val.path}`
                                               : val.path
                                           }
                                           // width="100%"
-                                          style={{
-                                            maxHeight: "245px",
-                                            width: "auto",
-                                            margin: "5px",
-                                            padding: "5px",
-                                            border: "2px solid #b8b8b8",
+                                          sx={{
+                                            height: "245px",
+                                            width: "100%",
+                                            display: "block",
                                           }}
                                         />
                                       </Box>
@@ -1239,21 +1257,48 @@ const EditDetailForm = (props) => {
                                       </Button>
                                     </Box>
                                   ) : (
-                                    <Box sx={{ textAlign: "center" }}>
-                                      <Box>
-                                        <img
+                                    <Box
+                                      sx={{
+                                        textAlign: "center",
+                                        // display: "block",
+                                        // alignItems: "center",
+                                      }}
+                                    >
+                                      <Box
+                                        sx={{
+                                          position: "relative",
+                                          width: "100%",
+                                          overflow: "hidden",
+                                          margin: "5px",
+                                          padding: "5px",
+                                          border: "2px solid red",
+                                        }}
+                                      >
+                                        <Box
+                                          component={"img"}
                                           src={
                                             val.id != -1
                                               ? `/${val.path}`
                                               : val.path
                                           }
                                           // width="100%"
-                                          style={{
-                                            maxHeight: "245px",
-                                            width: "auto",
-                                            margin: "5px",
-                                            padding: "5px",
-                                            border: "2px solid red",
+                                          sx={{
+                                            height: "245px",
+                                            width: "100%",
+                                            display: "block",
+                                          }}
+                                        />
+                                        <Box
+                                          sx={{
+                                            height: "245px",
+                                            bgcolor: "rgba(205, 92, 92,0.5)",
+                                            position: "absolute",
+                                            bottom: 5,
+                                            right: 5,
+                                            top: 5,
+                                            left: 5,
+                                            width: "calc(100% - 10px)",
+                                            display: "block",
                                           }}
                                         />
                                       </Box>
@@ -1261,7 +1306,7 @@ const EditDetailForm = (props) => {
                                         variant="contained"
                                         size="small"
                                         sx={{ textTransform: "none" }}
-                                        color="success"
+                                        color="warning"
                                         onClick={() => {
                                           setFieldValue(
                                             `image[${index}].active`,
@@ -1269,7 +1314,7 @@ const EditDetailForm = (props) => {
                                           );
                                         }}
                                       >
-                                        Active
+                                        Recall
                                       </Button>
                                     </Box>
                                   )}
