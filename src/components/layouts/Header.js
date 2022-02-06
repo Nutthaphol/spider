@@ -26,29 +26,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import AdminMenu from "./admin";
 import AppbarMenu from "../pages/shared/appbarMenu";
 import MobileMenu from "../pages/shared/MobileMenu";
-const theme = createTheme({
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        colorDefault: {
-          // backgroundColor: "#8B0000",
-          backgroundColor: "#F4CB49",
-        },
-      },
-    },
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          minWidth: "48px",
-          "@media (min-width:0px) and (orientation: landscape)": {
-            minHeight: 48,
-          },
-          "@media (min-width:600px)": { minHeight: 48 },
-        },
-      },
-    },
-  },
-});
+import themplates from "../pages/shared/theme";
+
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -92,7 +72,12 @@ const Header = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <AppBar position="sticky" color="default" className={classes.appBar}>
+        <AppBar
+          position="sticky"
+          color="default"
+          className={classes.appBar}
+          sx={{ bgcolor: "primary.main" }}
+        >
           {/* <Icon
             sx={{
               position: "absolute",

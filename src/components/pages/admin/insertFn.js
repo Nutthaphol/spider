@@ -49,7 +49,6 @@ const postAddressFn = async (address, locationId) => {
 
 const postPaperFn = async (paper, detail_id) => {
   paper.detail_id = detail_id;
-  console.log("check paper", paper);
   return paperService.postPaper(paper).then((res) => {
     return res.insertId;
   });

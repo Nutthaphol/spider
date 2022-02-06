@@ -65,8 +65,9 @@ import {
 } from "@mui/icons-material";
 import { getAllProvinces } from "../../../actions/province";
 import { getAllDistrict } from "../../../actions/district";
+import themplates from "../shared/theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -197,13 +198,11 @@ const InsertForm = () => {
     let formData = new FormData();
     acceptedFiles.map((file) => formData.append("image", file));
     let files_ = [...files];
-    console.log("files_", files_);
 
     const preFiles = acceptedFiles.map((file) =>
       Object.assign(file, { preview: URL.createObjectURL(file) })
     );
 
-    console.log("preFiles", preFiles);
     files_ = files_.concat(preFiles);
     // setFiles(
     //   acceptedFiles.map((file) =>
@@ -212,7 +211,6 @@ const InsertForm = () => {
     // );
 
     setFiles(files_);
-    console.log("after concat", files);
 
     let uploads_ = [...uploads];
     uploads_ = uploads_.concat(acceptedFiles);
@@ -279,7 +277,6 @@ const InsertForm = () => {
 
     const location = data_.location;
 
-    console.log("location ", location);
     location.map(async (item) => {
       const address = item.address;
       delete item.address;
@@ -356,13 +353,7 @@ const InsertForm = () => {
                 innerRef={formRef}
                 validationSchema={validationSchema}
                 onSubmit={(values, setSubmitting) => {
-                  {
-                    console.log("submit");
-                  }
                   try {
-                    {
-                      console.log("submit");
-                    }
                     handleSubmit(values.data).then((detail_id) => {
                       setSuccess(true);
                       window.scrollTo(0, 0);
@@ -661,9 +652,13 @@ const InsertForm = () => {
                               <Grid container spacing={2}>
                                 <Grid item xs={12} style={{ display: "flex" }}>
                                   <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     size="small"
-                                    color="success"
+                                    color="info"
+                                    sx={{
+                                      border: "none",
+                                      textTransform: "none",
+                                    }}
                                     onClick={() =>
                                       push({
                                         province: "",
@@ -849,11 +844,13 @@ const InsertForm = () => {
                                                       address
                                                     </Typography>
                                                     <Button
+                                                      color="info"
                                                       sx={{
-                                                        marginLeft: "2rem",
+                                                        border: "none",
+                                                        textTransform: "none",
+                                                        ml: "2rem",
                                                       }}
-                                                      color="success"
-                                                      variant="outlined"
+                                                      variant="contained"
                                                       size="small"
                                                       onClick={() => {
                                                         push({
@@ -987,11 +984,13 @@ const InsertForm = () => {
                                   Paper Ref
                                 </Typography>
                                 <Button
+                                  color="info"
                                   sx={{
-                                    marginLeft: "2rem",
+                                    border: "none",
+                                    textTransform: "none",
+                                    ml: "2rem",
                                   }}
-                                  color="success"
-                                  variant="outlined"
+                                  variant="contained"
                                   size="small"
                                   onClick={() =>
                                     push({
@@ -1094,17 +1093,29 @@ const InsertForm = () => {
                         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                           {files &&
                             files.map((file, index) => (
-                              <Box key={index} sx={{ textAlign: "center" }}>
-                                <img
+                              <Box
+                                key={index}
+                                sx={{ textAlign: "center", ml: 2 }}
+                              >
+                                <Box
+                                  component="img"
                                   key={file.name}
                                   src={file.preview}
-                                  className={classes.uploadImage}
+                                  // className={classes.uploadImage}
+                                  sx={{
+                                    height: "245px",
+                                    width: "100%",
+                                    display: "block",
+                                    border: "2px solid",
+                                    borderColor: "darkgray",
+                                    mb: 2,
+                                  }}
                                 />
-                                <br />
                                 <Button
                                   disableRipple
                                   variant="contained"
                                   color="error"
+                                  sx={{ textTransform: "none", border: "none" }}
                                   onClick={() =>
                                     handleOnClickDeleteImage(index)
                                   }
@@ -1124,7 +1135,8 @@ const InsertForm = () => {
                         <Button
                           type="submit"
                           variant="contained"
-                          color="primary"
+                          color="secondary"
+                          sx={{ border: "none" }}
                         >
                           Submit
                         </Button>

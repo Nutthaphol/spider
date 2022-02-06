@@ -27,8 +27,6 @@ const MapView = ({ listEx, listNormal, zoom }) => {
           ]}
           zoom={zoom || 2}
         >
-          {/* {console.log("listEx", listEx)} */}
-
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -55,8 +53,6 @@ const MapView = ({ listEx, listNormal, zoom }) => {
         </MapContainer>
       ) : (
         <MapContainer className="map-view" center={[13, 100]} zoom={zoom || 5}>
-          {/* {console.log("listEx", listEx)} */}
-
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

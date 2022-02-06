@@ -25,8 +25,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import themplates from "./theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   textFilter: {
@@ -132,7 +133,13 @@ const FamilyTable = (props) => {
                   value={selectFamily}
                   size="small"
                   variant="outlined"
-                  className={classes.fieldFilter}
+                  color="secondary"
+                  // className={classes.fieldFilter}
+                  sx={{
+                    bgcolor: "secondary.main",
+                    color: "secondary.contrastText",
+                    textAlign: "center",
+                  }}
                 >
                   {family &&
                     family.map((val, index) => (
@@ -204,9 +211,9 @@ const FamilyTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -216,9 +223,9 @@ const FamilyTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -228,9 +235,9 @@ const FamilyTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -240,16 +247,16 @@ const FamilyTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
                         >
                           {" "}
                           <Link
-                            sx={{ cursor: "pointer" }}
+                            sx={{ cursor: "pointer", color: "info.main" }}
                             onClick={() => {
                               ToNext("genus", val.family_id);
                             }}
@@ -260,41 +267,6 @@ const FamilyTable = (props) => {
                         </TableCell>
                       </TableRow>
                     ))}
-                {/* {family &&
-                  family
-                    // .filter(
-                    //   (item) =>
-                    //     detail && detail.find((val) => val.family_id == item.id)
-                    // )
-                    .map((val, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{val.name}</TableCell>
-                        <TableCell align="center">
-                          {detail &&
-                            detail
-                              // .slice(0, 1)
-                              .find((item) => item.family_id == val.id).author}
-                        </TableCell>
-                        <TableCell align="center">
-                          {
-                            genus.filter((item) => item.family_id == val.id)
-                              .length
-                          }
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => ToNext("genus", val.id)}
-                        >
-                          <Link
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => ToNext("genus", val.id)}
-                          >
-                            genera
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))} */}
               </TableBody>
             </Table>
           </Paper>

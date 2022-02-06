@@ -25,32 +25,15 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import themplates from "./theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   textFilter: {
     fontWeight: "600",
   },
-  fieldFilter: {
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "2px solid #000",
-    },
-    "& .Mui-focused.MuiOutlinedInput-notchedOutline": {
-      borderColor: "#000",
-    },
-    backgroundColor: "#ED7044",
-    color: "#fff",
-    "&:hover": {
-      background: "#fff",
-      backgroundColor: "#ED7044",
-      color: "#fff",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "#fff",
-    },
-    textAlign: "center",
-  },
+
   table: {
     boxShadow: "none",
     borderRadius: "4px",
@@ -79,6 +62,8 @@ const SpeciesTable = ({
   id,
   location,
   ButtonStack,
+  province,
+  district,
 }) => {
   const [selectSpecies, setSelectSpecies] = useState(0);
   const classes = useStyles();
@@ -105,7 +90,10 @@ const SpeciesTable = ({
                 component={`div`}
                 className={classes.textFilter}
               >
-                Genus: {genus && genus.find((item) => item.id == id).name}
+                Genus:{" "}
+                <Box component="span" sx={{ fontStyle: "italic" }}>
+                  {genus && genus.find((item) => item.id == id).name}
+                </Box>
               </Typography>
             </Box>
             <Box
@@ -125,13 +113,19 @@ const SpeciesTable = ({
                   onChange={(e) => handleOnChangeSelectSpecies(e)}
                   value={selectSpecies}
                   size="small"
-                  className={classes.fieldFilter}
+                  color="secondary"
+                  sx={{
+                    bgcolor: "secondary.main",
+                    textAlign: "center",
+                    color: "secondary.contrastText",
+                  }}
+                  variant="outlined"
                 >
                   {species &&
                     species
                       .filter((item) => item.genus_id == id)
                       .map((val, index) => (
-                        <MenuItem key={index} value={val.id}>
+                        <MenuItem key={index} value={val.id} color="secondary">
                           {val.name}
                         </MenuItem>
                       ))}
@@ -158,23 +152,31 @@ const SpeciesTable = ({
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.headerText} align="center">
-                    Species
+                    SPECIES
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
-                    Author
+                    AUTHOR
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
-                    Location
+                    LOCATIONS
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
-                    Action
+                    ACTION
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {detail &&
                   detail
-                    .filter((item) => item.genus_id === id)
+                    .filter(
+                      (item, index, self) =>
+                        self
+                          .map((e) => {
+                            return e.species_id;
+                          })
+                          .indexOf(item.species_id) === index
+                    )
+                    .filter((item, index, self) => item.genus_id === id)
                     .filter((item) =>
                       selectSpecies != 0
                         ? item.species_id == selectSpecies
@@ -185,9 +187,9 @@ const SpeciesTable = ({
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -197,9 +199,9 @@ const SpeciesTable = ({
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -209,23 +211,30 @@ const SpeciesTable = ({
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}
                           align="center"
                         >
                           {location &&
-                            location.find((item) => item.detail_id == val.id)
-                              .locality}
+                            location
+                              .filter((item) => item.detail_id == val.id)
+                              .map((val, index) => {
+                                return index == 0
+                                  ? val.locality
+                                  : ", " + val.locality;
+                              })}
                         </TableCell>
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -234,6 +243,7 @@ const SpeciesTable = ({
                             href={"detail/" + val.id}
                             sx={{
                               cursor: "pointer",
+                              color: "info.main",
                             }}
                           >
                             detail
@@ -241,40 +251,6 @@ const SpeciesTable = ({
                         </TableCell>
                       </TableRow>
                     ))}
-                {/* {species &&
-                  species
-                    .filter((item) => item.genus_id == id)
-                    .map((val, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <i>
-                            {genus && genus.find((item) => item.id == id).name}{" "}
-                            {val.name}
-                          </i>
-                        </TableCell>
-                        <TableCell align="center">
-                          {detail &&
-                            detail
-                              // .slice(0, 1)
-                              .find(
-                                (item) =>
-                                  item.species_id == val.id &&
-                                  item.genus_id == id
-                              ).author}
-                        </TableCell>
-
-                        <TableCell align="center">
-                          <Link
-                            href={`detail/${val.id}`}
-                            sx={{
-                              cursor: "pointer",
-                            }}
-                          >
-                            detail
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))} */}
               </TableBody>
             </Table>
           </Paper>

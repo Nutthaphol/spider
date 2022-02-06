@@ -102,7 +102,7 @@ const AppbarMenu = ({ data }) => {
               dispatch(logout());
             }}
           >
-            Log out
+            Logout
           </Button>
         ) : (
           <Button disableRipple href="/login" className={classes.button}>

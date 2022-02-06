@@ -52,7 +52,7 @@ import { useDropzone } from "react-dropzone";
 import { getAllFamily } from "../../../actions/family";
 import { getAllGenus } from "../../../actions/genus";
 import { getAllSpecies } from "../../../actions/species";
-import { Box } from "@mui/system";
+import { alpha, Box } from "@mui/system";
 
 import familyService from "../../../services/family.service";
 import genusService from "../../../services/genus.service";
@@ -76,8 +76,9 @@ import {
   updateLocationFn,
   updatePaperFn,
 } from "./insertFn";
+import themplates from "../shared/theme";
 
-const theme = createTheme({});
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -138,8 +139,6 @@ const EditDetailForm = (props) => {
         const paper_ = await paperService.getPaperAdmin(detailId);
         tmpDetail.paper = paper_;
 
-        console.log("tmp", tmpDetail);
-
         dispatch(getAllProvinces());
         dispatch(getAllDistrict());
         dispatch(getAllFamily());
@@ -157,7 +156,6 @@ const EditDetailForm = (props) => {
       const date = new Date();
       const tmpYesrs = [];
       let nowYear = date.getFullYear();
-      console.log(`now year : ${nowYear}`);
       for (let i = nowYear; i > nowYear - 100; i--) {
         tmpYesrs.push(i);
       }
@@ -185,7 +183,6 @@ const EditDetailForm = (props) => {
     if (res == type_.id) {
       setType(true);
     }
-    console.log("res update type", res);
   };
 
   const handleGeneralSubmit = (values) => {
@@ -209,7 +206,6 @@ const EditDetailForm = (props) => {
       const onLocation = { ...location_[i] };
       delete onLocation.address;
 
-      console.log("onLocation", onLocation);
       if (location_[i].id == -1) {
         resLocation = await postLocationFn(onLocation, detail.id);
       } else {
@@ -222,7 +218,6 @@ const EditDetailForm = (props) => {
       }
       for (let j = 0; j < location_[i].address.length; j++) {
         const onAddress = { ...location_[i].address[j] };
-        console.log("resLocation", resLocation);
         let resAddress = false;
         if (onAddress.id == -1) {
           resAddress = await postAddressFn(onAddress, resLocation);
@@ -316,7 +311,15 @@ const EditDetailForm = (props) => {
                   sx={{ fontWeight: 600 }}
                   gutterBottom
                 >
-                  Edit from ID #{detail && detail.id}
+                  Edit ID{" "}
+                  <Typography
+                    component="span"
+                    sx={{ fontWeight: 600 }}
+                    variant="h5"
+                    color="secondary"
+                  >
+                    #{detail && detail.id}
+                  </Typography>
                 </Typography>
                 <Divider />
                 <br />
@@ -435,7 +438,13 @@ const EditDetailForm = (props) => {
                         </Grid>
                       </Grid>
                       <br />
-                      <Button type="submit" variant="contained" size="small">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        sx={{ border: "none" }}
+                      >
                         save
                       </Button>
                     </Form>
@@ -602,7 +611,13 @@ const EditDetailForm = (props) => {
                         </Grid>
                       </Grid>
                       <br />
-                      <Button type="submit" variant="contained" size="small">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        sx={{ border: "none" }}
+                      >
                         save
                       </Button>
                     </Form>
@@ -650,7 +665,8 @@ const EditDetailForm = (props) => {
                                 <Button
                                   variant="contained"
                                   size="small"
-                                  color="warning"
+                                  color="info"
+                                  sx={{ border: "none" }}
                                   onClick={() =>
                                     push({
                                       id: -1,
@@ -850,10 +866,11 @@ const EditDetailForm = (props) => {
                                                   <Button
                                                     sx={{
                                                       marginLeft: "2rem",
+                                                      border: "none",
                                                     }}
-                                                    color="warning"
                                                     variant="contained"
                                                     size="small"
+                                                    color="info"
                                                     onClick={() => {
                                                       push({
                                                         id: -1,
@@ -994,7 +1011,13 @@ const EditDetailForm = (props) => {
                         )}
                       </FieldArray>
                       <br />
-                      <Button type="submit" variant="contained" size="small">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        sx={{ border: "none" }}
+                      >
                         save
                       </Button>
                     </Form>
@@ -1046,8 +1069,9 @@ const EditDetailForm = (props) => {
                               <Button
                                 sx={{
                                   marginLeft: "2rem",
+                                  border: "none",
                                 }}
-                                color="warning"
+                                color="info"
                                 variant="contained"
                                 size="small"
                                 onClick={() =>
@@ -1120,7 +1144,13 @@ const EditDetailForm = (props) => {
                         )}
                       </FieldArray>
                       <br />
-                      <Button type="submit" variant="contained" size="small">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        sx={{ border: "none" }}
+                      >
                         save
                       </Button>
                     </Form>
@@ -1187,7 +1217,6 @@ const EditDetailForm = (props) => {
                                         active: 1,
                                       });
                                     };
-                                    console.log("loop", i, "file", file);
                                     reader.readAsDataURL(file);
                                   }
                                   // reloading same files need to be set event value = null
@@ -1198,9 +1227,9 @@ const EditDetailForm = (props) => {
                               <Button
                                 size="small"
                                 variant="contained"
-                                // sx={{ textTransform: "none" }}
+                                sx={{ textTransform: "none", border: "none" }}
                                 component="span"
-                                color="warning"
+                                color="info"
                               >
                                 Add image
                               </Button>
@@ -1241,10 +1270,13 @@ const EditDetailForm = (props) => {
                                       <Button
                                         variant="contained"
                                         size="small"
-                                        sx={{ textTransform: "none" }}
+                                        sx={{
+                                          textTransform: "none",
+                                          border: "none",
+                                        }}
                                         color="error"
                                         onClick={() => {
-                                          values.image.length > 1 &&
+                                          values.image.length > 0 &&
                                           val.id == -1
                                             ? remove(index)
                                             : setFieldValue(
@@ -1291,7 +1323,11 @@ const EditDetailForm = (props) => {
                                         <Box
                                           sx={{
                                             height: "245px",
-                                            bgcolor: "rgba(205, 92, 92,0.5)",
+                                            bgcolor: alpha(
+                                              theme.palette.error.dark,
+                                              0.5
+                                            ),
+                                            // bgcolor: "rgba(205, 92, 92,0.5)",
                                             position: "absolute",
                                             bottom: 5,
                                             right: 5,
@@ -1305,8 +1341,11 @@ const EditDetailForm = (props) => {
                                       <Button
                                         variant="contained"
                                         size="small"
-                                        sx={{ textTransform: "none" }}
-                                        color="warning"
+                                        sx={{
+                                          textTransform: "none",
+                                          border: "none",
+                                        }}
+                                        color="success"
                                         onClick={() => {
                                           setFieldValue(
                                             `image[${index}].active`,
@@ -1326,12 +1365,18 @@ const EditDetailForm = (props) => {
                       </FieldArray>
                       <br />
                       <Box sx={{ display: "flex" }}>
-                        <Button variant="contained" type="submit" size="small">
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          size="small"
+                          color="secondary"
+                          sx={{ border: "none" }}
+                        >
                           Save
                         </Button>
                       </Box>
                       <Box style={{ display: "flex" }}>
-                        <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+                        {/* <pre>{JSON.stringify({ values, errors }, null, 4)}</pre> */}
                       </Box>
                     </Form>
                   )}

@@ -149,7 +149,6 @@ const EditDetailForm = (props) => {
         const paper_ = await paperService.getPaper(detailId);
         tmpDetail.paper = paper_;
 
-        console.log("tmp", tmpDetail);
         setData(tmpDetail);
       }
     }
@@ -163,7 +162,6 @@ const EditDetailForm = (props) => {
       const date = new Date();
       const tmpYesrs = [];
       let nowYear = date.getFullYear();
-      console.log(`now year : ${nowYear}`);
       for (let i = nowYear; i > nowYear - 100; i--) {
         tmpYesrs.push(i);
       }

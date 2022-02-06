@@ -26,6 +26,7 @@ import {
   ListItem,
   ListItemText,
   Grid,
+  Stack,
 } from "@mui/material";
 import { ClassNames } from "@emotion/react";
 import { getAllFamily } from "../../../actions/family";
@@ -42,8 +43,9 @@ import { getAllProvinces } from "../../../actions/province";
 import { getAllDistrict } from "../../../actions/district";
 import detailService from "../../../services/detail.service";
 import { updateDetailFn } from "./insertFn";
+import themplates from "../shared/theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -150,7 +152,6 @@ const Manage = () => {
       .indexOf(id);
 
     detail_[index].active = 1;
-    console.log("detail", detail_[index]);
 
     let res = false;
     res = await updateDetailFn(detail_[index]);
@@ -171,56 +172,63 @@ const Manage = () => {
                     <TableRow>
                       <TableCell align="left">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
+                          align="left"
                         >
-                          # id
+                          #ID
                         </Typography>
                       </TableCell>
                       <TableCell align="left">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
                         >
-                          Family
+                          FAMILY
                         </Typography>
                       </TableCell>
                       <TableCell align="left">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
                         >
-                          Genus
+                          GENUS
                         </Typography>
                       </TableCell>
                       <TableCell align="left">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
                         >
-                          Species
+                          SPECIES
                         </Typography>
                       </TableCell>
                       <TableCell align="left">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
                         >
-                          Author
+                          AUTHORS
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Typography
+                          sx={{ fontWeight: 700 }}
                           varaint="subtitle1"
                           gutterBottom
                           component="div"
                         >
-                          Action
+                          ACTIONS
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -230,18 +238,27 @@ const Manage = () => {
                       onDetail.map((val, index) => (
                         <TableRow
                           key={index}
-                          className={val.active == 0 ? classes.deleteBg : ""}
+                          // className={val.active == 0 ? classes.deleteBg : ""}
+                          sx={{
+                            bgcolor: val.active == 0 ? "error.light" : "none",
+                          }}
                         >
                           <TableCell align="left">
-                            <Link
-                              underline="hover"
-                              sx={{ cursor: "pointer" }}
+                            <Button
+                              sx={{
+                                fontWeight: "600",
+                                minWidth: 0,
+                                borderRadius: "50%",
+                              }}
+                              disabled={val.active == 0 ? true : false}
                               onClick={() => {
                                 handleOnClickDetailId(val.id);
                               }}
+                              color="info"
+                              disableFocusRipple
                             >
                               {val.id}
-                            </Link>
+                            </Button>
                           </TableCell>
                           <TableCell align="left">
                             <Typography variant="subtitle1" component="div">
@@ -271,14 +288,13 @@ const Manage = () => {
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-around",
-                              }}
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              justifyContent="space-between"
                             >
                               <Button
+                                fullWidth
                                 size="small"
                                 variant="contained"
                                 color="warning"
@@ -289,6 +305,7 @@ const Manage = () => {
                               </Button>
                               {val.active == 1 ? (
                                 <Button
+                                  fullWidth
                                   size="small"
                                   variant="contained"
                                   color="error"
@@ -298,6 +315,7 @@ const Manage = () => {
                                 </Button>
                               ) : (
                                 <Button
+                                  fullWidth
                                   size="small"
                                   variant="contained"
                                   color="success"
@@ -306,7 +324,7 @@ const Manage = () => {
                                   Active
                                 </Button>
                               )}
-                            </Box>
+                            </Stack>
                           </TableCell>
                         </TableRow>
                       ))}

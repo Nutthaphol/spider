@@ -33,10 +33,8 @@ const updateImage = (data, callback) => {
           WHERE id = ?`;
     paramt = [data.id];
 
-    console.log("delete image", data);
     unlink("./app/image/" + data.name, (err) => {
       if (err) throw err;
-      console.log("delete image comples");
     });
   }
 

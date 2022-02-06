@@ -50,12 +50,9 @@ exports.updateDetail = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   const id = req.params.id;
-  console.log("id ", id);
-
   await db.getDetail(id, (error, result) => {
     try {
       if (result) {
-        console.log("result", result);
         res.status(200).send(result[0]);
       } else {
         res.status(404).send({ message: "detail not found" });
@@ -69,12 +66,10 @@ exports.getDetail = async (req, res) => {
 
 exports.getDetailAdmin = async (req, res) => {
   const id = req.params.id;
-  console.log("id ", id);
 
   await db.getDetailAdmin(id, (error, result) => {
     try {
       if (result) {
-        console.log("result", result);
         res.status(200).send(result[0]);
       } else {
         res.status(404).send({ message: "detail not found" });

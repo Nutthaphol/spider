@@ -14,8 +14,9 @@ import {
   Typography,
   Card,
 } from "@mui/material";
+import themplates from "./theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 const useStyles = makeStyles(() => ({}));
 
 const PaperPopup = (props) => {

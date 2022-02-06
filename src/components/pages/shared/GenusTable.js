@@ -25,31 +25,32 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import themplates from "./theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 const useStyles = makeStyles(() => ({
   textFilter: {
     fontWeight: "600",
   },
-  fieldFilter: {
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "2px solid #000",
-    },
-    "& .Mui-focused.MuiOutlinedInput-notchedOutline": {
-      borderColor: "#000",
-    },
-    backgroundColor: "#ED7044",
-    color: "#fff",
-    "&:hover": {
-      background: "#fff",
-      backgroundColor: "#ED7044",
-      color: "#fff",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "#fff",
-    },
-    textAlign: "center",
-  },
+  // fieldFilter: {
+  //   "& .MuiOutlinedInput-notchedOutline": {
+  //     border: "2px solid #000",
+  //   },
+  //   "& .Mui-focused.MuiOutlinedInput-notchedOutline": {
+  //     borderColor: "#000",
+  //   },
+  //   backgroundColor: "#ED7044",
+  //   color: "#fff",
+  //   "&:hover": {
+  //     background: "#fff",
+  //     backgroundColor: "#ED7044",
+  //     color: "#fff",
+  //   },
+  //   "& .MuiSvgIcon-root": {
+  //     color: "#fff",
+  //   },
+  //   textAlign: "center",
+  // },
   table: {
     boxShadow: "none",
     borderRadius: "4px",
@@ -112,7 +113,10 @@ const GenusTable = (props) => {
                 component={`div`}
                 className={classes.textFilter}
               >
-                Family: {family && family.find((item) => item.id == id).name}
+                Family:{" "}
+                <Box component="span" sx={{ fontStyle: "italic" }}>
+                  {family && family.find((item) => item.id == id).name}
+                </Box>
               </Typography>
             </Box>
             <Box
@@ -129,7 +133,12 @@ const GenusTable = (props) => {
               </Box>
               <FormControl fullWidth sx={{ maxWidth: 240 }}>
                 <Select
-                  className={classes.fieldFilter}
+                  color="secondary"
+                  sx={{
+                    bgcolor: "secondary.main",
+                    color: "secondary.contrastText",
+                    textAlign: "center",
+                  }}
                   onChange={(e) => handleOnChangeSelectGenus(e)}
                   value={selectGenus}
                   size="small"
@@ -165,22 +174,21 @@ const GenusTable = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.headerText} align="center">
-                    Genus
+                    GENUS
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
-                    Author
+                    AUTHOR
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
                     {" "}
-                    # species
+                    #SPECIES
                   </TableCell>
                   <TableCell className={classes.headerText} align="center">
-                    Action
+                    ACTION
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {console.log("detail", detail)}
                 {detail &&
                   detail
                     // unique genus type
@@ -202,9 +210,9 @@ const GenusTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -214,9 +222,9 @@ const GenusTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -226,9 +234,9 @@ const GenusTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -238,9 +246,9 @@ const GenusTable = (props) => {
                         <TableCell
                           className={classes.cellTable}
                           sx={{
-                            backgroundColor:
+                            bgcolor:
                               index % 2 == 0
-                                ? "rgba(237, 112, 68, 0.2)"
+                                ? "secondary.lighter"
                                 : "transparent",
                           }}
                           align="center"
@@ -248,6 +256,7 @@ const GenusTable = (props) => {
                           <Link
                             sx={{
                               cursor: "pointer",
+                              color: "info.main",
                             }}
                             onClick={() => ToNext("species", val.genus_id)}
                           >
