@@ -1,14 +1,14 @@
 import { httpClient } from "./httpClient";
 
-const getAllFamily = async () => {
-  const res = await httpClient.get("family/allfamily");
+const getAllFamily = () => {
+  const res = httpClient.get("family/allfamily");
   // console.log(`res ${res}`);
   return res;
 };
 
-const postFamily = async (data) => {
+const postFamily = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("family/postfamily", { data })
     .then((response) => {
       return response.data;
@@ -17,8 +17,8 @@ const postFamily = async (data) => {
   return res;
 };
 
-const getFamily = async (id) => {
-  const res = await httpClient.get("family/" + id).then((response) => {
+const getFamily = (id) => {
+  const res = httpClient.get("family/" + id).then((response) => {
     return response.data;
   });
   return res;

@@ -16,6 +16,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemIcon,
+  Stack,
 } from "@mui/material";
 import { getAllSpecies } from "../../../actions/species";
 import detailService from "../../../services/detail.service";
@@ -35,6 +37,7 @@ import locationService from "../../../services/location.service";
 import addressService from "../../../services/address.service";
 import paperService from "../../../services/paper.service";
 import { Box } from "@mui/system";
+import { Circle, DockTwoTone } from "@mui/icons-material";
 
 const theme = createTheme();
 
@@ -208,8 +211,10 @@ const Detail = (props) => {
                             <Grid item xs={12} md={6} lg={3}>
                               <Typography variant="subtitle1" component="div">
                                 <b>Position: </b>{" "}
-                                {val2.address.map((item) => {
-                                  return item.name + ", ";
+                                {val2.address.map((item, index) => {
+                                  return index + 1 == val2.address.length
+                                    ? item.name
+                                    : item.name + ", ";
                                 })}
                               </Typography>
                             </Grid>
@@ -225,12 +230,32 @@ const Detail = (props) => {
                   Reference
                 </Typography>
                 <Box sx={{ paddingLeft: "20px" }}>
-                  <Typography variant="subtitle1" component="div">
+                  {/* <Typography variant="subtitle1" component="div">
                     <b>Paper referance: </b>{" "}
                     {detail.paper.map((item) => {
                       return item.name + ", ";
                     })}
-                  </Typography>
+                  </Typography> */}
+                  <List disablePadding>
+                    {detail.paper.map((item, index) => (
+                      <ListItem key={index + item.id} disablePadding>
+                        <ListItemText
+                          primary={
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              alignItems="center"
+                            >
+                              <Circle sx={{ fontSize: 8 }} />
+                              <Typography variant="subtitle1">
+                                {item.name}
+                              </Typography>
+                            </Stack>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
                 </Box>
                 <br />
                 <br />

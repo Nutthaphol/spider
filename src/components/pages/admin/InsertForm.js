@@ -15,6 +15,7 @@ import {
   Dialog,
   DialogTitle,
   Icon,
+  Stack,
 } from "@mui/material";
 import {
   ThemeProvider,
@@ -222,6 +223,7 @@ const InsertForm = () => {
     accept: "image/jpeg, image/png",
     onDrop,
     maxFiles: 20,
+    maxSize: 1256000,
   });
 
   // preview image input
@@ -1045,9 +1047,18 @@ const InsertForm = () => {
                         <Divider style={{ marginTop: "1rem" }} />
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography variant="subtitle1" gutterBottom>
-                          Upload image
-                        </Typography>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Typography variant="subtitle1" gutterBottom>
+                            Upload image
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            (Up to 1 MB/file)
+                          </Typography>
+                        </Stack>
                       </Grid>
                       <Grid item xs={12}>
                         <Box sx={{ margin: "1rem" }}>

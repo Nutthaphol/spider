@@ -1,8 +1,8 @@
 import { httpClient } from "./httpClient";
 
-const postDetail = async (data) => {
+const postDetail = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("detail/postDetail", { data })
     .then((response) => {
       return response.data;
@@ -10,9 +10,9 @@ const postDetail = async (data) => {
   return res;
 };
 
-const updateDetailType = async (data) => {
+const updateDetailType = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("detail/updateDatailType", { data })
     .then((response) => {
       return response.data;
@@ -20,9 +20,9 @@ const updateDetailType = async (data) => {
   return res;
 };
 
-const updateDetail = async (data) => {
+const updateDetail = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("detail/updateDatail", { data })
     .then((response) => {
       return response.data;
@@ -30,31 +30,29 @@ const updateDetail = async (data) => {
   return res;
 };
 
-const getDetail = async (id) => {
-  const res = await httpClient.get("detail/get/" + id).then((response) => {
+const getDetail = (id) => {
+  const res = httpClient.get("detail/get/" + id).then((response) => {
     return response.data;
   });
   return res;
 };
 
-const getDetailAdmin = async (id) => {
-  const res = await httpClient
-    .get("admin/detail/get/" + id)
-    .then((response) => {
-      return response.data;
-    });
-  return res;
-};
-
-const getAllDetail = async () => {
-  const res = await httpClient.get("detail").then((response) => {
+const getDetailAdmin = (id) => {
+  const res = httpClient.get("admin/detail/get/" + id).then((response) => {
     return response.data;
   });
   return res;
 };
 
-const getAllDetailAdmin = async () => {
-  const res = await httpClient.get("admin/detail").then((response) => {
+const getAllDetail = () => {
+  const res = httpClient.get("detail").then((response) => {
+    return response.data;
+  });
+  return res;
+};
+
+const getAllDetailAdmin = () => {
+  const res = httpClient.get("admin/detail").then((response) => {
     return response.data;
   });
   return res;

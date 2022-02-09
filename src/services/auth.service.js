@@ -7,7 +7,7 @@ import { httpClient } from "./httpClient";
 
 const login = (username, password) => {
   return httpClient
-    .post("auth/signin", {
+    .post("/auth/signin", {
       username,
       password,
     })

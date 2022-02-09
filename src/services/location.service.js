@@ -1,8 +1,8 @@
 import { httpClient } from "./httpClient";
 
-const postLocation = async (data) => {
+const postLocation = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("/location/postLocation", { data })
     .then((response) => {
       return response.data;
@@ -11,9 +11,9 @@ const postLocation = async (data) => {
   return res;
 };
 
-const updateLocation = async (data) => {
+const updateLocation = (data) => {
   console.log("services", data);
-  const res = await httpClient
+  const res = httpClient
     .post("/location/updateLocation", { data })
     .then((response) => {
       return response.data;
@@ -22,22 +22,22 @@ const updateLocation = async (data) => {
   return res;
 };
 
-const getLocation = async (id) => {
-  const res = await httpClient.get("location/" + id).then((response) => {
+const getLocation = (id) => {
+  const res = httpClient.get("location/" + id).then((response) => {
     return response.data;
   });
   return res;
 };
 
-const getLocationAdmin = async (id) => {
-  const res = await httpClient.get("admin/location/" + id).then((response) => {
+const getLocationAdmin = (id) => {
+  const res = httpClient.get("admin/location/" + id).then((response) => {
     return response.data;
   });
   return res;
 };
 
-const getAllLocation = async () => {
-  const res = await httpClient.get("location").then((response) => {
+const getAllLocation = () => {
+  const res = httpClient.get("location").then((response) => {
     return response.data;
   });
   return res;

@@ -34,6 +34,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  Stack,
 } from "@mui/material";
 import {
   Close,
@@ -1208,31 +1209,50 @@ const EditDetailForm = (props) => {
                                   for (let i = 0; i < tmp.length; i++) {
                                     let reader = new FileReader();
                                     const file = e.currentTarget.files[i];
-                                    reader.onloadend = () => {
-                                      push({
-                                        id: -1,
-                                        detail_id: detail.id,
-                                        name: file,
-                                        path: reader.result,
-                                        active: 1,
-                                      });
-                                    };
-                                    reader.readAsDataURL(file);
+                                    console.log("size", file.size);
+                                    if (file.size <= 1256000) {
+                                      reader.onloadend = () => {
+                                        push({
+                                          id: -1,
+                                          detail_id: detail.id,
+                                          name: file,
+                                          path: reader.result,
+                                          active: 1,
+                                        });
+                                      };
+                                      reader.readAsDataURL(file);
+                                    } else {
+                                      alert(
+                                        "This file is larger than the specified size."
+                                      );
+                                    }
                                   }
                                   // reloading same files need to be set event value = null
                                   e.target.value = null;
                                 }}
                               />
-
-                              <Button
-                                size="small"
-                                variant="contained"
-                                sx={{ textTransform: "none", border: "none" }}
-                                component="span"
-                                color="info"
+                              <Stack
+                                direction="row"
+                                spacing={2}
+                                alignItems="center"
                               >
-                                Add image
-                              </Button>
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                  sx={{ textTransform: "none", border: "none" }}
+                                  component="span"
+                                  color="info"
+                                >
+                                  Add image
+                                </Button>
+                                <Typography
+                                  variant="body2"
+                                  sx={{}}
+                                  color="text.secondary"
+                                >
+                                  Up to 1 MB/file
+                                </Typography>
+                              </Stack>
                             </label>
                             <Box>
                               <br />

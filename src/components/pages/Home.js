@@ -183,39 +183,42 @@ const Home = () => {
   const [guid, setGuid] = useState(true);
   const [notFount, setNotFount] = useState(false);
 
-  useEffect(async () => {
-    !dbfamily && dispatch(getAllFamily());
-    !dbgenus && dispatch(getAllGenus());
-    !dbspecies && dispatch(getAllSpecies());
-    !dbprovince && dispatch(getAllDetail());
-    !dbdistrict && dispatch(getAllDistrict());
-    !dbdetail && dispatch(getAllProvinces());
-    !dblocation && dispatch(getAllLocation());
-    !dbaddress && dispatch(getAllAddress());
+  useEffect(
+    async () => {
+      dispatch(getAllFamily());
+      dispatch(getAllGenus());
+      dispatch(getAllSpecies());
+      dispatch(getAllDetail());
+      dispatch(getAllDistrict());
+      dispatch(getAllProvinces());
+      dispatch(getAllLocation());
+      dispatch(getAllAddress());
 
-    if (
-      dbfamily &&
-      dbgenus &&
-      dbspecies &&
-      dbprovince &&
-      dbdistrict &&
-      dbdetail &&
-      dblocation &&
-      dbaddress
-    ) {
-      setAddress(dbaddress);
-      handleOnChangeAddress();
-    }
-  }, [
-    dbfamily,
-    dbgenus,
-    dbspecies,
-    dbprovince,
-    dbdistrict,
-    dbdetail,
-    dblocation,
-    dbaddress,
-  ]);
+      if (
+        dbfamily &&
+        dbgenus &&
+        dbspecies &&
+        dbprovince &&
+        dbdistrict &&
+        dbdetail &&
+        dblocation &&
+        dbaddress
+      ) {
+        setAddress(dbaddress);
+        handleOnChangeAddress();
+      }
+    },
+    [
+      // dbfamily,
+      // dbgenus,
+      // dbspecies,
+      // dbprovince,
+      // dbdistrict,
+      // dbdetail,
+      // dblocation,
+      // dbaddress,
+    ]
+  );
 
   const markAddress = (location_) => {
     let address_ = [];
@@ -519,26 +522,6 @@ const Home = () => {
           <Container maxWidth="lg">
             <Grid container spacing={4}>
               <Grid item xs={12} md={4}>
-                {/* <Box
-                  sx={{
-                    width: "100%",
-                    textAlign: "center",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{
-                      color: "darkslategray",
-                      // visibility: province == "" ? "hidden" : "none",
-                      fontSize: "18px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Province
-                  </Typography>
-                </Box> */}
                 <Autocomplete
                   disablePortal
                   size="small"
@@ -588,26 +571,6 @@ const Home = () => {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                {/* <Box
-                  sx={{
-                    width: "100%",
-                    textAlign: "center",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{
-                      color: "darkslategray",
-                      // visibility: district == "" ? "hidden" : "none",
-                      fontSize: "18px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    District
-                  </Typography>
-                </Box> */}
                 <Autocomplete
                   disablePortal
                   size="small"
@@ -666,7 +629,6 @@ const Home = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  // className={classes.dispalyButton}
                   onClick={() => handleOnChangeAddress()}
                   color="secondary"
                   fullWidth
@@ -678,7 +640,6 @@ const Home = () => {
             <Box
               sx={{
                 height: "450px",
-                // margin: "20px",
                 margin: "50px 0",
               }}
             >
