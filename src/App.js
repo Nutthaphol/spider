@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Routers from "./Routers";
 import { BrowserRouter as Router } from "react-router-dom";
 import axios from "axios";
@@ -7,26 +7,48 @@ import Header from "./components/layouts/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "./components/layouts/Footer";
+
+import themplates from "./components/pages/shared/theme";
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
+import { Box } from "@mui/system";
 // import "leaflet/dist/leaflet.css";
 
+const theme = createTheme(themplates);
+
 function App() {
+  useEffect(() => {}, []);
   return (
     <Router>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "100%",
-          minHeight: "100vh",
-        }}
-      >
-        <Header />
-        <div style={{ flexGrow: 1 }}>
-          <Routers />
-        </div>
-        <Footer />
-      </div>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Box
+            component="div"
+            sx={{
+              minHeight: "100%",
+              position: "relative",
+              display: "block",
+            }}
+          >
+            <Header />
+            <Box
+              component="div"
+              sx={{
+                flexGrow: 1,
+                overflow: "hidden",
+                minHeight: "100%",
+                mb: 4,
+              }}
+            >
+              <Routers />
+            </Box>
+            <Footer />
+          </Box>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Router>
   );
 }

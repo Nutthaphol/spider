@@ -28,7 +28,7 @@ import { red, green } from "@mui/material/colors";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { login } from "../../actions/auth";
+import { login, runLogoutTimer } from "../../actions/auth";
 
 const theme = createTheme();
 
@@ -219,13 +219,6 @@ const Login = (props) => {
                         handleMessage(false);
                         props.history.push("/");
                         window.location.reload();
-
-                        // else {
-                        //   // props.history.push("/login");
-                        //   // window.location.reload();
-                        //   resetForm();
-                        //   handleMessage(data);
-                        // }
                       })
                       .catch((error) => {
                         resetForm();

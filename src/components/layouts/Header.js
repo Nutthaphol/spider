@@ -33,10 +33,10 @@ const theme = createTheme(themplates);
 const useStyles = makeStyles((theme) => ({
   appBar: {
     "&.MuiPaper-root.MuiAppBar-root": {
-      boxShadow: "0 1 8px rgba(11,11,11,0.30)",
+      // boxShadow: "0 1 8px rgba(11,11,11,0.30)",
     },
-    position: "sticky",
-    position: "-webkit-sticky",
+    // position: "sticky",
+    // position: "-webkit-sticky",
   },
   logo: {
     fontFamily: "SeoulHangang CEB",
@@ -70,15 +70,8 @@ const Header = () => {
     setIsMobile(window.innerWidth <= 600);
   }, []);
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <AppBar
-          position="sticky"
-          color="default"
-          className={classes.appBar}
-          sx={{ bgcolor: "primary.main" }}
-        >
-          {/* <Icon
+    <AppBar position="sticky">
+      {/* <Icon
             sx={{
               position: "absolute",
               top: 0,
@@ -91,25 +84,25 @@ const Header = () => {
               width="100%"
             />
           </Icon> */}
-          <Toolbar>
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                flexDirection: isMobile ? "row-reverse" : "row",
-              }}
-            >
-              <Box sx={{ flexGrow: 1, flexBasis: 1 }} />
-              {!isMobile ? (
-                <Box>
-                  <AppbarMenu data={listMenu} />
-                </Box>
-              ) : (
-                <Box>
-                  <MobileMenu data={listMenu} />
-                </Box>
-              )}
-              {/* {admin && <AdminMenu />}
+      <Toolbar>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            flexDirection: isMobile ? "row-reverse" : "row",
+          }}
+        >
+          <Box sx={{ flexGrow: 1, flexBasis: 1 }} />
+          {!isMobile ? (
+            <Box>
+              <AppbarMenu data={listMenu} />
+            </Box>
+          ) : (
+            <Box>
+              <MobileMenu data={listMenu} />
+            </Box>
+          )}
+          {/* {admin && <AdminMenu />}
                 <UserMenu />
                 {currentUser ? (
                   <Button
@@ -131,11 +124,9 @@ const Header = () => {
                     login
                   </Button>
                 )} */}
-            </Box>
-          </Toolbar>
-        </AppBar>
-      </ThemeProvider>
-    </StyledEngineProvider>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

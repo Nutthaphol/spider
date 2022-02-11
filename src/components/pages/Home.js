@@ -168,11 +168,9 @@ const Home = () => {
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState();
   const [location, setLocation] = useState();
-  const [detail, setDetail] = useState([]);
   const [family, setFamily] = useState([]);
   const [genus, setGenus] = useState([]);
   const [species, setSpecies] = useState([]);
-  const [map, setMap] = useState(false);
   const [table, setTable] = useState();
   const [show, setShow] = useState([
     {
@@ -182,59 +180,94 @@ const Home = () => {
   const [stack, setStack] = useState(1);
   const [guid, setGuid] = useState(true);
   const [notFount, setNotFount] = useState(false);
+  const [map, setMap] = useState(false);
+  const [detail, setDetail] = useState([]);
+  const [ready, setReady] = useState(false);
 
-  useEffect(
-    async () => {
-      dispatch(getAllFamily());
-      dispatch(getAllGenus());
-      dispatch(getAllSpecies());
-      dispatch(getAllDetail());
-      dispatch(getAllDistrict());
-      dispatch(getAllProvinces());
-      dispatch(getAllLocation());
-      dispatch(getAllAddress());
+  useEffect(() => {
+    // const fetch = async () => {
+    //   !dbfamily && (await dispatch(getAllFamily()));
+    //   !dbgenus && (await dispatch(getAllGenus()));
+    //   !dbspecies && (await dispatch(getAllSpecies()));
+    //   !dbprovince && (await dispatch(getAllProvinces()));
+    //   !dbdistrict && (await dispatch(getAllDistrict()));
+    //   !dbdetail && (await dispatch(getAllDetail()));
+    //   !dblocation && (await dispatch(getAllLocation()));
+    //   !dbaddress && (await dispatch(getAllAddress()));
+    //   return true;
+    // };
 
-      if (
-        dbfamily &&
-        dbgenus &&
-        dbspecies &&
-        dbprovince &&
-        dbdistrict &&
-        dbdetail &&
-        dblocation &&
-        dbaddress
-      ) {
-        setAddress(dbaddress);
-        handleOnChangeAddress();
-      }
-    },
-    [
-      // dbfamily,
-      // dbgenus,
-      // dbspecies,
-      // dbprovince,
-      // dbdistrict,
-      // dbdetail,
-      // dblocation,
-      // dbaddress,
-    ]
-  );
+    const pree = async (callback_) => {
+      !dbfamily && (await dispatch(getAllFamily()));
+      !dbgenus && (await dispatch(getAllGenus()));
+      !dbspecies && (await dispatch(getAllSpecies()));
+      !dbprovince && (await dispatch(getAllProvinces()));
+      !dbdistrict && (await dispatch(getAllDistrict()));
+      !dbdetail && (await dispatch(getAllDetail()));
+      !dblocation && (await dispatch(getAllLocation()));
+      !dbaddress && (await dispatch(getAllAddress()));
+      callback_();
+    };
 
-  const markAddress = (location_) => {
+    pree(() => {
+      setReady(true);
+      return;
+    });
+
+    if (
+      dbfamily &&
+      dbgenus &&
+      dbspecies &&
+      dbprovince &&
+      dbdistrict &&
+      dbdetail &&
+      dblocation &&
+      dbaddress
+    ) {
+      setAddress(dbaddress);
+
+      setReady(true);
+      // handleOnChangeAddress();
+    }
+    if (ready) {
+      console.log("ready");
+      setAddress(dbaddress);
+      handleOnChangeAddress();
+    }
+  }, [
+    // dbfamily,
+    // dbgenus,
+    // dbspecies,
+    // dbprovince,
+    // dbdistrict,
+    // dbdetail,
+    // dblocation,
+    // dbaddress,
+    ready,
+  ]);
+
+  const filterAddress = (location_) => {
     let address_ = [];
     if (location_ && dbaddress) {
-      location_.map((item) => {
-        const tmp = dbaddress.filter((item2) => item2.location_id == item.id);
-        tmp.map((val) => {
-          address_.push(val);
-        });
-      });
+      address_ = location_.reduce((prov, curr) => {
+        let addressFilter = dbaddress
+          .filter((item) => curr.id == item.location_id)
+          .map((e) => {
+            e.location_id = curr.id;
+            e.detail_id = curr.detail_id;
+            e.address_id = e.id;
+            return e;
+          });
+
+        return prov.concat(addressFilter);
+      }, []);
     }
     return address_;
   };
 
   const mapMarker = (location_) => {
-    const address_ = markAddress(location_);
+    // divide the data by the number of address because we need
+    const address_ = filterAddress(location_);
 
     let data = [];
     let skip = false;
@@ -401,6 +434,7 @@ const Home = () => {
     ]);
     setStack(1);
 
+    // fillter location that match province/district and it has in detail table
     if (province && district) {
       location_ = dblocation.filter(
         (item) =>
@@ -497,7 +531,7 @@ const Home = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Box className={`home`}>
+        <Box className={`page`}>
           <Box
             // className={classes.braner}
             sx={{

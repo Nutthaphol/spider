@@ -9,6 +9,10 @@ export const login = (username, password) => (dispatch) => {
         type: LOGIN_SUCCESS,
         payload: { user: data },
       });
+      const timer = data.expiresIn * 1000;
+      setTimeout(() => {
+        dispatch(logout());
+      }, timer);
 
       return Promise.resolve;
     },

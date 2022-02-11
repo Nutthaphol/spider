@@ -19,25 +19,15 @@ axios.interceptors.request.use(async (config) => {
 });
 
 axios.interceptors.response.use(
-  async (response) => {
+  (response) => {
     return response;
   },
   async (error) => {
     console.log(JSON.stringify(error, undefined, 2));
-    // if (error.response.status === "401") {
-    //   const refreshToken = localStorage.getItem(server.REFRESH_TOKEN_KEY);
-    //   let result = await axios.post(
-    //     "http://localhost:8081/api/v2/refresh/token",
-    //     {
-    //       refreshToken: refreshToken
-    //     }
-    //   );
-
-    //   const token = result.data.jwt;
-    //   localStorage.setItem(server.TOKEN_KEY, token);
-    //   debugger;
-    //   return axios.request(error.config);
-    // }
+    if (error.response.status === 401) {
+      alert(JSON.stringify(error.response.message));
+      localStorage.removeItem("user");
+    }
 
     if (axios.isCancel(error)) {
       return Promise.reject(error);
