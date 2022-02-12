@@ -28,9 +28,11 @@ function App() {
           <Box
             component="div"
             sx={{
-              minHeight: "100%",
-              position: "relative",
-              display: "block",
+              minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              // position: "relative",
+              // display: "block",
             }}
           >
             <Header />

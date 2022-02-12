@@ -381,334 +381,422 @@ const InsertForm = () => {
                     className={classes.form}
                     onKeyDown={onKeyDown}
                   >
-                    <Grid container style={{ padding: "20px" }} spacing={2}>
-                      <Grid item xs={6}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <Typography variant="h5" gutterBottom>
-                              Family action
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={4} className={`family`}>
-                            <Box style={{ display: "flex" }}>
-                              <Typography variant="subtitle1">
-                                Family
-                              </Typography>
-                              <div style={{ flexGrow: 1 }} />
-                              <Field
-                                component={Switch}
-                                type="checkbox"
-                                name="status.showFamily"
-                              />
-                            </Box>
-                            {values.status.showFamily ? (
-                              <Field
-                                component={Select}
-                                formControl={{
-                                  sx: { width: "100%", size: "small" },
-                                }}
-                                size="small"
-                                name="data.family"
-                              >
-                                {dbFamily &&
-                                  dbFamily.map((val, index) => (
-                                    <MenuItem key={index} value={val.id}>
-                                      {val.name}
-                                    </MenuItem>
-                                  ))}
-                              </Field>
-                            ) : (
-                              <Field
-                                component={TextField}
-                                name="data.family"
-                                size="small"
-                              ></Field>
-                            )}
-                          </Grid>
-                          <Grid item xs={4} className={`genus`}>
-                            <Box style={{ display: "flex" }}>
-                              <Typography variant="subtitle1">Genus</Typography>
-                              <div style={{ flexGrow: 1 }} />
-                              <Field
-                                component={Switch}
-                                type="checkbox"
-                                name="status.showGenus"
-                              />
-                            </Box>
-                            {values.status.showGenus ? (
-                              <Field
-                                component={Select}
-                                formControl={{
-                                  sx: { width: "100%", size: "small" },
-                                }}
-                                size="small"
-                                id="data.genus"
-                                name="data.genus"
-                              >
-                                {dbGenus &&
-                                  dbGenus
-                                    .filter(
-                                      (item) =>
-                                        item.family_id ===
-                                        Number(values.data.family)
-                                    )
-                                    .map((val, index) => (
-                                      <MenuItem key={index} value={val.id}>
-                                        {val.name}
-                                      </MenuItem>
-                                    ))}
-                              </Field>
-                            ) : (
-                              <Field
-                                component={TextField}
-                                name="data.genus"
-                                size="small"
-                              ></Field>
-                            )}
-                          </Grid>
-                          <Grid item xs={4} className={`species`}>
-                            <Box style={{ display: "flex" }}>
-                              <Typography variant="subtitle1">
-                                Species
-                              </Typography>
-                              <div style={{ flexGrow: 1 }} />
-                              <Field
-                                component={Switch}
-                                type="checkbox"
-                                name="status.showSpecies"
-                              />
-                            </Box>
-                            {values.status.showSpecies ? (
-                              <Field
-                                component={Select}
-                                formControl={{
-                                  sx: { width: "100%", size: "small" },
-                                }}
-                                size="small"
-                                id="data.species"
-                                name="data.species"
-                              >
-                                {dbSpecies &&
-                                  dbSpecies
-                                    .filter(
-                                      (item) =>
-                                        item.genus_id ===
-                                        Number(values.data.genus)
-                                    )
-                                    .map((val, index) => (
-                                      <MenuItem key={index} value={val.id}>
-                                        {val.name}
-                                      </MenuItem>
-                                    ))}
-                              </Field>
-                            ) : (
-                              <Field
-                                component={TextField}
-                                name="data.species"
-                                size="small"
-                              ></Field>
-                            )}
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Divider />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography variant="h5" gutterBottom>
-                              Detail
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={9} className={`author`}>
-                            <Typography varaint="subtitle1">Author</Typography>
-                            <Field
-                              name="data.author"
-                              component={TextField}
-                              fullWidth
-                              size="small"
-                            />
-                          </Grid>
-                          <Grid item xs={3} className={`year`}>
-                            <Typography varaint="subtitle1">
-                              publish year
-                            </Typography>
-                            <Field
-                              name="data.publish_year"
-                              component={Select}
-                              formControl={{
-                                sx: { width: "100%", size: "small" },
-                              }}
-                              size="small"
-                              MenuProps={{
-                                PaperProps: { sx: { maxHeight: 300 } },
-                              }}
-                            >
-                              {years &&
-                                years.map((val, index) => (
-                                  <MenuItem key={index} value={val}>
-                                    {val}
-                                  </MenuItem>
-                                ))}
-                            </Field>
-                          </Grid>
-                          <Grid item xs={3}>
-                            <Typography variant="subtitle1">Country</Typography>
-                            <Field
-                              name="data.country"
-                              component={TextField}
-                              disabled
-                              fullWidth
-                              value={values.data.country}
-                              size="small"
-                            />
-                          </Grid>
-                          <Grid item xs={9}>
-                            <Typography variant="subtitle1">
-                              Other country
-                            </Typography>
-                            <Field
-                              name="data.country_other"
-                              component={TextField}
-                              fullWidth
-                              size="small"
-                              placeholder="if any"
-                            />
-                          </Grid>
-                        </Grid>
-                        {/* grid for create first half layout */}
-
-                        {/*grid for segment MapView */}
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography variant="subtitle1" gutterBottom>
-                          Map monitor
-                        </Typography>
+                    <Stack
+                      spacing={2}
+                      direction={
+                        window.innerWidth >= 900 ? "row-reverse" : "column"
+                      }
+                    >
+                      <Box
+                        sx={{
+                          position: "relative",
+                          flexGrow: 1,
+                          [theme.breakpoints.down("sm")]: {
+                            height: "240px",
+                          },
+                          [theme.breakpoints.up("sm")]: {
+                            height: "360px",
+                          },
+                          [theme.breakpoints.up("md")]: {
+                            minHeight: "360px",
+                            flexBasis: 1,
+                            flexGrow: 0.6,
+                          },
+                        }}
+                      >
                         <div className="map" style={{ height: "100%" }}>
                           <MapView listEx={values.data.location} />
                         </div>
-                      </Grid>
-                      {/* End map view */}
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle1">Altitude</Typography>
-                        <Field
-                          name="data.altitude"
-                          component={TextField}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          size="small"
-                        ></Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle1">Method</Typography>
-                        <Field
-                          name="data.method"
-                          component={TextField}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          size="small"
-                        ></Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle1">habitat</Typography>
-                        <Field
-                          name="data.habitat"
-                          component={TextField}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          size="small"
-                        ></Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle1">
-                          microhabitat
+                      </Box>
+                      <Box
+                        sx={{
+                          flexGrow: 1,
+                          [theme.breakpoints.up("md")]: {
+                            flexBasis: 1,
+                          },
+                        }}
+                      >
+                        <Typography
+                          variant="h5"
+                          sx={{ fontWeight: 600 }}
+                          gutterBottom
+                        >
+                          Family action
                         </Typography>
-                        <Field
-                          name="data.microhabitat"
-                          component={TextField}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          size="small"
-                        ></Field>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                          <Grid item xs={12} md={4} sm={4}>
+                            <Stack spacing={1}>
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                              >
+                                <Typography variant="subtitle1">
+                                  Family
+                                </Typography>
+                                <Field
+                                  component={Switch}
+                                  type="checkbox"
+                                  name="status.showFamily"
+                                  size="small"
+                                />
+                              </Stack>
+                              {values.status.showFamily ? (
+                                <Field
+                                  component={Select}
+                                  formControl={{
+                                    sx: { width: "100%", size: "small" },
+                                  }}
+                                  size="small"
+                                  name="data.family"
+                                >
+                                  {dbFamily &&
+                                    dbFamily.map((val, index) => (
+                                      <MenuItem key={index} value={val.id}>
+                                        {val.name}
+                                      </MenuItem>
+                                    ))}
+                                </Field>
+                              ) : (
+                                <Field
+                                  component={TextField}
+                                  name="data.family"
+                                  size="small"
+                                ></Field>
+                              )}
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={12} md={4} sm={4}>
+                            <Stack spacing={1}>
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                              >
+                                <Typography variant="subtitle1">
+                                  Genus
+                                </Typography>
+                                <Field
+                                  component={Switch}
+                                  type="checkbox"
+                                  name="status.showGenus"
+                                  size="small"
+                                />
+                              </Stack>
+                              {values.status.showGenus ? (
+                                <Field
+                                  component={Select}
+                                  formControl={{
+                                    sx: { width: "100%", size: "small" },
+                                  }}
+                                  size="small"
+                                  id="data.genus"
+                                  name="data.genus"
+                                >
+                                  {dbGenus &&
+                                    dbGenus
+                                      .filter(
+                                        (item) =>
+                                          item.family_id ===
+                                          Number(values.data.family)
+                                      )
+                                      .map((val, index) => (
+                                        <MenuItem key={index} value={val.id}>
+                                          {val.name}
+                                        </MenuItem>
+                                      ))}
+                                </Field>
+                              ) : (
+                                <Field
+                                  component={TextField}
+                                  name="data.genus"
+                                  size="small"
+                                ></Field>
+                              )}
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={12} md={4} sm={4}>
+                            <Stack spacing={1}>
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                              >
+                                <Typography variant="subtitle1">
+                                  Species
+                                </Typography>
+                                <Field
+                                  component={Switch}
+                                  type="checkbox"
+                                  name="status.showSpecies"
+                                  size="small"
+                                />
+                              </Stack>
+                              {values.status.showSpecies ? (
+                                <Field
+                                  component={Select}
+                                  formControl={{
+                                    sx: { width: "100%", size: "small" },
+                                  }}
+                                  size="small"
+                                  id="data.species"
+                                  name="data.species"
+                                >
+                                  {dbSpecies &&
+                                    dbSpecies
+                                      .filter(
+                                        (item) =>
+                                          item.genus_id ===
+                                          Number(values.data.genus)
+                                      )
+                                      .map((val, index) => (
+                                        <MenuItem key={index} value={val.id}>
+                                          {val.name}
+                                        </MenuItem>
+                                      ))}
+                                </Field>
+                              ) : (
+                                <Field
+                                  component={TextField}
+                                  name="data.species"
+                                  size="small"
+                                ></Field>
+                              )}
+                            </Stack>
+                          </Grid>
+                        </Grid>
+                        <Typography
+                          variant="h5"
+                          sx={{ fontWeight: 600 }}
+                          gutterBottom
+                        >
+                          Detail
+                        </Typography>
+                        <Grid container spacing={2}>
+                          <Grid item xs={8}>
+                            <Stack spacing={1}>
+                              <Typography variant="subtitle1">
+                                Author
+                              </Typography>
+                              <Field
+                                name="data.author"
+                                component={TextField}
+                                fullWidth
+                                size="small"
+                              />
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Stack spacing={1}>
+                              <Typography variant="subtitle1">
+                                ​ Publish year
+                              </Typography>
+                              <Field
+                                name="data.publish_year"
+                                component={Select}
+                                formControl={{
+                                  sx: { width: "100%", size: "small" },
+                                }}
+                                size="small"
+                                MenuProps={{
+                                  PaperProps: { sx: { maxHeight: 300 } },
+                                }}
+                              >
+                                {years &&
+                                  years.map((val, index) => (
+                                    <MenuItem key={index} value={val}>
+                                      {val}
+                                    </MenuItem>
+                                  ))}
+                              </Field>
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Stack spacing={1}>
+                              <Typography variant="subtitle1">
+                                Country
+                              </Typography>
+                              <Field
+                                name="data.country"
+                                component={TextField}
+                                disabled
+                                fullWidth
+                                value={values.data.country}
+                                size="small"
+                              />
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Stack spacing={1}>
+                              <Typography variant="subtitle1">
+                                Other country
+                              </Typography>
+                              <Field
+                                name="data.country_other"
+                                component={TextField}
+                                fullWidth
+                                size="small"
+                                placeholder="if any"
+                              />
+                            </Stack>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Stack>
+                    <Stack spacing={4}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <Stack spacing={1}>
+                            <Typography variant="subtitle1">
+                              Altitude
+                            </Typography>
+                            <Field
+                              name="data.altitude"
+                              component={TextField}
+                              fullWidth
+                              multiline
+                              rows={2}
+                              size="small"
+                            ></Field>
+                          </Stack>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Stack spacing={1}>
+                            <Typography variant="subtitle1">Method</Typography>
+                            <Field
+                              name="data.method"
+                              component={TextField}
+                              fullWidth
+                              multiline
+                              rows={2}
+                              size="small"
+                            ></Field>
+                          </Stack>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Stack spacing={1}>
+                            <Typography variant="subtitle1">habitat</Typography>
+                            <Field
+                              name="data.habitat"
+                              component={TextField}
+                              fullWidth
+                              multiline
+                              rows={2}
+                              size="small"
+                            ></Field>
+                          </Stack>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Stack spacing={1}>
+                            <Typography variant="subtitle1">
+                              microhabitat
+                            </Typography>
+                            <Field
+                              name="data.microhabitat"
+                              component={TextField}
+                              fullWidth
+                              multiline
+                              rows={2}
+                              size="small"
+                            ></Field>
+                          </Stack>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Stack spacing={1}>
+                            <Typography variant="subtitle1">
+                              Designate
+                            </Typography>
+                            <Field
+                              name="data.designate"
+                              component={TextField}
+                              fullWidth
+                              multiline
+                              rows={2}
+                              size="small"
+                            ></Field>
+                          </Stack>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle1">Designate</Typography>
-                        <Field
-                          name="data.designate"
-                          component={TextField}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          size="small"
-                        ></Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Divider style={{ marginTop: "1rem" }} />
-                      </Grid>
-                      {/* End Detail */}
-                      <Grid item xs={12}>
-                        <FieldArray name="data.location">
-                          {({ push, pop, remove }) => (
-                            <Fragment>
-                              <Grid container spacing={2}>
-                                <Grid item xs={12} style={{ display: "flex" }}>
-                                  <Button
-                                    variant="contained"
-                                    size="small"
-                                    color="info"
-                                    sx={{
-                                      border: "none",
-                                      textTransform: "none",
-                                    }}
-                                    onClick={() =>
-                                      push({
-                                        province: "",
-                                        district: "",
-                                        locality: "",
-                                        address: [
-                                          {
-                                            name: "",
-                                            latitude: "",
-                                            longitude: "",
-                                          },
-                                        ],
-                                      })
-                                    }
-                                  >
-                                    Add location
-                                  </Button>
-                                  <Grid item xs={12}></Grid>
-                                </Grid>
-                                {values.data.location &&
-                                  values.data.location.map((val, index) => (
-                                    <Grid item xs={12} key={index}>
-                                      <Paper
-                                        sx={{
-                                          padding: "10px",
-                                          paddingBottom: "15px",
-                                        }}
+                      <Divider style={{ marginTop: "1rem" }} />
+                      <FieldArray name="data.location">
+                        {({ push, pop, remove }) => (
+                          <Box>
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              alignItems="center"
+                              sx={{ mb: 2 }}
+                            >
+                              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                                Loaction
+                              </Typography>
+                              <Button
+                                variant="contained"
+                                size="small"
+                                color="info"
+                                sx={{
+                                  border: "none",
+                                  textTransform: "none",
+                                }}
+                                onClick={() =>
+                                  push({
+                                    province: "",
+                                    district: "",
+                                    locality: "",
+                                    address: [
+                                      {
+                                        name: "",
+                                        latitude: "",
+                                        longitude: "",
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                Add location
+                              </Button>
+                            </Stack>
+                            <Grid container>
+                              {values.data.location &&
+                                values.data.location.map((val, index) => (
+                                  <Grid item xs={12} key={index}>
+                                    <Paper
+                                      sx={{
+                                        p: 2,
+                                        mb: 2,
+                                        boxShadow: "none",
+                                        border: `1px solid ${theme.palette.grey[400]}`,
+                                      }}
+                                    >
+                                      <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
                                       >
-                                        <Grid container spacing={2}>
-                                          <Grid item xs={12}>
-                                            <Typography varaint="subtitle1">
-                                              Location {index + 1}.
-                                            </Typography>
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            xs={3}
-                                            className={`province`}
-                                          >
-                                            <Typography varaint="subtitle1">
+                                        <Typography variant="subtitle1">
+                                          Location {index + 1}.
+                                        </Typography>
+                                        <IconButton
+                                          color="error"
+                                          sx={{ marginLeft: "1rem" }}
+                                          onClick={() => {
+                                            values.data.location.length > 1 &&
+                                              remove(index);
+                                          }}
+                                        >
+                                          <Delete />
+                                        </IconButton>
+                                      </Stack>
+                                      <Grid
+                                        container
+                                        spacing={2}
+                                        sx={{ mb: 2 }}
+                                      >
+                                        <Grid item xs={12} sm={6} md={4}>
+                                          <Stack spacing={1}>
+                                            <Typography variant="subtitle1">
                                               Province
                                             </Typography>
-                                            {/* <Field
-                                              name={`data.location[${index}].province`}
-                                              component={TextField}
-                                              size="small"
-                                              fullWidth
-                                            /> */}
                                             <Field
                                               component={Select}
                                               formControl={{
@@ -742,21 +830,13 @@ const InsertForm = () => {
                                                     </MenuItem>
                                                   ))}
                                             </Field>
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            xs={3}
-                                            className={`district`}
-                                          >
-                                            <Typography varaint="subtitle1">
+                                          </Stack>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={4}>
+                                          <Stack spacing={1}>
+                                            <Typography variant="subtitle1">
                                               District
                                             </Typography>
-                                            {/* <Field
-                                              name={`data.location[${index}].district`}
-                                              component={TextField}
-                                              size="small"
-                                              fullWidth
-                                            /> */}
                                             <Field
                                               component={Select}
                                               formControl={{
@@ -797,258 +877,239 @@ const InsertForm = () => {
                                                     </MenuItem>
                                                   ))}
                                             </Field>
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            xs={6}
-                                            className={`locality`}
-                                          >
-                                            <Typography varaint="subtitle1">
+                                          </Stack>
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={4}>
+                                          <Stack spacing={1}>
+                                            <Typography variant="subtitle1">
                                               Locality
                                             </Typography>
-                                            <Box style={{ display: "flex" }}>
-                                              <Field
-                                                name={`data.location[${index}].locality`}
-                                                component={TextField}
+                                            <Field
+                                              name={`data.location[${index}].locality`}
+                                              component={TextField}
+                                              size="small"
+                                              fullWidth
+                                            />
+                                          </Stack>
+                                        </Grid>
+                                      </Grid>
+                                      <FieldArray
+                                        name={`data.location[${index}].address`}
+                                      >
+                                        {({ push, remove }) => (
+                                          <Fragment>
+                                            <Stack
+                                              direction="row"
+                                              spacing={2}
+                                              alignItems="center"
+                                              sx={{ mb: 2 }}
+                                            >
+                                              <Typography
+                                                variant="subtitle1"
+                                                sx={{ fontWeight: 600 }}
+                                              >
+                                                Address
+                                              </Typography>
+                                              <Button
+                                                color="info"
+                                                sx={{
+                                                  border: "none",
+                                                  textTransform: "none",
+                                                }}
+                                                variant="contained"
                                                 size="small"
-                                                fullWidth
-                                              />
-                                              <div style={{ flexGrow: 1 }} />
-                                              <IconButton
-                                                color="error"
-                                                sx={{ marginLeft: "1rem" }}
                                                 onClick={() => {
-                                                  values.data.location.length >
-                                                    1 && remove(index);
+                                                  push({
+                                                    name: "",
+                                                    latitude: "",
+                                                    longitude: "",
+                                                  });
                                                 }}
                                               >
-                                                <DeleteOutline />
-                                              </IconButton>
-                                            </Box>
-                                          </Grid>
-                                          <Grid item xs={12}>
-                                            <FieldArray
-                                              name={`data.location[${index}].address`}
-                                            >
-                                              {({ push, remove }) => (
-                                                <Grid container spacing={2}>
-                                                  <Grid
-                                                    item
-                                                    xs={12}
-                                                    style={{
-                                                      display: "flex",
-                                                    }}
-                                                  >
-                                                    <Typography
-                                                      variant="subtitle1"
-                                                      gutterBottom
+                                                Add
+                                              </Button>
+                                            </Stack>
+                                            <Stack spacing={1}>
+                                              {values.data.location[index]
+                                                .address &&
+                                                values.data.location[
+                                                  index
+                                                ].address.map(
+                                                  (val2, subIndex) => (
+                                                    <Stack
+                                                      direction="row"
+                                                      spacing={1}
+                                                      alignItems="center"
                                                     >
-                                                      address
-                                                    </Typography>
-                                                    <Button
-                                                      color="info"
-                                                      sx={{
-                                                        border: "none",
-                                                        textTransform: "none",
-                                                        ml: "2rem",
-                                                      }}
-                                                      variant="contained"
-                                                      size="small"
-                                                      onClick={() => {
-                                                        push({
-                                                          name: "",
-                                                          latitude: "",
-                                                          longitude: "",
-                                                        });
-                                                      }}
-                                                    >
-                                                      Add
-                                                    </Button>
-                                                  </Grid>
-                                                  {values.data.location[index]
-                                                    .address &&
-                                                    values.data.location[
-                                                      index
-                                                    ].address.map(
-                                                      (val, subIndex) => (
+                                                      <Typography
+                                                        varaint="subtitle1"
+                                                        gutterBottom
+                                                        sx={{
+                                                          marginRight: "1rem",
+                                                        }}
+                                                      >
+                                                        {subIndex + 1}.
+                                                      </Typography>
+                                                      <Box
+                                                        sx={{
+                                                          [theme.breakpoints.down(
+                                                            "sm"
+                                                          )]: {
+                                                            border: `1px solid ${theme.palette.grey[500]}`,
+                                                            borderRadius: "4px",
+                                                            p: 1,
+                                                          },
+                                                        }}
+                                                      >
                                                         <Grid
-                                                          item
-                                                          xs={12}
-                                                          key={subIndex}
+                                                          container
+                                                          spacing={2}
+                                                          alignItems="center"
                                                         >
                                                           <Grid
-                                                            container
-                                                            spacing={2}
-                                                            alignItems="flex-end"
+                                                            item
+                                                            xs={12}
+                                                            sm={4}
                                                           >
-                                                            <Grid
-                                                              item
-                                                              xs={4}
-                                                              sx={{
-                                                                display: "flex",
-                                                                alignItems:
-                                                                  "flex-end",
-                                                              }}
-                                                            >
-                                                              <Typography
-                                                                varaint="subtitle1"
-                                                                gutterBottom
-                                                                sx={{
-                                                                  marginRight:
-                                                                    "1rem",
-                                                                }}
-                                                              >
-                                                                {subIndex + 1}.
-                                                              </Typography>
-                                                              <Box
-                                                                sx={{
-                                                                  flexGrow: 1,
-                                                                }}
-                                                              />
-                                                              <Field
-                                                                name={`data.location[${index}].address[${subIndex}].name`}
-                                                                component={
-                                                                  TextField
-                                                                }
-                                                                size="small"
-                                                                fullWidth
-                                                                placeholder="Name"
-                                                              />
-                                                            </Grid>
-                                                            <Grid item xs={3}>
-                                                              <Field
-                                                                name={`data.location[${index}].address[${subIndex}].latitude`}
-                                                                component={
-                                                                  TextField
-                                                                }
-                                                                size="small"
-                                                                fullWidth
-                                                                placeholder="Latitude"
-                                                              />
-                                                            </Grid>
-                                                            <Grid item xs={3}>
-                                                              <Field
-                                                                name={`data.location[${index}].address[${subIndex}].longitude`}
-                                                                component={
-                                                                  TextField
-                                                                }
-                                                                size="small"
-                                                                fullWidth
-                                                                placeholder="Longitude"
-                                                              />
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                              <IconButton
-                                                                color="error"
-                                                                onClick={() => {
-                                                                  values.data
-                                                                    .location[
-                                                                    index
-                                                                  ].address
-                                                                    .length >
-                                                                    1 &&
-                                                                    remove(
-                                                                      subIndex
-                                                                    );
-                                                                }}
-                                                              >
-                                                                <Backspace />
-                                                              </IconButton>
-                                                            </Grid>
+                                                            <Field
+                                                              name={`data.location[${index}].address[${subIndex}].name`}
+                                                              component={
+                                                                TextField
+                                                              }
+                                                              size="small"
+                                                              fullWidth
+                                                              placeholder="Name"
+                                                            />
+                                                          </Grid>
+                                                          <Grid
+                                                            item
+                                                            xs={12}
+                                                            sm={4}
+                                                          >
+                                                            <Field
+                                                              name={`data.location[${index}].address[${subIndex}].latitude`}
+                                                              component={
+                                                                TextField
+                                                              }
+                                                              size="small"
+                                                              fullWidth
+                                                              placeholder="Latitude"
+                                                            />
+                                                          </Grid>
+                                                          <Grid
+                                                            item
+                                                            xs={12}
+                                                            sm={4}
+                                                          >
+                                                            {" "}
+                                                            <Field
+                                                              name={`data.location[${index}].address[${subIndex}].longitude`}
+                                                              component={
+                                                                TextField
+                                                              }
+                                                              size="small"
+                                                              fullWidth
+                                                              placeholder="Longitude"
+                                                            />
                                                           </Grid>
                                                         </Grid>
-                                                      )
-                                                    )}
-                                                </Grid>
-                                              )}
-                                            </FieldArray>
-                                          </Grid>
-                                        </Grid>
-                                      </Paper>
-                                      <Grid item xs={12}>
-                                        <Divider
-                                          style={{ marginTop: "1rem" }}
-                                        />
-                                      </Grid>
-                                    </Grid>
-                                  ))}
-                              </Grid>
-                            </Fragment>
-                          )}
-                        </FieldArray>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <FieldArray name="data.paper">
-                          {({ push, remove }) => (
-                            <Grid container spacing={2}>
-                              <Grid item xs={12} sx={{ display: "flex" }}>
-                                <Typography variant="subtitle1">
-                                  Paper Ref
-                                </Typography>
-                                <Button
-                                  color="info"
-                                  sx={{
-                                    border: "none",
-                                    textTransform: "none",
-                                    ml: "2rem",
-                                  }}
-                                  variant="contained"
-                                  size="small"
-                                  onClick={() =>
-                                    push({
-                                      name: "",
-                                    })
-                                  }
-                                >
-                                  Add
-                                </Button>
-                              </Grid>
-                              {values.data.paper &&
-                                values.data.paper.map((val, index) => (
-                                  <Grid
-                                    item
-                                    key={index}
-                                    xs={4}
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "flex-end",
-                                    }}
-                                  >
-                                    <Typography
-                                      varaint="subtitle1"
-                                      gutterBottom
-                                      sx={{ marginRight: "1rem" }}
-                                    >
-                                      {index + 1}.
-                                    </Typography>
-                                    <Field
-                                      name={`data.paper[${index}].name`}
-                                      component={TextField}
-                                      size="small"
-                                      fullWidth
-                                      placeholder="Paper name"
-                                    />
-                                    <IconButton
-                                      color="error"
-                                      onClick={() => {
-                                        values.data.paper.length > 1 &&
-                                          remove(index);
-                                      }}
-                                    >
-                                      <Backspace />
-                                    </IconButton>
+                                                      </Box>{" "}
+                                                      <IconButton
+                                                        color="error"
+                                                        onClick={() => {
+                                                          values.data.location[
+                                                            index
+                                                          ].address.length >
+                                                            1 &&
+                                                            remove(subIndex);
+                                                        }}
+                                                      >
+                                                        <Backspace />
+                                                      </IconButton>
+                                                    </Stack>
+                                                  )
+                                                )}
+                                            </Stack>
+                                          </Fragment>
+                                        )}
+                                      </FieldArray>
+                                    </Paper>
                                   </Grid>
                                 ))}
                             </Grid>
-                          )}
-                        </FieldArray>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Divider style={{ marginTop: "1rem" }} />
-                      </Grid>
-                      <Grid item xs={12}>
+                          </Box>
+                        )}
+                      </FieldArray>
+                      <FieldArray name="data.paper">
+                        {({ push, remove }) => (
+                          <Box>
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              alignItems="center"
+                              sx={{ mb: 2 }}
+                            >
+                              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                                Paper Ref
+                              </Typography>
+                              <Button
+                                color="info"
+                                sx={{
+                                  border: "none",
+                                  textTransform: "none",
+                                  ml: "2rem",
+                                }}
+                                variant="contained"
+                                size="small"
+                                onClick={() =>
+                                  push({
+                                    name: "",
+                                  })
+                                }
+                              >
+                                Add
+                              </Button>
+                            </Stack>
+                            <Grid container>
+                              {values.data.paper &&
+                                values.data.paper.map((val, index) => (
+                                  <Grid item xs={12} sm={6} md={4}>
+                                    <Stack
+                                      direction="row"
+                                      alignItems="center"
+                                      spacing={2}
+                                      sx={{ mb: 2 }}
+                                    >
+                                      <Typography varaint="subtitle1">
+                                        {index + 1}.
+                                      </Typography>
+                                      <Field
+                                        name={`data.paper[${index}].name`}
+                                        component={TextField}
+                                        size="small"
+                                        fullWidth
+                                        placeholder="Paper name"
+                                      />
+                                      <IconButton
+                                        color="error"
+                                        onClick={() => {
+                                          values.data.paper.length > 1 &&
+                                            remove(index);
+                                        }}
+                                      >
+                                        <Backspace />
+                                      </IconButton>
+                                    </Stack>
+                                  </Grid>
+                                ))}
+                            </Grid>
+                          </Box>
+                        )}
+                      </FieldArray>
+                      <Divider />
+                      <Box sx={{ width: 1 }}>
                         <Stack direction="row" spacing={2} alignItems="center">
-                          <Typography variant="subtitle1" gutterBottom>
+                          <Typography variant="h5" sx={{ fontWeight: 600 }}>
                             Upload image
                           </Typography>
                           <Typography
@@ -1059,104 +1120,102 @@ const InsertForm = () => {
                             (Up to 1 MB/file)
                           </Typography>
                         </Stack>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Box sx={{ margin: "1rem" }}>
-                          <Box {...getRootProps({ className: "dropzone" })}>
-                            <Box className="inner-dropzone">
-                              <input {...getInputProps()} />
-                              {/* <Fragment>{thumbs}</Fragment> */}
-                              <div
-                                className={`placeholder ${
-                                  classes.placeholder
-                                } ${
-                                  files.length != 0 &&
-                                  classes.placeholderImageProfile
-                                }`}
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          [theme.breakpoints.up("md")]: {
+                            flexDirection: "column-reverse",
+                          },
+                        }}
+                      >
+                        <Grid container sx={{ mt: 2 }}>
+                          {files &&
+                            files.map((file, index) => (
+                              <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                key={index}
+                                sx={{ p: 2 }}
                               >
-                                <AddAPhoto />
-                                <Typography
-                                  style={{
-                                    marginTop: 8,
-                                    backgroundColor: "transparent",
-                                  }}
-                                  className={`${
-                                    files != 0 && classes.placeholderLabel
-                                  }`}
-                                  variant="body2"
-                                >
-                                  Upload Photo
-                                </Typography>
-                              </div>
+                                <Stack alignItems="center">
+                                  <Box
+                                    component="img"
+                                    key={file.name}
+                                    src={file.preview}
+                                    sx={{
+                                      height: "245px",
+                                      width: "100%",
+                                      display: "block",
+                                      border: "2px solid",
+                                      borderColor: "darkgray",
+                                      mb: 2,
+                                    }}
+                                  />
+                                  <Button
+                                    disableRipple
+                                    variant="contained"
+                                    color="error"
+                                    sx={{
+                                      textTransform: "none",
+                                      border: "none",
+                                    }}
+                                    onClick={() =>
+                                      handleOnClickDeleteImage(index)
+                                    }
+                                  >
+                                    Delete
+                                  </Button>
+                                </Stack>
+                              </Grid>
+                            ))}
+                        </Grid>
+                        <Box {...getRootProps({ className: "dropzone" })}>
+                          <Box className="inner-dropzone">
+                            <input {...getInputProps()} />
+                            <Box
+                              sx={{
+                                width: 1,
+                                textAlign: "center",
+                                pb: 8,
+                                pt: 8,
+                                bgcolor:
+                                  files.length != 0
+                                    ? "rgba(22, 28, 36, .50)"
+                                    : "none",
+                              }}
+                            >
+                              <AddAPhoto />
+                              <Typography
+                                style={{
+                                  backgroundColor: "transparent",
+                                }}
+                                className={`${
+                                  files != 0 && classes.placeholderLabel
+                                }`}
+                                variant="body2"
+                              >
+                                Upload Photo
+                              </Typography>
                             </Box>
                           </Box>
                         </Box>
-                        {/* <Button
-                          variant="text"
-                          size="small"
-                          color="error"
-                          onClick={() => setFiles([])}
-                        >
-                          Clear
-                        </Button> */}
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-                          {files &&
-                            files.map((file, index) => (
-                              <Box
-                                key={index}
-                                sx={{ textAlign: "center", ml: 2 }}
-                              >
-                                <Box
-                                  component="img"
-                                  key={file.name}
-                                  src={file.preview}
-                                  // className={classes.uploadImage}
-                                  sx={{
-                                    height: "245px",
-                                    width: "100%",
-                                    display: "block",
-                                    border: "2px solid",
-                                    borderColor: "darkgray",
-                                    mb: 2,
-                                  }}
-                                />
-                                <Button
-                                  disableRipple
-                                  variant="contained"
-                                  color="error"
-                                  sx={{ textTransform: "none", border: "none" }}
-                                  onClick={() =>
-                                    handleOnClickDeleteImage(index)
-                                  }
-                                >
-                                  Delete
-                                </Button>
-                              </Box>
-                            ))}
-                        </Box>
-                      </Grid>
-
-                      {/* main grid */}
-                      <Grid item xs={12}>
-                        <Divider style={{ marginTop: "1rem" }} />
-                      </Grid>
-                      <Grid item xs={12}>
+                      </Box>
+                      <Divider />
+                      <Stack direction="row-reverse">
                         <Button
                           type="submit"
                           variant="contained"
                           color="secondary"
-                          sx={{ border: "none" }}
+                          sx={{ border: "none", minWidth: "120px" }}
                         >
                           Submit
                         </Button>
-                      </Grid>
-                    </Grid>
-
-                    <Box style={{ display: "flex" }}>
-                      <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
-                    </Box>
+                      </Stack>
+                    </Stack>
                   </Form>
                 )}
               </Formik>

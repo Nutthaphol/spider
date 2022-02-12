@@ -88,7 +88,6 @@ const Detail = (props) => {
         const paper_ = await paperService.getPaper(detailId);
         tmpDetail.paper = paper_;
 
-        console.log("tmp", tmpDetail);
         setDetail(tmpDetail);
       }
     }
@@ -96,12 +95,15 @@ const Detail = (props) => {
     dispatch(getAllDistrict());
   }, [detail]);
   return (
-    <div className={`page`}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={`page`}>
           {detail && (
             <Container maxWidth="lg">
-              <Paper className={classes.root}>
+              <Paper
+                sx={{ p: 2, mb: 4, border: "1px solid #B3B6B7" }}
+                elevation={0}
+              >
                 <Typography variant="h4" component="div" gutterBottom>
                   Document detail
                 </Typography>
@@ -278,13 +280,12 @@ const Detail = (props) => {
                     }}
                   />
                 ))}
-                <br />
               </Paper>
             </Container>
           )}
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </div>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

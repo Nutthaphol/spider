@@ -531,7 +531,7 @@ const Home = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Box className={`page`}>
+        <Box className={`home`}>
           <Box
             // className={classes.braner}
             sx={{

@@ -627,13 +627,6 @@ const EditDetailForm = (props) => {
                 <br />
                 <Divider />
                 <br />
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: 600 }}
-                >
-                  Location
-                </Typography>
                 <Collapse in={location ? true : false}>
                   <Alert>Save Locations</Alert>
                 </Collapse>
@@ -662,35 +655,55 @@ const EditDetailForm = (props) => {
                         {({ push, pop, remove }) => (
                           <Fragment>
                             <Grid container spacing={2}>
-                              <Grid item xs={12} style={{ display: "flex" }}>
-                                <Button
-                                  variant="contained"
-                                  size="small"
-                                  color="info"
-                                  sx={{ border: "none" }}
-                                  onClick={() =>
-                                    push({
-                                      id: -1,
-                                      detail_id: values.location[0].detail_id,
-                                      province: "",
-                                      district: "",
-                                      locality: "",
-                                      active: 1,
-                                      address: [
-                                        {
-                                          id: -1,
-                                          location_id: "newLocation",
-                                          name: "",
-                                          latitude: "",
-                                          longitude: "",
-                                          active: 1,
-                                        },
-                                      ],
-                                    })
-                                  }
+                              <Grid item xs={12}>
+                                <Stack
+                                  sx={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    [theme.breakpoints.up("sm")]: {
+                                      flexDirection: "column",
+                                      justifyContent: "flex-start",
+                                      alignItems: "flex-start",
+                                    },
+                                  }}
                                 >
-                                  Add location
-                                </Button>
+                                  <Typography
+                                    variant="h6"
+                                    component="div"
+                                    sx={{ fontWeight: 600 }}
+                                  >
+                                    Location
+                                  </Typography>
+                                  <Button
+                                    variant="contained"
+                                    size="small"
+                                    color="info"
+                                    sx={{ border: "none", maxWidth: "120px" }}
+                                    onClick={() =>
+                                      push({
+                                        id: -1,
+                                        detail_id: values.location[0].detail_id,
+                                        province: "",
+                                        district: "",
+                                        locality: "",
+                                        active: 1,
+                                        address: [
+                                          {
+                                            id: -1,
+                                            location_id: "newLocation",
+                                            name: "",
+                                            latitude: "",
+                                            longitude: "",
+                                            active: 1,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    Add location
+                                  </Button>
+                                </Stack>
                               </Grid>
                               {values.location &&
                                 values.location.map((val, index) => (
@@ -699,17 +712,63 @@ const EditDetailForm = (props) => {
                                       sx={{
                                         padding: "10px",
                                         paddingBottom: "15px",
+                                        color:
+                                          values.location[index].active == 0
+                                            ? "red"
+                                            : "none",
                                       }}
                                     >
                                       <Grid container spacing={2}>
                                         <Grid item xs={12}>
-                                          <Typography varaint="subtitle1">
-                                            Location {index + 1}.
-                                          </Typography>
+                                          <Stack
+                                            direction="row"
+                                            spacing={2}
+                                            alignItems="center"
+                                          >
+                                            <Typography varaint="subtitle1">
+                                              Location {index + 1}.
+                                            </Typography>
+                                            {val.active == 1 ? (
+                                              <IconButton
+                                                color="error"
+                                                sx={{ marginLeft: "1rem" }}
+                                                onClick={() => {
+                                                  values.location.length > 1 &&
+                                                  val.id == -1
+                                                    ? remove(index)
+                                                    : setFieldValue(
+                                                        `location[${index}].active`,
+                                                        0
+                                                      );
+                                                }}
+                                              >
+                                                <DeleteOutline />
+                                              </IconButton>
+                                            ) : (
+                                              <IconButton
+                                                color="success"
+                                                sx={{ marginLeft: "1rem" }}
+                                                onClick={() => {
+                                                  values.location.length > 1 &&
+                                                  val.id == -1
+                                                    ? remove(index)
+                                                    : setFieldValue(
+                                                        `location[${index}].active`,
+                                                        1
+                                                      );
+                                                }}
+                                              >
+                                                <SettingsBackupRestore />
+                                              </IconButton>
+                                            )}
+                                          </Stack>
                                         </Grid>
                                         <Grid
                                           item
-                                          xs={3}
+                                          xs={12}
+                                          sm={6}
+                                          md={4}
+                                          lg={3}
                                           className={`province`}
                                         >
                                           <Typography varaint="subtitle1">
@@ -749,7 +808,10 @@ const EditDetailForm = (props) => {
                                         </Grid>
                                         <Grid
                                           item
-                                          xs={3}
+                                          xs={12}
+                                          sm={6}
+                                          md={4}
+                                          lg={3}
                                           className={`district`}
                                         >
                                           <Typography varaint="subtitle1">
@@ -796,7 +858,10 @@ const EditDetailForm = (props) => {
                                         </Grid>
                                         <Grid
                                           item
-                                          xs={6}
+                                          xs={12}
+                                          sm={6}
+                                          md={4}
+                                          lg={3}
                                           className={`locality`}
                                         >
                                           <Typography varaint="subtitle1">
@@ -809,40 +874,6 @@ const EditDetailForm = (props) => {
                                               size="small"
                                               fullWidth
                                             />
-                                            <div style={{ flexGrow: 1 }} />
-                                            {val.active == 1 ? (
-                                              <IconButton
-                                                color="error"
-                                                sx={{ marginLeft: "1rem" }}
-                                                onClick={() => {
-                                                  values.location.length > 1 &&
-                                                  val.id == -1
-                                                    ? remove(index)
-                                                    : setFieldValue(
-                                                        `location[${index}].active`,
-                                                        0
-                                                      );
-                                                }}
-                                              >
-                                                <DeleteOutline />
-                                              </IconButton>
-                                            ) : (
-                                              <IconButton
-                                                color="success"
-                                                sx={{ marginLeft: "1rem" }}
-                                                onClick={() => {
-                                                  values.location.length > 1 &&
-                                                  val.id == -1
-                                                    ? remove(index)
-                                                    : setFieldValue(
-                                                        `location[${index}].active`,
-                                                        1
-                                                      );
-                                                }}
-                                              >
-                                                <SettingsBackupRestore />
-                                              </IconButton>
-                                            )}
                                           </Box>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -851,39 +882,51 @@ const EditDetailForm = (props) => {
                                           >
                                             {({ push, remove }) => (
                                               <Grid container spacing={2}>
-                                                <Grid
-                                                  item
-                                                  xs={12}
-                                                  style={{
-                                                    display: "flex",
-                                                  }}
-                                                >
-                                                  <Typography
-                                                    variant="subtitle1"
-                                                    gutterBottom
-                                                  >
-                                                    address
-                                                  </Typography>
-                                                  <Button
+                                                <Grid item xs={12}>
+                                                  <Stack
                                                     sx={{
-                                                      marginLeft: "2rem",
-                                                      border: "none",
-                                                    }}
-                                                    variant="contained"
-                                                    size="small"
-                                                    color="info"
-                                                    onClick={() => {
-                                                      push({
-                                                        id: -1,
-                                                        name: "",
-                                                        latitude: "",
-                                                        longitude: "",
-                                                        active: 1,
-                                                      });
+                                                      flexDirection: "row",
+                                                      justifyContent:
+                                                        "space-between",
+                                                      alignItems: "center",
+                                                      [theme.breakpoints.up(
+                                                        "sm"
+                                                      )]: {
+                                                        flexDirection: "column",
+                                                        justifyContent:
+                                                          "flex-start",
+                                                        alignItems:
+                                                          "flex-start",
+                                                      },
                                                     }}
                                                   >
-                                                    Add
-                                                  </Button>
+                                                    <Typography
+                                                      variant="subtitle1"
+                                                      gutterBottom
+                                                    >
+                                                      address
+                                                    </Typography>
+                                                    <Button
+                                                      sx={{
+                                                        border: "none",
+                                                        maxWidth: "120px",
+                                                      }}
+                                                      variant="contained"
+                                                      size="small"
+                                                      color="info"
+                                                      onClick={() => {
+                                                        push({
+                                                          id: -1,
+                                                          name: "",
+                                                          latitude: "",
+                                                          longitude: "",
+                                                          active: 1,
+                                                        });
+                                                      }}
+                                                    >
+                                                      Add
+                                                    </Button>
+                                                  </Stack>
                                                 </Grid>
                                                 {values.location[index]
                                                   .address &&
@@ -896,7 +939,115 @@ const EditDetailForm = (props) => {
                                                         xs={12}
                                                         key={subIndex}
                                                       >
-                                                        <Grid
+                                                        <Stack
+                                                          direction="row"
+                                                          alignItems="center"
+                                                          spacing={2}
+                                                          sx={{}}
+                                                        >
+                                                          <Typography varaint="subtitle1">
+                                                            {subIndex + 1}.
+                                                          </Typography>
+                                                          <Box
+                                                            sx={{
+                                                              flexGrow: 1,
+                                                              [theme.breakpoints.down(
+                                                                "sm"
+                                                              )]: {
+                                                                border: `1px solid ${theme.palette.grey[500]}`,
+                                                                borderRadius:
+                                                                  "4px",
+                                                                p: 1,
+                                                              },
+                                                            }}
+                                                          >
+                                                            <Grid
+                                                              container
+                                                              spacing={1}
+                                                              sx={{}}
+                                                            >
+                                                              <Grid
+                                                                item
+                                                                xs={12}
+                                                                sm={4}
+                                                              >
+                                                                <Field
+                                                                  name={`location[${index}].address[${subIndex}].name`}
+                                                                  component={
+                                                                    TextField
+                                                                  }
+                                                                  size="small"
+                                                                  fullWidth
+                                                                  placeholder="Name"
+                                                                />
+                                                              </Grid>
+                                                              <Grid
+                                                                item
+                                                                xs={12}
+                                                                sm={4}
+                                                              >
+                                                                <Field
+                                                                  name={`location[${index}].address[${subIndex}].latitude`}
+                                                                  component={
+                                                                    TextField
+                                                                  }
+                                                                  size="small"
+                                                                  fullWidth
+                                                                  placeholder="Latitude"
+                                                                />
+                                                              </Grid>
+                                                              <Grid
+                                                                item
+                                                                xs={12}
+                                                                sm={4}
+                                                              >
+                                                                <Field
+                                                                  name={`location[${index}].address[${subIndex}].longitude`}
+                                                                  component={
+                                                                    TextField
+                                                                  }
+                                                                  size="small"
+                                                                  fullWidth
+                                                                  placeholder="Longitude"
+                                                                />
+                                                              </Grid>
+                                                            </Grid>
+                                                          </Box>
+                                                          {val2.active == 1 ? (
+                                                            <IconButton
+                                                              color="error"
+                                                              onClick={() => {
+                                                                values.location[
+                                                                  index
+                                                                ].address
+                                                                  .length > 1 &&
+                                                                val2.id == -1
+                                                                  ? remove(
+                                                                      subIndex
+                                                                    )
+                                                                  : setFieldValue(
+                                                                      `location[${index}].address[${subIndex}].active`,
+                                                                      0
+                                                                    );
+                                                              }}
+                                                            >
+                                                              <Backspace />
+                                                            </IconButton>
+                                                          ) : (
+                                                            <IconButton
+                                                              color="success"
+                                                              onClick={() => {
+                                                                setFieldValue(
+                                                                  `location[${index}].address[${subIndex}].active`,
+                                                                  1
+                                                                );
+                                                              }}
+                                                            >
+                                                              <SettingsBackupRestore />
+                                                            </IconButton>
+                                                          )}
+                                                        </Stack>
+                                                        {/* <Grid
                                                           container
                                                           spacing={2}
                                                           alignItems="flex-end"
@@ -995,7 +1146,7 @@ const EditDetailForm = (props) => {
                                                               </IconButton>
                                                             )}
                                                           </Grid>
-                                                        </Grid>
+                                                        </Grid> */}
                                                       </Grid>
                                                     )
                                                   )}
@@ -1092,7 +1243,9 @@ const EditDetailForm = (props) => {
                                 <Grid
                                   item
                                   key={index}
-                                  xs={4}
+                                  xs={12}
+                                  sm={6}
+                                  md={4}
                                   sx={{
                                     display: "flex",
                                     alignItems: "flex-end",
