@@ -62,8 +62,6 @@ const CheckData = () => {
 
       const paper_ = await paperService.getPaper(id);
       tmpDetail.paper = paper_;
-
-      console.log("tmp", tmpDetail);
     }
     setDetail(tmpDetail);
   };
@@ -143,7 +141,7 @@ const CheckData = () => {
                     </Typography>
                     <Box sx={{ marginLeft: "2.5rem" }}>
                       <Typography variant="subtitle1">
-                        province: {console.log("type of ", typeof val.province)}
+                        province:
                         {
                           dbProvince.find((item) => item.id == val.province)
                             .name_en

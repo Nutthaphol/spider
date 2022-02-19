@@ -2,7 +2,6 @@ import { httpClient } from "./httpClient";
 
 const getAllGenus = () => {
   const res = httpClient.get("genus/allgenus");
-  // console.log(`res genus ${res}`);
   return res;
 };
 

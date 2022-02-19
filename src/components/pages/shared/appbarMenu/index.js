@@ -9,15 +9,16 @@ import { Button, Link, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../../actions/auth";
+import themplates from "../theme";
 
-const theme = createTheme();
+const theme = createTheme(themplates);
 
 const useStyles = makeStyles(() => ({
   button: {
     textTransform: "none",
-    color: "darkslategray",
-    fontWeight: "600",
+    fontWeight: "700",
     fontSize: "16px",
+    color: theme.palette.primary.darker,
   },
 }));
 

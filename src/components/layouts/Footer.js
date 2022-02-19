@@ -54,24 +54,25 @@ const Footer = (props) => {
       <Container maxWidth="xl">
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="subtitle1" sx={{ fontWeight: "700" }}>
-              อ้างอิงสำหรับผู้ที่นำไปใช้
-            </Typography>
             <Typography variant="body2" sx={{ color: "#000" }}>
               This website should be cited as follows (ผู้ที่นำไปอ้างอิง
               กรุณาเขียนอ้างอิงดังด้านล่าง):
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: "700" }}>
-              Citation:
-            </Typography>
-            <Typography variant="body2" sx={{ color: "#000" }}>
-              Spiders in Thailand (2022). Spiders in Thailand. Version 1.0.,
-              online at{" "}
-              <Link sx={{ color: "info.dark", cursor: "pointer" }}>
-                {" "}
-                https://www.spiderthailand.info
-              </Link>
-              , accessed on (date of access).
+              Citation:{" "}
+              <Typography
+                variant="body2"
+                sx={{ color: "#000" }}
+                component="span"
+              >
+                Spiders in Thailand (2022). Spiders in Thailand. Version 1.0.,
+                online at{" "}
+                <Link sx={{ color: "info.dark", cursor: "pointer" }}>
+                  {" "}
+                  https://www.spiderthailand.info
+                </Link>
+                , accessed on (date of access).
+              </Typography>
             </Typography>
           </Grid>
         </Grid>

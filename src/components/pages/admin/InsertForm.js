@@ -200,11 +200,25 @@ const InsertForm = () => {
     acceptedFiles.map((file) => formData.append("image", file));
     let files_ = [...files];
 
-    const preFiles = acceptedFiles.map((file) =>
-      Object.assign(file, { preview: URL.createObjectURL(file) })
-    );
+    let preFiles = acceptedFiles.map((file, index) => {
+      if (file.size > 1256000) {
+        alert(
+          `File name "${file.name}" over size. The file size that can be uploaded does not exceed 1 MB.`
+        );
+        return;
+      }
+      return Object.assign(file, { preview: URL.createObjectURL(file) });
+    });
+
+    preFiles = preFiles.reduce((prev, curr) => {
+      if (curr) {
+        prev.push(curr);
+      }
+      return prev;
+    }, []);
 
     files_ = files_.concat(preFiles);
+
     // setFiles(
     //   acceptedFiles.map((file) =>
     //     Object.assign(file, { preview: URL.createObjectURL(file) })
@@ -223,7 +237,7 @@ const InsertForm = () => {
     accept: "image/jpeg, image/png",
     onDrop,
     maxFiles: 20,
-    maxSize: 1256000,
+    // maxSize: 1256000,
   });
 
   // preview image input
@@ -452,7 +466,10 @@ const InsertForm = () => {
                                 >
                                   {dbFamily &&
                                     dbFamily.map((val, index) => (
-                                      <MenuItem key={index} value={val.id}>
+                                      <MenuItem
+                                        key={index + val.id}
+                                        value={val.id}
+                                      >
                                         {val.name}
                                       </MenuItem>
                                     ))}
@@ -501,7 +518,10 @@ const InsertForm = () => {
                                           Number(values.data.family)
                                       )
                                       .map((val, index) => (
-                                        <MenuItem key={index} value={val.id}>
+                                        <MenuItem
+                                          key={index + val.id}
+                                          value={val.id}
+                                        >
                                           {val.name}
                                         </MenuItem>
                                       ))}
@@ -550,7 +570,10 @@ const InsertForm = () => {
                                           Number(values.data.genus)
                                       )
                                       .map((val, index) => (
-                                        <MenuItem key={index} value={val.id}>
+                                        <MenuItem
+                                          key={index + val.id}
+                                          value={val.id}
+                                        >
                                           {val.name}
                                         </MenuItem>
                                       ))}
@@ -604,7 +627,7 @@ const InsertForm = () => {
                               >
                                 {years &&
                                   years.map((val, index) => (
-                                    <MenuItem key={index} value={val}>
+                                    <MenuItem key={index + val} value={val}>
                                       {val}
                                     </MenuItem>
                                   ))}
@@ -759,7 +782,7 @@ const InsertForm = () => {
                             <Grid container>
                               {values.data.location &&
                                 values.data.location.map((val, index) => (
-                                  <Grid item xs={12} key={index}>
+                                  <Grid item xs={12} key={index + val.id}>
                                     <Paper
                                       sx={{
                                         p: 2,
@@ -823,7 +846,7 @@ const InsertForm = () => {
                                                   )
                                                   .map((val, index) => (
                                                     <MenuItem
-                                                      key={index}
+                                                      key={index + val.id}
                                                       value={val.id}
                                                     >
                                                       {val.name_en}
@@ -870,7 +893,7 @@ const InsertForm = () => {
                                                   )
                                                   .map((val, index) => (
                                                     <MenuItem
-                                                      key={index}
+                                                      key={index + val.id}
                                                       value={val.id}
                                                     >
                                                       {val.name_en}
@@ -940,6 +963,7 @@ const InsertForm = () => {
                                                       direction="row"
                                                       spacing={1}
                                                       alignItems="center"
+                                                      key={subIndex + val.id}
                                                     >
                                                       <Typography
                                                         varaint="subtitle1"
@@ -1073,7 +1097,13 @@ const InsertForm = () => {
                             <Grid container>
                               {values.data.paper &&
                                 values.data.paper.map((val, index) => (
-                                  <Grid item xs={12} sm={6} md={4}>
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={4}
+                                    key={index + val.name}
+                                  >
                                     <Stack
                                       direction="row"
                                       alignItems="center"
@@ -1138,7 +1168,7 @@ const InsertForm = () => {
                                 xs={12}
                                 sm={6}
                                 md={4}
-                                key={index}
+                                key={index + file.name}
                                 sx={{ p: 2 }}
                               >
                                 <Stack alignItems="center">

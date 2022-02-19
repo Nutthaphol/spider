@@ -36,7 +36,6 @@ export const getAllDetailAdmin = () => async (dispatch) => {
 export const getDetail = (id) => async (dispatch) => {
   try {
     const res = await detailService.getDetail(id);
-    console.log("action detail res", res);
     if (res) {
       dispatch({
         type: DETAIL_SUCCESS,
@@ -52,7 +51,6 @@ export const getDetail = (id) => async (dispatch) => {
 export const getDetailAdmin = (id) => async (dispatch) => {
   try {
     const res = await detailService.getDetailAdmin(id);
-    console.log("action detail res", res);
     if (res) {
       dispatch({
         type: DETAIL_SUCCESS,

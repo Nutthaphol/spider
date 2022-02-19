@@ -1,24 +1,20 @@
 import { httpClient } from "./httpClient";
 
 const postLocation = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("/location/postLocation", { data })
     .then((response) => {
       return response.data;
     });
-  // console.log("family post res", res);
   return res;
 };
 
 const updateLocation = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("/location/updateLocation", { data })
     .then((response) => {
       return response.data;
     });
-  // console.log("family post res", res);
   return res;
 };
 

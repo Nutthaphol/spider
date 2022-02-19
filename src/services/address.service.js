@@ -1,7 +1,6 @@
 import { httpClient } from "./httpClient";
 
 const postAddress = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("address/postAddress", { data })
     .then((response) => {
@@ -11,7 +10,6 @@ const postAddress = (data) => {
 };
 
 const updateAddress = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("address/updateAddress", { data })
     .then((response) => {

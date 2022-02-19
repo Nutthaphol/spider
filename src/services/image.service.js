@@ -1,11 +1,9 @@
 import { httpClient } from "./httpClient";
 
 const postImage = (data) => {
-  console.log("services image", data);
   const res = httpClient.post("image/postImage", data).then((response) => {
     return response.data;
   });
-  // console.log("family post res", res);
   return res;
 };
 

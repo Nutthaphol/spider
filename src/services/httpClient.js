@@ -27,6 +27,7 @@ axios.interceptors.response.use(
     if (error.response.status === 401) {
       alert(JSON.stringify(error.response.message));
       localStorage.removeItem("user");
+      window.location.reload();
     }
 
     if (axios.isCancel(error)) {

@@ -15,8 +15,6 @@ const login = (username, password) => {
       if (response.data.accessToken) {
         const data = response.data;
         localStorage.setItem("user", JSON.stringify(response.data));
-
-        console.log(`set local storage`);
       }
       return response.data;
     });

@@ -25,7 +25,7 @@ exports.signin = async (req, res) => {
           config.secret,
           {
             expiresIn: 86400, // 24 hours
-            // expiresIn: 30,
+            // expiresIn: 10,
           }
         );
         res.status(200).send({

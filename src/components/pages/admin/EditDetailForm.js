@@ -498,7 +498,7 @@ const EditDetailForm = (props) => {
                       onKeyDown={onKeyDown}
                     >
                       <Grid container spacing={2}>
-                        <Grid item xs={9} className={`author`}>
+                        <Grid item xs={8} className={`author`}>
                           <Typography varaint="subtitle1">Author</Typography>
                           <Field
                             name="author"
@@ -507,7 +507,7 @@ const EditDetailForm = (props) => {
                             size="small"
                           />
                         </Grid>
-                        <Grid item xs={3} className={`year`}>
+                        <Grid item xs={4} className={`year`}>
                           <Typography varaint="subtitle1">
                             publish year
                           </Typography>
@@ -1047,106 +1047,6 @@ const EditDetailForm = (props) => {
                                                             </IconButton>
                                                           )}
                                                         </Stack>
-                                                        {/* <Grid
-                                                          container
-                                                          spacing={2}
-                                                          alignItems="flex-end"
-                                                        >
-                                                          <Grid
-                                                            item
-                                                            xs={4}
-                                                            sx={{
-                                                              display: "flex",
-                                                              alignItems:
-                                                                "flex-end",
-                                                            }}
-                                                          >
-                                                            <Typography
-                                                              varaint="subtitle1"
-                                                              gutterBottom
-                                                              sx={{
-                                                                marginRight:
-                                                                  "1rem",
-                                                              }}
-                                                            >
-                                                              {subIndex + 1}.
-                                                            </Typography>
-                                                            <Box
-                                                              sx={{
-                                                                flexGrow: 1,
-                                                              }}
-                                                            />
-                                                            <Field
-                                                              name={`location[${index}].address[${subIndex}].name`}
-                                                              component={
-                                                                TextField
-                                                              }
-                                                              size="small"
-                                                              fullWidth
-                                                              placeholder="Name"
-                                                            />
-                                                          </Grid>
-                                                          <Grid item xs={3}>
-                                                            <Field
-                                                              name={`location[${index}].address[${subIndex}].latitude`}
-                                                              component={
-                                                                TextField
-                                                              }
-                                                              size="small"
-                                                              fullWidth
-                                                              placeholder="Latitude"
-                                                            />
-                                                          </Grid>
-                                                          <Grid item xs={3}>
-                                                            <Field
-                                                              name={`location[${index}].address[${subIndex}].longitude`}
-                                                              component={
-                                                                TextField
-                                                              }
-                                                              size="small"
-                                                              fullWidth
-                                                              placeholder="Longitude"
-                                                            />
-                                                          </Grid>
-                                                          <Grid item xs={1}>
-                                                            {val2.active ==
-                                                            1 ? (
-                                                              <IconButton
-                                                                color="error"
-                                                                onClick={() => {
-                                                                  values
-                                                                    .location[
-                                                                    index
-                                                                  ].address
-                                                                    .length >
-                                                                    1 &&
-                                                                  val2.id == -1
-                                                                    ? remove(
-                                                                        subIndex
-                                                                      )
-                                                                    : setFieldValue(
-                                                                        `location[${index}].address[${subIndex}].active`,
-                                                                        0
-                                                                      );
-                                                                }}
-                                                              >
-                                                                <Backspace />
-                                                              </IconButton>
-                                                            ) : (
-                                                              <IconButton
-                                                                color="success"
-                                                                onClick={() => {
-                                                                  setFieldValue(
-                                                                    `location[${index}].address[${subIndex}].active`,
-                                                                    1
-                                                                  );
-                                                                }}
-                                                              >
-                                                                <SettingsBackupRestore />
-                                                              </IconButton>
-                                                            )}
-                                                          </Grid>
-                                                        </Grid> */}
                                                       </Grid>
                                                     )
                                                   )}
@@ -1362,7 +1262,6 @@ const EditDetailForm = (props) => {
                                   for (let i = 0; i < tmp.length; i++) {
                                     let reader = new FileReader();
                                     const file = e.currentTarget.files[i];
-                                    console.log("size", file.size);
                                     if (file.size <= 1256000) {
                                       reader.onloadend = () => {
                                         push({
@@ -1376,7 +1275,7 @@ const EditDetailForm = (props) => {
                                       reader.readAsDataURL(file);
                                     } else {
                                       alert(
-                                        "This file is larger than the specified size."
+                                        `File name "${file.name}" over size. The file size that can be uploaded does not exceed 1 MB.`
                                       );
                                     }
                                   }
@@ -1412,16 +1311,14 @@ const EditDetailForm = (props) => {
                             </Box>
                             <Grid container spacing={4}>
                               {values.image.map((val, index) => (
-                                <Grid item key={index}>
+                                <Grid item xs={12} sm={6} md={4} key={index}>
                                   {val.active == 1 ? (
-                                    <Box sx={{ textAlign: "center" }}>
+                                    <Stack spacing={2}>
                                       <Box
                                         sx={{
                                           position: "relative",
                                           width: "100%",
                                           overflow: "hidden",
-                                          margin: "5px",
-                                          padding: "5px",
                                           border: "2px solid #b8b8b8",
                                         }}
                                       >
@@ -1460,22 +1357,14 @@ const EditDetailForm = (props) => {
                                       >
                                         Delete
                                       </Button>
-                                    </Box>
+                                    </Stack>
                                   ) : (
-                                    <Box
-                                      sx={{
-                                        textAlign: "center",
-                                        // display: "block",
-                                        // alignItems: "center",
-                                      }}
-                                    >
+                                    <Stack spacing={2}>
                                       <Box
                                         sx={{
                                           position: "relative",
                                           width: "100%",
                                           overflow: "hidden",
-                                          margin: "5px",
-                                          padding: "5px",
                                           border: "2px solid red",
                                         }}
                                       >
@@ -1486,7 +1375,6 @@ const EditDetailForm = (props) => {
                                               ? `/${val.path}`
                                               : val.path
                                           }
-                                          // width="100%"
                                           sx={{
                                             height: "245px",
                                             width: "100%",
@@ -1500,13 +1388,10 @@ const EditDetailForm = (props) => {
                                               theme.palette.error.dark,
                                               0.5
                                             ),
-                                            // bgcolor: "rgba(205, 92, 92,0.5)",
                                             position: "absolute",
-                                            bottom: 5,
-                                            right: 5,
-                                            top: 5,
-                                            left: 5,
-                                            width: "calc(100% - 10px)",
+                                            bottom: 0,
+
+                                            width: 1,
                                             display: "block",
                                           }}
                                         />
@@ -1528,7 +1413,7 @@ const EditDetailForm = (props) => {
                                       >
                                         Recall
                                       </Button>
-                                    </Box>
+                                    </Stack>
                                   )}
                                 </Grid>
                               ))}

@@ -31,8 +31,6 @@ function App() {
               minHeight: "100vh",
               display: "flex",
               flexDirection: "column",
-              // position: "relative",
-              // display: "block",
             }}
           >
             <Header />
@@ -42,7 +40,7 @@ function App() {
                 flexGrow: 1,
                 overflow: "hidden",
                 minHeight: "100%",
-                mb: 4,
+                pb: 4,
               }}
             >
               <Routers />

@@ -31,6 +31,7 @@ import {
   DialogContentText,
   DialogTitle,
   DialogActions,
+  Stack,
 } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,6 +73,7 @@ import PaperPopup from "./shared/PaperPopup";
 import locationService from "../../services/location.service";
 import { runLogoutTimer } from "../../actions/auth";
 import themplates from "./shared/theme";
+import { maxWidth } from "@mui/material/node_modules/@mui/system";
 
 const theme = createTheme(themplates);
 
@@ -113,18 +115,12 @@ const useStyles = makeStyles(() => ({
     },
     "& .MuiInputLabel-outlined": {
       color: "#000",
-      borderRadius: "4px",
-      width: "100%",
-      textAlign: "center",
     },
     "& .MuiOutlinedInput-notchedOutline": {
       borderWidth: "2px",
       borderColor: "#000",
       boxShadow:
         "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
-    },
-    "& MuiFormLabel-root.MuiInputLabel-root": {
-      // transform: "translate(0px, -9px) scale(0.75)",
     },
   },
   dispalyButton: {
@@ -185,18 +181,6 @@ const Home = () => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // const fetch = async () => {
-    //   !dbfamily && (await dispatch(getAllFamily()));
-    //   !dbgenus && (await dispatch(getAllGenus()));
-    //   !dbspecies && (await dispatch(getAllSpecies()));
-    //   !dbprovince && (await dispatch(getAllProvinces()));
-    //   !dbdistrict && (await dispatch(getAllDistrict()));
-    //   !dbdetail && (await dispatch(getAllDetail()));
-    //   !dblocation && (await dispatch(getAllLocation()));
-    //   !dbaddress && (await dispatch(getAllAddress()));
-    //   return true;
-    // };
-
     const pree = async (callback_) => {
       !dbfamily && (await dispatch(getAllFamily()));
       !dbgenus && (await dispatch(getAllGenus()));
@@ -210,41 +194,14 @@ const Home = () => {
     };
 
     pree(() => {
-      setReady(true);
+      setAddress(dbaddress);
       return;
     });
 
-    if (
-      dbfamily &&
-      dbgenus &&
-      dbspecies &&
-      dbprovince &&
-      dbdistrict &&
-      dbdetail &&
-      dblocation &&
-      dbaddress
-    ) {
-      setAddress(dbaddress);
-
-      setReady(true);
-      // handleOnChangeAddress();
-    }
-    if (ready) {
-      console.log("ready");
-      setAddress(dbaddress);
+    if (address) {
       handleOnChangeAddress();
     }
-  }, [
-    // dbfamily,
-    // dbgenus,
-    // dbspecies,
-    // dbprovince,
-    // dbdistrict,
-    // dbdetail,
-    // dblocation,
-    // dbaddress,
-    ready,
-  ]);
+  }, [address]);
 
   const filterAddress = (location_) => {
     let address_ = [];
@@ -580,25 +537,7 @@ const Home = () => {
                     <TextField
                       {...params}
                       fullWidth
-                      sx={{
-                        "& .MuiInputLabel-outlined.Mui-focused": {
-                          borderRadius: "4px",
-                          maxWidth:
-                            province == ""
-                              ? "calc(100% - 260px)"
-                              : "calc(100% - 290px)",
-                        },
-                        "& .MuiInputLabel-outlined": {
-                          color: "#000",
-                          borderRadius: "4px",
-                          width: "100%",
-                          textAlign: "center",
-                          maxWidth:
-                            province == ""
-                              ? "calc(100% - 14px)"
-                              : "calc(100% - 290px)",
-                        },
-                      }}
+                      sx={{}}
                       label={province == "" ? "Province (All)" : "Province"}
                     />
                   )}
@@ -635,25 +574,25 @@ const Home = () => {
                     <TextField
                       {...params}
                       fullWidth
-                      sx={{
-                        "& .MuiInputLabel-outlined.Mui-focused": {
-                          borderRadius: "4px",
-                          maxWidth:
-                            district == ""
-                              ? "calc(100% - 274px)"
-                              : "calc(100% - 298px)",
-                        },
-                        "& .MuiInputLabel-outlined": {
-                          color: "#000",
-                          borderRadius: "4px",
-                          width: "100%",
-                          textAlign: "center",
-                          maxWidth:
-                            district == ""
-                              ? "calc(100% - 14px)"
-                              : "calc(100% - 298px)",
-                        },
-                      }}
+                      // sx={{
+                      //   "& .MuiInputLabel-outlined.Mui-focused": {
+                      //     borderRadius: "4px",
+                      //     maxWidth:
+                      //       district == ""
+                      //         ? "calc(100% - 274px)"
+                      //         : "calc(100% - 298px)",
+                      //   },
+                      //   "& .MuiInputLabel-outlined": {
+                      //     color: "#000",
+                      //     borderRadius: "4px",
+                      //     width: "100%",
+                      //     textAlign: "center",
+                      //     maxWidth:
+                      //       district == ""
+                      //         ? "calc(100% - 14px)"
+                      //         : "calc(100% - 298px)",
+                      //   },
+                      // }}
                       label={district == "" ? "District (All)" : "District"}
                     />
                   )}
@@ -700,6 +639,11 @@ const Home = () => {
                         <Marker
                           key={index}
                           position={[val.latitude, val.longitude]}
+                          eventHandlers={{
+                            click: (e) => {
+                              e.target.openPopup();
+                            },
+                          }}
                         >
                           {val.data.length > 1 ? (
                             <Popup style={{ width: "480px" }}>
@@ -775,6 +719,16 @@ const Home = () => {
               )}
             </Box>
           </Container>
+          <Dialog
+            open={notFount}
+            onClose={() => setNotFount(false)}
+            maxWidth="xs"
+            fullWidth
+          >
+            <DialogContent sx={{ textAlign: "center" }}>
+              <Typography variant="subtitle1">No information</Typography>
+            </DialogContent>
+          </Dialog>
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>

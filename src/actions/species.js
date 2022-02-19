@@ -5,7 +5,6 @@ import speciesService from "../services/species.service";
 export const getAllSpecies = () => async (dispatch) => {
   try {
     const res = await speciesService.getAllSpecies();
-    // console.log("res = ", res);
     if (res) {
       dispatch({
         type: SPECIES_SUCCESS,

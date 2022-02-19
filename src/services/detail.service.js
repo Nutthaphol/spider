@@ -1,7 +1,6 @@
 import { httpClient } from "./httpClient";
 
 const postDetail = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("detail/postDetail", { data })
     .then((response) => {
@@ -11,7 +10,6 @@ const postDetail = (data) => {
 };
 
 const updateDetailType = (data) => {
-  console.log("services", data);
   const res = httpClient
     .post("detail/updateDatailType", { data })
     .then((response) => {

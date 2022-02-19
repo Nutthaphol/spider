@@ -24,6 +24,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Stack,
 } from "@mui/material";
 import themplates from "./theme";
 
@@ -114,7 +115,7 @@ const GenusTable = (props) => {
                 className={classes.textFilter}
               >
                 Family:{" "}
-                <Box component="span" sx={{ fontStyle: "italic" }}>
+                <Box component="span" sx={{}}>
                   {family && family.find((item) => item.id == id).name}
                 </Box>
               </Typography>
